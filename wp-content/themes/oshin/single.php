@@ -1,0 +1,36 @@
+<?php
+/*
+ *  The template for displaying a Blog Post.
+ * 
+ *
+*/
+get_header();
+global $be_themes_data; 
+$sidebar_flag = (array_key_exists('blog_single_sidebar', $be_themes_data) ) ?  $be_themes_data['blog_single_sidebar'] : '1' ;
+$blog_style = ((!isset($be_themes_data['blog_style'])) || empty($be_themes_data['blog_style'])) ? 'style1' : $be_themes_data['blog_style'];
+$sidebar = 'right';
+$sidebar = ( isset($sidebar_flag) && '1' != $sidebar_flag) ? 'no' : $sidebar;
+while ( have_posts() ) : the_post(); ?>
+	<section id="content" class="<?php echo esc_attr( $sidebar ); ?>-sidebar-page">
+		<div id="content-wrap" class="be-wrap clearfix">
+			<section id="page-content" class="content-single-sidebar">
+				<div class="clearfix <?php echo esc_attr( $blog_style ); ?>-blog">
+					<?php
+						$blog_style = be_get_blog_loop_style( $blog_style );
+						get_template_part( 'blog/loop', $blog_style );
+					?>
+				</div> <!--  End Page Content -->
+				<div class="be-themes-comments">
+					<?php comments_template( '', true ); ?>
+				</div> <!--  End Optional Page Comments -->
+			</section>
+			<?php if ('no' != $sidebar ){?>
+				<section id="<?php echo esc_attr( $sidebar ); ?>-sidebar" class="sidebar-widgets">
+					<?php get_sidebar( $sidebar ); ?>
+				</section>
+			<?php } ?>
+		</div>
+	</section> <?php 
+endwhile;
+get_footer(); 
+?>

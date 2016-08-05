@@ -1,0 +1,1763 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BE Page Builder\n"
+"POT-Creation-Date: 2015-01-09 12:34+0530\n"
+"PO-Revision-Date: 2015-01-13 07:51+0100\n"
+"Last-Translator: \n"
+"Language-Team: Brand Exponents <swami@brandexponents.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.3\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"Language: de\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../be-page-builder/be-page-builder.php:608
+msgid "Page Builder"
+msgstr ""
+
+#: ../be-page-builder/be-page-builder.php:630
+msgid ""
+"Add Rows, organize content into column blocks and style the page using a "
+"myraid collection of shortcodes"
+msgstr ""
+
+#: ../be-page-builder/be-page-builder.php:657
+msgid "Styling & Elements"
+msgstr ""
+
+#: ../be-page-builder/be-page-builder.php:658
+msgid ""
+"If you wish to adjust or add styling to your page or content, you can use "
+"the optional modules left side."
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:905
+msgid "Hover Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:923
+msgid "Portfolio"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:928
+#: ../be-page-builder/be-pb-options.php:1238
+msgid "Number of Columns"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:939
+#: ../be-page-builder/be-pb-options.php:1249
+#: ../be-page-builder/be-pb-options.php:1430
+msgid "Gutter Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:948
+#: ../be-page-builder/be-pb-options.php:1258
+#: ../be-page-builder/be-pb-options.php:1439
+#: ../be-page-builder/be-pb-options.php:3915
+msgid "Gutter Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:953
+msgid "Filterable Portfolio"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:959
+msgid "Filter to use"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:968
+#: ../be-page-builder/be-pb-options.php:1128
+msgid "Portfolio Categories"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:973
+#: ../be-page-builder/be-pb-options.php:1133
+msgid "Number of Items per Page"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:978
+#: ../be-page-builder/be-pb-options.php:1263
+msgid "Enable Masonry Layout"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:983
+msgid "Pagination Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:993
+#: ../be-page-builder/be-pb-options.php:1268
+msgid "Image Load Animation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1006
+#: ../be-page-builder/be-pb-options.php:1281
+msgid "Enable Parallax Effect to Portfolio Items"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1012
+#: ../be-page-builder/be-pb-options.php:1178
+#: ../be-page-builder/be-pb-options.php:1660
+msgid "Title Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1026
+msgid "Title alignment - for Title Below Thumbnail styles"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1036
+msgid "Thumbnail Color / Gradient Start Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1041
+#: ../be-page-builder/be-pb-options.php:1144
+#: ../be-page-builder/be-pb-options.php:1335
+#: ../be-page-builder/be-pb-options.php:1717
+msgid "Thumbnail Overlay Opacity"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1046
+#: ../be-page-builder/be-pb-options.php:1149
+#: ../be-page-builder/be-pb-options.php:1316
+msgid "Enable Gradient Overlay"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1051
+#: ../be-page-builder/be-pb-options.php:1154
+#: ../be-page-builder/be-pb-options.php:1321
+msgid "Thumbnail Overlay Gradient End Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1056
+#: ../be-page-builder/be-pb-options.php:1159
+#: ../be-page-builder/be-pb-options.php:1326
+msgid "Gradient Direction"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1065
+#: ../be-page-builder/be-pb-options.php:1168
+#: ../be-page-builder/be-pb-options.php:1589
+#: ../be-page-builder/be-pb-options.php:1789
+#: ../be-page-builder/be-pb-options.php:1891
+#: ../be-page-builder/be-pb-options.php:2033
+#: ../be-page-builder/be-pb-options.php:2125
+#: ../be-page-builder/be-pb-options.php:2428
+#: ../be-page-builder/be-pb-options.php:2533
+#: ../be-page-builder/be-pb-options.php:2572
+#: ../be-page-builder/be-pb-options.php:3587
+#: ../be-page-builder/be-pb-options.php:4064
+#: ../be-page-builder/be-pb-options.php:4305
+msgid "Title Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1070
+#: ../be-page-builder/be-pb-options.php:1173
+msgid "Categories Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1075
+msgid "Hide Categories"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1080
+#: ../be-page-builder/be-pb-options.php:1189
+#: ../be-page-builder/be-pb-options.php:1287
+#: ../be-page-builder/be-pb-options.php:1688
+#: ../be-page-builder/be-pb-options.php:3651
+msgid "Default Image Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1086
+#: ../be-page-builder/be-pb-options.php:1195
+#: ../be-page-builder/be-pb-options.php:1293
+#: ../be-page-builder/be-pb-options.php:1694
+#: ../be-page-builder/be-pb-options.php:3657
+msgid "Hover Image Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1092
+#: ../be-page-builder/be-pb-options.php:1201
+#: ../be-page-builder/be-pb-options.php:1299
+#: ../be-page-builder/be-pb-options.php:1700
+msgid "Image Effects"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1104
+msgid "Portfolio Title Animation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1110
+msgid "Portfolio Categories Animation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1116
+#: ../be-page-builder/be-pb-options.php:1225
+#: ../be-page-builder/be-pb-options.php:1340
+msgid "Disable Like Button"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1123
+msgid "Portfolio Carousel"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1139
+#: ../be-page-builder/be-pb-options.php:1311
+msgid "Thumbnail Overlay Color / Gradient Start Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1213
+msgid "Portfolio Title Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1219
+msgid "Portfolio Categories Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1233
+msgid "Gallery"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1345
+msgid "Image Source"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1357
+msgid "Upload Image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1362
+msgid "Account Name"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1367
+msgid "Images Count"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1375
+msgid "Portfolio Navigation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1381
+#: ../be-page-builder/be-pb-options.php:2189
+#: ../be-page-builder/be-pb-options.php:2839
+#: ../be-page-builder/be-pb-options.php:3250
+#: ../be-page-builder/be-pb-options.php:3351
+msgid "Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1390
+msgid "Style1 Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1396
+msgid "Next and Previous Page Navigation Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1401
+#: ../be-page-builder/be-pb-options.php:1475
+#: ../be-page-builder/be-pb-options.php:1543
+#: ../be-page-builder/be-pb-options.php:1727
+#: ../be-page-builder/be-pb-options.php:1860
+#: ../be-page-builder/be-pb-options.php:1936
+#: ../be-page-builder/be-pb-options.php:2095
+#: ../be-page-builder/be-pb-options.php:2151
+#: ../be-page-builder/be-pb-options.php:2216
+#: ../be-page-builder/be-pb-options.php:2246
+#: ../be-page-builder/be-pb-options.php:2277
+#: ../be-page-builder/be-pb-options.php:2390
+#: ../be-page-builder/be-pb-options.php:2490
+#: ../be-page-builder/be-pb-options.php:2713
+#: ../be-page-builder/be-pb-options.php:2806
+#: ../be-page-builder/be-pb-options.php:3163
+#: ../be-page-builder/be-pb-options.php:3256
+#: ../be-page-builder/be-pb-options.php:3318
+#: ../be-page-builder/be-pb-options.php:3414
+#: ../be-page-builder/be-pb-options.php:3514
+#: ../be-page-builder/be-pb-options.php:4119
+#: ../be-page-builder/be-pb-options.php:4271
+#: ../be-page-builder/be-pb-options.php:4345
+#: ../be-page-builder/be-pb-options.php:4373
+msgid "Enable CSS Animation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1406
+#: ../be-page-builder/be-pb-options.php:1480
+#: ../be-page-builder/be-pb-options.php:1548
+#: ../be-page-builder/be-pb-options.php:1865
+#: ../be-page-builder/be-pb-options.php:1941
+#: ../be-page-builder/be-pb-options.php:2100
+#: ../be-page-builder/be-pb-options.php:2156
+#: ../be-page-builder/be-pb-options.php:2221
+#: ../be-page-builder/be-pb-options.php:2251
+#: ../be-page-builder/be-pb-options.php:2282
+#: ../be-page-builder/be-pb-options.php:2395
+#: ../be-page-builder/be-pb-options.php:2495
+#: ../be-page-builder/be-pb-options.php:2718
+#: ../be-page-builder/be-pb-options.php:2811
+#: ../be-page-builder/be-pb-options.php:3168
+#: ../be-page-builder/be-pb-options.php:3261
+#: ../be-page-builder/be-pb-options.php:3323
+#: ../be-page-builder/be-pb-options.php:3419
+#: ../be-page-builder/be-pb-options.php:3519
+#: ../be-page-builder/be-pb-options.php:4124
+#: ../be-page-builder/be-pb-options.php:4276
+#: ../be-page-builder/be-pb-options.php:4350
+#: ../be-page-builder/be-pb-options.php:4378
+msgid "Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1415
+msgid "Blog"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1420
+msgid "Blog Masonry Columns"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1447
+msgid "Text Block"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1453
+msgid "Text Block Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1459
+#: ../be-page-builder/be-pb-options.php:2141
+msgid "Maximum Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1464
+msgid "Wrapper alignment(Will apply only if Max width is specified)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1470
+#: ../be-page-builder/be-pb-options.php:1855
+#: ../be-page-builder/be-pb-options.php:1931
+#: ../be-page-builder/be-pb-options.php:2090
+#: ../be-page-builder/be-pb-options.php:2136
+msgid "Enable Animation When Scrolling"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1489
+msgid "Plugin Shortcodes"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1494
+msgid "Shortcode"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1503
+msgid "Dropcaps"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1509
+msgid "Letter to be Dropcapped"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1514
+msgid "Icon to be Dropcapped  - prioritized over letter"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1520
+msgid "Dropcap Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1526
+msgid "Dropcap Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1532
+msgid "Dropcap Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1537
+msgid "Dropcap Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1557
+msgid "Team"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1563
+#: ../be-page-builder/be-pb-options.php:1778
+#: ../be-page-builder/be-pb-options.php:1880
+#: ../be-page-builder/be-pb-options.php:2022
+#: ../be-page-builder/be-pb-options.php:2417
+#: ../be-page-builder/be-pb-options.php:3442
+#: ../be-page-builder/be-pb-options.php:4053
+#: ../be-page-builder/be-pb-options.php:4290
+msgid "Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1568
+#: ../be-page-builder/be-pb-options.php:1783
+#: ../be-page-builder/be-pb-options.php:1885
+#: ../be-page-builder/be-pb-options.php:2027
+#: ../be-page-builder/be-pb-options.php:2422
+#: ../be-page-builder/be-pb-options.php:4058
+msgid "Heading tag to use for Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1574
+msgid "Designation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1579
+msgid "Description"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1584
+msgid "Upload Team Member Image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1594
+msgid "Description Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1599
+msgid "Designation Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1604
+msgid "Facebook Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1609
+msgid "Twitter Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1614
+msgid "Google Plus Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1619
+msgid "LinkedIn Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1624
+msgid "Youtube Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1629
+msgid "Vimeo Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1634
+msgid "Dribbble Profile Url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1639
+#: ../be-page-builder/be-pb-options.php:1830
+#: ../be-page-builder/be-pb-options.php:2200
+#: ../be-page-builder/be-pb-options.php:2612
+#: ../be-page-builder/be-pb-options.php:3307
+#: ../be-page-builder/be-pb-options.php:3367
+#: ../be-page-builder/be-pb-options.php:3987
+#: ../be-page-builder/be-pb-options.php:4043
+#: ../be-page-builder/be-pb-options.php:4255
+msgid "Icon Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1644
+msgid "Icon Hover Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1649
+msgid "Icon Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1654
+msgid "Icon Hover Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1669
+msgid "Social Media Icons Position"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1678
+msgid "Title alignment for \"Below Thumbnail\" type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1712
+msgid "Thumbnail Overlay Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1722
+msgid "Transparent Overlay"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1732
+msgid "Css Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1742
+msgid "Divider"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1748
+msgid "Divider Height"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1753
+msgid "Divider Width (In Percentage)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1758
+#: ../be-page-builder/be-pb-options.php:1835
+msgid "Divider Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1766
+msgid "Special Title - Style 1"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1772
+#: ../be-page-builder/be-pb-options.php:2183
+#: ../be-page-builder/be-pb-options.php:2690
+#: ../be-page-builder/be-pb-options.php:2845
+#: ../be-page-builder/be-pb-options.php:3392
+#: ../be-page-builder/be-pb-options.php:3766
+#: ../be-page-builder/be-pb-options.php:4113
+msgid "Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1794
+msgid "Sub Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1800
+msgid "Apply \"Special-Subtitle\" font to Sub-Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1805
+msgid "Disable Separator"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1810
+msgid "Separator Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1819
+msgid "Icon in Separator"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1825
+msgid "Default Icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1840
+msgid "Separator Thickness"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1845
+msgid "Separator Width (In Pixels)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1850
+msgid "Place Divider above Sub Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1874
+msgid "Special Title - Style 2"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1896
+#: ../be-page-builder/be-pb-options.php:2357
+#: ../be-page-builder/be-pb-options.php:2961
+#: ../be-page-builder/be-pb-options.php:3282
+#: ../be-page-builder/be-pb-options.php:3382
+#: ../be-page-builder/be-pb-options.php:4236
+#: ../be-page-builder/be-pb-options.php:4340
+msgid "Border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1901
+msgid "Border Thickness (In Pixels)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1906
+msgid "Padding Value in"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1915
+msgid "Title Top and Bottom Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1920
+msgid "Title Left and Right Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:1925
+#: ../be-page-builder/be-pb-options.php:2130
+msgid "Title Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2016
+msgid "Special Title Style3"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2038
+msgid "Top Caption"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2043
+msgid "Bottom Caption"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2048
+msgid "Top Caption Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2053
+msgid "Bottom Caption Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2058
+msgid "Top Caption Font Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2063
+msgid "Bottom Caption Font Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2068
+msgid "Font for Top Caption"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2074
+msgid "Font for Bottom Caption"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2080
+msgid "Top Caption Separator Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2085
+msgid "Bottom Caption Separator Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2109
+msgid "Special Sub Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2115
+msgid "Sub Title Text"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2120
+msgid "Font Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2146
+msgid "Margin Bottom (In Pixels)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2165
+msgid "Title with Icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2171
+#: ../be-page-builder/be-pb-options.php:2303
+#: ../be-page-builder/be-pb-options.php:2596
+#: ../be-page-builder/be-pb-options.php:3295
+#: ../be-page-builder/be-pb-options.php:3338
+#: ../be-page-builder/be-pb-options.php:3789
+#: ../be-page-builder/be-pb-options.php:3975
+#: ../be-page-builder/be-pb-options.php:4031
+#: ../be-page-builder/be-pb-options.php:4249
+msgid "Icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2177
+#: ../be-page-builder/be-pb-options.php:3345
+msgid "Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2195
+msgid "Background Color of Icon if circled"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2205
+msgid "Icon Border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2210
+#: ../be-page-builder/be-pb-options.php:2617
+#: ../be-page-builder/be-pb-options.php:2826
+#: ../be-page-builder/be-pb-options.php:3312
+#: ../be-page-builder/be-pb-options.php:4266
+msgid "Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2230
+msgid "Video"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2235
+msgid "Choose a Video style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2241
+msgid "Enter the video url"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2260
+msgid "Notifications"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2266
+msgid "Background Color of Notification box"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2271
+msgid "Notification Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2292
+msgid "Buttons"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2298
+#: ../be-page-builder/be-pb-options.php:2433
+#: ../be-page-builder/be-pb-options.php:3468
+msgid "Button Text"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2309
+msgid "Icon Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2315
+msgid "Button Link"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2320
+msgid "Button Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2326
+msgid "Button Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2332
+#: ../be-page-builder/be-pb-options.php:2412
+#: ../be-page-builder/be-pb-options.php:2910
+#: ../be-page-builder/be-pb-options.php:3049
+#: ../be-page-builder/be-pb-options.php:3357
+#: ../be-page-builder/be-pb-options.php:3602
+#: ../be-page-builder/be-pb-options.php:3940
+#: ../be-page-builder/be-pb-options.php:4021
+msgid "Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2337
+#: ../be-page-builder/be-pb-options.php:3362
+msgid "Hover Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2342
+#: ../be-page-builder/be-pb-options.php:4108
+msgid "Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2347
+msgid "Hover Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2352
+#: ../be-page-builder/be-pb-options.php:3377
+#: ../be-page-builder/be-pb-options.php:3868
+msgid "Border Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2362
+#: ../be-page-builder/be-pb-options.php:3387
+msgid "Hover Border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2367
+msgid "Rounded Corners ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2372
+#: ../be-page-builder/be-pb-options.php:2484
+#: ../be-page-builder/be-pb-options.php:3408
+msgid "Select Lightbox image / video"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2378
+msgid "Hover BG Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2406
+msgid "Call to Action"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2435
+#: ../be-page-builder/be-pb-options.php:3470
+msgid "Click Here"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2438
+msgid "URL to be linked to the button"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2443
+msgid "Open Link in New Tab"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2449
+#: ../be-page-builder/be-pb-options.php:3488
+#: ../be-page-builder/be-pb-options.php:3890
+msgid "Button Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2454
+msgid "Button Hover Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2459
+#: ../be-page-builder/be-pb-options.php:3895
+msgid "Button Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2464
+msgid "Button Hover Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2469
+msgid "Button Border Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2474
+#: ../be-page-builder/be-pb-options.php:3498
+msgid "Button Border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2479
+msgid "Button Hover Border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2504
+msgid "Tabs"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2512
+msgid "Tab"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2518
+msgid "Tab Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2522
+msgid "Choose icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2527
+msgid "Tab Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2541
+msgid "Accordion Toggles"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2548
+msgid "Collapse content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2556
+msgid "Toggle"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2562
+msgid "Accordian Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2566
+msgid "Accordian Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2582
+msgid "Lists"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2590
+msgid "List Item"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2602
+msgid "Circled ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2607
+msgid "Background Color if circled"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2628
+msgid "Flex Slider"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2635
+msgid "Animation Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2641
+msgid "Auto Slide"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2647
+msgid "Slide Interval in milli secs if auto slide is enabled"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2654
+#: ../be-page-builder/be-pb-options.php:4159
+msgid "Slide"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2659
+#: ../be-page-builder/be-pb-options.php:4164
+msgid "Choose a slider image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2665
+msgid "Enter Youtube/ Vimeo url if you wish to have video in the slide"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2672
+msgid "Testimonials"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2679
+msgid "Testimonial Font Size (In Pixels)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2684
+msgid "Author Role - Font Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2696
+#: ../be-page-builder/be-pb-options.php:2779
+msgid "Slide Animation type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2702
+#: ../be-page-builder/be-pb-options.php:2785
+#: ../be-page-builder/be-pb-options.php:3616
+msgid "Enable Slide Show"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2708
+#: ../be-page-builder/be-pb-options.php:2791
+#: ../be-page-builder/be-pb-options.php:3622
+msgid "Slide Show Speed"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2727
+msgid "Testimonial"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2733
+msgid "Testimonial Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2738
+msgid "Testimonial Author Image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2744
+msgid "Quote Icon Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2749
+msgid "Testimonial Author"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2754
+msgid "Testimonial Author Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2759
+msgid "Testimonial Author Role"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2764
+msgid "Testimonial Author Role Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2772
+msgid "Content Slider"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2796
+msgid "Content Max Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2801
+msgid "Navigation Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2820
+msgid "Content Slide"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2834
+msgid "Portfolio Details"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2854
+msgid "Extra Spacing"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2859
+msgid "Height in px"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2864
+#: ../be-page-builder/be-pb-options.php:3035
+#: ../be-page-builder/be-pb-options.php:3174
+#: ../be-page-builder/be-pb-options.php:3210
+msgid "Hide If Mobile Devices"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2873
+msgid "Recent - Blog Posts Masonry Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2878
+msgid "Number of Items"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2884
+msgid "Hide Excerpt"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2905
+msgid "Section Settings"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2915
+#: ../be-page-builder/be-pb-options.php:3054
+#: ../be-page-builder/be-pb-options.php:3934
+msgid "Background Image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2921
+#: ../be-page-builder/be-pb-options.php:3060
+msgid "Background Repeat"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2927
+#: ../be-page-builder/be-pb-options.php:3066
+msgid "Background Attachment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2933
+#: ../be-page-builder/be-pb-options.php:3072
+msgid "Background Position"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2939
+#: ../be-page-builder/be-pb-options.php:3078
+msgid "Center Scale Image to occupy container"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2944
+msgid "Background Image Animation"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2956
+msgid "Border Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2966
+#: ../be-page-builder/be-pb-options.php:3083
+msgid "Top Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2971
+#: ../be-page-builder/be-pb-options.php:3093
+msgid "Bottom Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2976
+#: ../be-page-builder/be-pb-options.php:3122
+#: ../be-page-builder/be-pb-options.php:4170
+msgid "Enable Background Video"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2981
+#: ../be-page-builder/be-pb-options.php:3127
+#: ../be-page-builder/be-pb-options.php:4175
+msgid ".MP4 Video File"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2986
+#: ../be-page-builder/be-pb-options.php:3132
+#: ../be-page-builder/be-pb-options.php:4180
+msgid ".OGG Video File"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2991
+#: ../be-page-builder/be-pb-options.php:3137
+#: ../be-page-builder/be-pb-options.php:4185
+msgid ".Webm Video File"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:2996
+#: ../be-page-builder/be-pb-options.php:3142
+msgid "Enable Background Overlay"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3001
+#: ../be-page-builder/be-pb-options.php:3147
+msgid "Background Overlay Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3006
+#: ../be-page-builder/be-pb-options.php:3152
+msgid "Background Overlay Opacity"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3011
+msgid "Section Id"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3016
+msgid "Section Title"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3021
+msgid "Full Screen Section"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3026
+msgid "Full Screen Section Transparent Header Scheme"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3043
+msgid "Column Settings"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3088
+msgid "Right Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3098
+msgid "Left Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3103
+msgid "Padding Values To"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3112
+msgid "Column Padding"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3117
+msgid ""
+"Bottom Margin <br/> <span style = \"color: red; font-size: 10px\">Enter only "
+"numbers</span>"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3157
+msgid "Vertical Alignment"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3190
+msgid "Row Settings"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3195
+msgid "No Wrap ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3200
+msgid "Zero Bottom Margin ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3205
+msgid "No Space Between Columns ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3220
+msgid "Google Map"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3225
+msgid "Address"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3230
+msgid "Latitude"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3235
+msgid "Longitude"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3240
+msgid "Height in px (only numbers)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3245
+msgid "Zoom Value"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3270
+msgid "Icon/Image Grid"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3277
+msgid "Columns"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3290
+msgid "Grid Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3301
+#: ../be-page-builder/be-pb-options.php:3981
+#: ../be-page-builder/be-pb-options.php:4037
+#: ../be-page-builder/be-pb-options.php:4260
+msgid "Icon Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3332
+msgid "Icons"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3372
+msgid "Hover Icon Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3398
+msgid "URL to be linked to the Icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3403
+msgid "Open as new tab"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3428
+msgid "Pricing Table"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3436
+msgid "Style Options"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3447
+msgid "Title Heading Tag"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3453
+#: ../be-page-builder/be-pb-options.php:4300
+msgid "Price"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3458
+msgid "Duration"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3463
+msgid "Currency"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3465
+msgid "$"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3473
+msgid "Url to be linked to the button"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3478
+msgid "Button Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3483
+msgid "Button Hover Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3493
+msgid "Button Background Hover Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3503
+msgid "Button Border Hover Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3508
+msgid "Highlight Column"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3528
+msgid "Pricing Feature"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3534
+msgid "Feature"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3538
+msgid "Highlight this section ?"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3543
+msgid "Highlight Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3548
+msgid "Highlight Text Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3557
+msgid "Skills"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3564
+msgid "Direction"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3570
+msgid "Skill Height if Vertical Direction"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3578
+msgid "Skill Option"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3583
+msgid "Skill Name"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3592
+msgid "Skill Score in %"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3597
+msgid "Fill Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3609
+msgid "Clients"
+msgstr "﻿Kunden"
+
+#: ../be-page-builder/be-pb-options.php:3630
+#: ../be-page-builder/functions/shortcodes.php:1974
+msgid "Client"
+msgstr "﻿Kunde"
+
+#: ../be-page-builder/be-pb-options.php:3635
+msgid "Choose a Client image"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3641
+msgid "URL to be linked to Client Website"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3645
+msgid "Open Link in New tab"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3666
+msgid "Services"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3673
+msgid "Timeline Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3681
+msgid "Service"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3686
+msgid "Service Icon"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3692
+msgid "Service Icon Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3698
+msgid "Service Icon Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3703
+msgid "Service Icon Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3708
+msgid "Service Icon Hover Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3713
+msgid "Service Icon Hover Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3718
+msgid "Servies Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3723
+msgid "Services content BG color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3731
+msgid "Animated Numbers"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3736
+msgid "Number"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3741
+#: ../be-page-builder/be-pb-options.php:3805
+msgid "Caption"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3746
+msgid "Number Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3751
+msgid "Number Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3756
+msgid "Caption Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3761
+#: ../be-page-builder/be-pb-options.php:3815
+msgid "Caption Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3779
+msgid "Animated Chart"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3784
+msgid "Percentage"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3795
+msgid "Percentage / Icon - Font Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3800
+msgid "Percentage / Icon - Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3810
+msgid "Caption Font Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3820
+msgid "Percentage Bar Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3825
+msgid "Percentage Track Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3830
+msgid "Percentage Scale Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3835
+msgid "Chart Size"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3840
+msgid "Bar Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3847
+msgid "Contact Form"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3853
+msgid "Input Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3858
+msgid "Input Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3863
+msgid "Input border Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3873
+msgid "Input Height"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3878
+msgid "Input Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3884
+msgid "Button Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3903
+msgid "Fixed Height Animated Module"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3910
+msgid "Height"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3923
+msgid "Animate Module Element"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3929
+msgid "URL to be linked"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3945
+#: ../be-page-builder/be-pb-options.php:4026
+msgid "Background Color - Hover State"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3950
+msgid "Enable Overlay"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3955
+msgid "Overlay Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3960
+msgid "Overlay Background Opacity"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3965
+msgid "Hover Overlay Background Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3970
+msgid "Hover Overlay Background Opacity"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3992
+#: ../be-page-builder/be-pb-options.php:4074
+msgid "Content on Hover"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:3998
+msgid "Animate Direction"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4007
+msgid "Variable Height Animated Module"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4015
+msgid "Animated Module Element"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4048
+msgid "Icon Color - Hover State"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4069
+msgid "Title Color - Hover State"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4083
+msgid "Tweets"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4088
+msgid "Tweet Account Name"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4093
+msgid "Tweet Count"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4098
+msgid "Tweet Font Size (In Pixels)"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4103
+msgid "Tweet Bird Icon Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4133
+msgid "Be Slider"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4140
+msgid "Slider Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4146
+msgid "Slider Height"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4151
+msgid "Slider Height in mobile device"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4190
+msgid "Content Width"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4195
+msgid "Left - Position %"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4200
+msgid "Right - Position %"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4205
+msgid "Top - Position %"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4210
+msgid "Bottom - Position %"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4215
+msgid "Slide Content"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4220
+msgid "Content Animation Type"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4229
+msgid "Process Style"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4244
+msgid "Process"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4285
+msgid "Menu Card"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4295
+msgid "Ingredients"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4310
+msgid "Ingredients Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4315
+msgid "Price Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4320
+msgid "Highlight this item"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4325
+msgid "highlight Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4330
+msgid "Important"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4335
+msgid "Star Color"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4358
+msgid "News Letter"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4363
+msgid "Api key"
+msgstr ""
+
+#: ../be-page-builder/be-pb-options.php:4368
+msgid "Id"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:1258
+msgid "All"
+msgstr "Alle"
+
+#: ../be-page-builder/functions/shortcodes.php:1542
+msgid "Gallery Error : "
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:1542
+msgid "Unknown Error Please try again later"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:1638
+msgid ""
+"Apologies, but no results were found. Perhaps searching will help find a "
+"related post."
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:1688
+msgid "Google Map API Error Please Try Again Later"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:1978
+msgid "Project Date"
+msgstr "﻿Projektdatum"
+
+#: ../be-page-builder/functions/shortcodes.php:1983
+msgid "Category"
+msgstr "﻿Kategorie"
+
+#: ../be-page-builder/functions/shortcodes.php:1988
+msgid "Share This"
+msgstr "Teilen"
+
+#: ../be-page-builder/functions/shortcodes.php:1996
+msgid "View Project"
+msgstr "﻿Projekt anzeigen"
+
+#: ../be-page-builder/functions/shortcodes.php:2596
+msgid "Name"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:2599
+#: ../be-page-builder/functions/shortcodes.php:3349
+msgid "Email"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:2602
+msgid "Subject"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:2605
+msgid "Message"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:2608
+msgid "Submit"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:3236
+msgid "Posted By :"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:3237
+msgid " comments"
+msgstr ""
+
+#: ../be-page-builder/functions/shortcodes.php:3238
+msgid "Under :"
+msgstr ""
