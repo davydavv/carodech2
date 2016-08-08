@@ -2,17 +2,13 @@
 # This file is distributed under the same license as the Master Slider (Pro version) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-05-21 21:28+0330\n"
+"PO-Revision-Date: 2014-12-20 09:20:53+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.5.7\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/1.0-alpha-1000\n"
 "Project-Id-Version: Master Slider (Pro version)\n"
-"POT-Creation-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
 
 #: admin/views/slider-panel/index.php:1810
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:728
@@ -244,9 +240,7 @@ msgstr ""
 
 #: admin/includes/msp-hooks.php:47
 #: build/masterslider/admin/includes/msp-hooks.php:47
-msgid ""
-"Warning: the [rich editing] capability is disabled for this user which might "
-"lead to some potential issues. Please enable it."
+msgid "Warning: the [rich editing] capability is disabled for this user which might lead to some potential issues. Please enable it."
 msgstr ""
 
 #: admin/includes/msp-sample-sliders.php:127
@@ -418,9 +412,7 @@ msgstr ""
 #: build/masterslider/admin/views/slider-panel/index.php:1536
 #: build/masterslider/admin/views/slider-panel/index.php:1544
 #: build/masterslider/admin/views/slider-panel/index.php:1552
-msgid ""
-"You can add custom style in below box, please make sure to enter a valid "
-"CSS. Example: <em>text-transform:uppercase;"
+msgid "You can add custom style in below box, please make sure to enter a valid CSS. Example: <em>text-transform:uppercase;"
 msgstr ""
 
 #: admin/views/slider-panel/index.php:1679
@@ -503,15 +495,12 @@ msgstr ""
 
 #: admin/includes/classes/class-msp-admin-assets.php:454
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:454
-msgid ""
-"By updating a button it will be changed in all of your sliders. Are you sure "
-"you want to update this button?"
+msgid "By updating a button it will be changed in all of your sliders. Are you sure you want to update this button?"
 msgstr ""
 
 #: admin/includes/classes/class-msp-admin-assets.php:456
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:456
-msgid ""
-"Select background image for new slide. (Multiple selection is available)"
+msgid "Select background image for new slide. (Multiple selection is available)"
 msgstr ""
 
 #: admin/includes/classes/class-msp-admin-assets.php:457
@@ -595,9 +584,7 @@ msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:93
 #: build/masterslider/admin/views/setting/class-msp-settings.php:93
-msgid ""
-"To enable automatic update for Master Slider, a valid purchase code is "
-"required."
+msgid "To enable automatic update for Master Slider, a valid purchase code is required."
 msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:108
@@ -612,9 +599,7 @@ msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:161
 #: build/masterslider/admin/views/setting/class-msp-settings.php:161
-msgid ""
-"To find your API key, navigate to your envato account, select settings from "
-"the account dropdown, then navigate to the API Keys tab."
+msgid "To find your API key, navigate to your envato account, select settings from the account dropdown, then navigate to the API Keys tab."
 msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:162
@@ -634,11 +619,7 @@ msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:191
 #: build/masterslider/admin/views/setting/class-msp-settings.php:191
-msgid ""
-"By default, Master Slider will load corresponding JavaScript files on "
-"demand. but if you need to load assets on all pages, check this option. "
-"( For example, if you plan to load Master Slider via Ajax, you need to check "
-"this option ) "
+msgid "By default, Master Slider will load corresponding JavaScript files on demand. but if you need to load assets on all pages, check this option. ( For example, if you plan to load Master Slider via Ajax, you need to check this option ) "
 msgstr ""
 
 #: admin/views/slider-panel/index.php:20
@@ -925,9 +906,7 @@ msgid "Disable swipe navigation when mouse moves over this layer :"
 msgstr ""
 
 #: masterslider.php:34 build/masterslider/masterslider.php:34
-msgid ""
-"You are using two instances of MasterSlider plugin at same time, please "
-"deactive one of them."
+msgid "You are using two instances of MasterSlider plugin at same time, please deactive one of them."
 msgstr ""
 
 #: admin/includes/msp-hooks.php:35
@@ -1202,9 +1181,7 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:1404
 #: bower_components/averta-masterslider-wp-panel/src/index.php:1468
 #: build/masterslider/admin/views/slider-panel/index.php:1404
-msgid ""
-"You can add more style settings in below box, please make sure to enter a "
-"valid CSS. Example: <em>text-transform:uppercase;"
+msgid "You can add more style settings in below box, please make sure to enter a valid CSS. Example: <em>text-transform:uppercase;"
 msgstr ""
 
 #: admin/views/slider-panel/index.php:1419
@@ -1888,10 +1865,7 @@ msgstr "Ukloni"
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:1909
 #: bower_components/averta-masterslider-wp-panel/src/index.php:1976
 #: build/masterslider/admin/views/slider-panel/index.php:1909
-msgid ""
-"Here you can choose template for the slider. Please note that selecting "
-"template may overwrite some slider options. If you want to have full control "
-"on options, select \"Custom Template\"."
+msgid "Here you can choose template for the slider. Please note that selecting template may overwrite some slider options. If you want to have full control on options, select \"Custom Template\"."
 msgstr ""
 
 #: admin/views/slider-panel/index.php:1918
@@ -2089,9 +2063,7 @@ msgstr "Naslov"
 #: build/masterslider/includes/lib/vcomposer.php:25
 #: includes/lib/vcomposer.php:25
 msgid "What text use as slider title. Leave blank if no title is needed"
-msgstr ""
-"Tekst koji treba koristiti kao naziv slajdera. Ostavite prazno ako naslov "
-"nije potreban."
+msgstr "Tekst koji treba koristiti kao naziv slajdera. Ostavite prazno ako naslov nije potreban."
 
 #: build/masterslider/includes/lib/vcomposer.php:32
 #: includes/lib/vcomposer.php:32
@@ -2105,13 +2077,8 @@ msgstr "Dodatni naziv CSS klase"
 
 #: build/masterslider/includes/lib/vcomposer.php:39
 #: includes/lib/vcomposer.php:39
-msgid ""
-"If you wish to style particular element differently, then use this field to "
-"add a class name and then refer to it in your css file."
-msgstr ""
-"Ako želite da drugačije stilizujete određeni element, koristite ovo polje da "
-"biste dodali naziv klase i da biste se kasnije pozvali na njega u svojoj css "
-"datoteci. "
+msgid "If you wish to style particular element differently, then use this field to add a class name and then refer to it in your css file."
+msgstr "Ako želite da drugačije stilizujete određeni element, koristite ovo polje da biste dodali naziv klase i da biste se kasnije pozvali na njega u svojoj css datoteci. "
 
 #: admin/views/slider-panel/index.php:1058
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:1058
@@ -2293,9 +2260,7 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:1128
 #: bower_components/averta-masterslider-wp-panel/src/index.php:1192
 #: build/masterslider/admin/views/slider-panel/index.php:1128
-msgid ""
-"Insert your hotspot content here, for a better SEO result you can use "
-"heading tags for important contents."
+msgid "Insert your hotspot content here, for a better SEO result you can use heading tags for important contents."
 msgstr ""
 
 #: admin/views/slider-panel/index.php:1227
@@ -2475,8 +2440,7 @@ msgstr ""
 msgid "Border"
 msgstr ""
 
-#: admin/views/slider-panel/index.php:39
-#: admin/views/slider-panel/index.php:412
+#: admin/views/slider-panel/index.php:39 admin/views/slider-panel/index.php:412
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:39
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:39
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:412
@@ -2487,8 +2451,7 @@ msgstr ""
 msgid "Facebook Settings"
 msgstr ""
 
-#: admin/views/slider-panel/index.php:40
-#: admin/views/slider-panel/index.php:472
+#: admin/views/slider-panel/index.php:40 admin/views/slider-panel/index.php:472
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:40
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:40
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:472
@@ -2499,8 +2462,7 @@ msgstr ""
 msgid "Posts Settings"
 msgstr ""
 
-#: admin/views/slider-panel/index.php:41
-#: admin/views/slider-panel/index.php:581
+#: admin/views/slider-panel/index.php:41 admin/views/slider-panel/index.php:581
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:41
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:41
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:581
@@ -2512,8 +2474,7 @@ msgid "Product Slider Settings"
 msgstr ""
 
 #: admin/includes/classes/class-msp-list-table.php:36
-#: admin/views/slider-panel/index.php:42
-#: admin/views/slider-panel/index.php:689
+#: admin/views/slider-panel/index.php:42 admin/views/slider-panel/index.php:689
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:42
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:347
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:42
@@ -2641,9 +2602,7 @@ msgstr "Visina slajdera:"
 #: bower_components/averta-masterslider-wp-panel/src/index.php:106
 #: build/masterslider/admin/views/slider-panel/index.php:96
 msgid "Automatically crop and resize slider images based on above size."
-msgstr ""
-"Automatski reže slike slajdera i menja im veličinu na osnovu navedene "
-"veličine."
+msgstr "Automatski reže slike slajdera i menja im veličinu na osnovu navedene veličine."
 
 #: admin/views/slider-panel/index.php:99
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:182
@@ -2731,9 +2690,7 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:145
 #: bower_components/averta-masterslider-wp-panel/src/index.php:168
 #: build/masterslider/admin/views/slider-panel/index.php:145
-msgid ""
-"Select slider template here, click on \"Choose template\" for list of all "
-"templates."
+msgid "Select slider template here, click on \"Choose template\" for list of all templates."
 msgstr ""
 
 #: admin/views/slider-panel/index.php:147
@@ -4012,9 +3969,7 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:703
 #: bower_components/averta-masterslider-wp-panel/src/index.php:743
 #: build/masterslider/admin/views/slider-panel/index.php:703
-msgid ""
-"Slide template will be used by the slider to create dynamically slides from "
-"posts, Facebook or Flickr photos."
+msgid "Slide template will be used by the slider to create dynamically slides from posts, Facebook or Flickr photos."
 msgstr ""
 
 #: admin/views/slider-panel/index.php:718
@@ -4256,14 +4211,8 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:856
 #: bower_components/averta-masterslider-wp-panel/src/index.php:919
 #: build/masterslider/admin/views/slider-panel/index.php:856
-msgid ""
-"This info will show beside of slider when slider reaches the slide or it can "
-"represent as tab in a tabs control. It is relative to selected slider "
-"template."
-msgstr ""
-"Ovaj podatak biće prikazan pored slajdera kada slajder dođe do slajda ili "
-"kad može biti predstavljen kao tabulator u kontroli tabulatora. Povezan je "
-"sa odabranim šablonom slajdera."
+msgid "This info will show beside of slider when slider reaches the slide or it can represent as tab in a tabs control. It is relative to selected slider template."
+msgstr "Ovaj podatak biće prikazan pored slajdera kada slajder dođe do slajda ili kad može biti predstavljen kao tabulator u kontroli tabulatora. Povezan je sa odabranim šablonom slajdera."
 
 #: admin/views/slider-panel/index.php:861
 #: admin/views/slider-panel/index.php:951
@@ -4444,9 +4393,7 @@ msgstr ""
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:947
 #: bower_components/averta-masterslider-wp-panel/src/index.php:1011
 #: build/masterslider/admin/views/slider-panel/index.php:947
-msgid ""
-"Insert your text content here, for a better SEO result you can use heading "
-"tags for important contents."
+msgid "Insert your text content here, for a better SEO result you can use heading tags for important contents."
 msgstr ""
 
 #: admin/views/slider-panel/index.php:1004
@@ -4484,12 +4431,8 @@ msgstr "Period keš memorije"
 
 #: admin/views/setting/class-msp-settings.php:139
 #: build/masterslider/admin/views/setting/class-msp-settings.php:139
-msgid ""
-"The cache refresh time in hours. Cache is also cleared when you click on "
-"\"Save Changes\" in slider panel."
-msgstr ""
-"Keš se osvežava na svakih nekoliko sati. Keš se briše klad na panelu "
-"slajdera kliknete na \"Sačuvaj izmene\"."
+msgid "The cache refresh time in hours. Cache is also cleared when you click on \"Save Changes\" in slider panel."
+msgstr "Keš se osvežava na svakih nekoliko sati. Keš se briše klad na panelu slajdera kliknete na \"Sačuvaj izmene\"."
 
 #: admin/views/setting/class-msp-settings.php:152
 #: build/masterslider/admin/views/setting/class-msp-settings.php:152
@@ -4523,9 +4466,7 @@ msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:182
 #: build/masterslider/admin/views/setting/class-msp-settings.php:182
-msgid ""
-"Replace woocommerce default product slider in product single page with "
-"Masterslider"
+msgid "Replace woocommerce default product slider in product single page with Masterslider"
 msgstr ""
 
 #: admin/views/slider-dashboard/list-sliders.php:14
@@ -4577,12 +4518,8 @@ msgstr ""
 
 #: admin/views/slider-dashboard/list-sliders.php:199
 #: build/masterslider/admin/views/slider-dashboard/list-sliders.php:199
-msgid ""
-"Downloads an export file that contains your selected sliders to import on "
-"your new site."
-msgstr ""
-"Preuzima izvoznu datoteku koja sadrži vaše odabrane slajdere za uvoz na "
-"vašem novom site-u."
+msgid "Downloads an export file that contains your selected sliders to import on your new site."
+msgstr "Preuzima izvoznu datoteku koja sadrži vaše odabrane slajdere za uvoz na vašem novom site-u."
 
 #: admin/views/slider-dashboard/preview.php:28
 #: build/masterslider/admin/views/slider-dashboard/preview.php:28
@@ -4597,8 +4534,7 @@ msgstr "Nije pronađen"
 msgid "Slider Settings"
 msgstr "Podešavanja slajdera"
 
-#: admin/views/slider-panel/index.php:38
-#: admin/views/slider-panel/index.php:344
+#: admin/views/slider-panel/index.php:38 admin/views/slider-panel/index.php:344
 #: bower_components/averta-masterslider-wp-panel/dist/lite/slider-panel/index.php:38
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:38
 #: bower_components/averta-masterslider-wp-panel/dist/pro/slider-panel/index.php:344
@@ -4960,9 +4896,7 @@ msgstr ""
 
 #: admin/includes/classes/class-axiom-plugin-updater.php:113
 #: build/masterslider/admin/includes/classes/class-axiom-plugin-updater.php:113
-msgid ""
-"Envato username, API key and your item purchase code are required for "
-"downloading updates from Envato marketplace."
+msgid "Envato username, API key and your item purchase code are required for downloading updates from Envato marketplace."
 msgstr ""
 
 #: admin/includes/classes/class-axiom-plugin-updater.php:129
@@ -4992,25 +4926,17 @@ msgstr ""
 
 #: admin/includes/classes/class-axiom-plugin-updater.php:304
 #: build/masterslider/admin/includes/classes/class-axiom-plugin-updater.php:304
-msgid ""
-"There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox"
-"\" title=\"%3$s\">View version %4$s details</a>."
+msgid "There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a>."
 msgstr ""
 
 #: admin/includes/classes/class-axiom-plugin-updater.php:306
 #: build/masterslider/admin/includes/classes/class-axiom-plugin-updater.php:306
-msgid ""
-"There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox"
-"\" title=\"%3$s\">View version %4$s details</a>. <em>Automatic update is not "
-"available for this plugin. Visit %5$ssetting page%6$s to enable that.</em>"
+msgid "There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a>. <em>Automatic update is not available for this plugin. Visit %5$ssetting page%6$s to enable that.</em>"
 msgstr ""
 
 #: admin/includes/classes/class-axiom-plugin-updater.php:309
 #: build/masterslider/admin/includes/classes/class-axiom-plugin-updater.php:309
-msgid ""
-"There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox"
-"\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\">update "
-"now</a>."
+msgid "There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\">update now</a>."
 msgstr ""
 
 #: admin/includes/classes/class-axiom-screen-help.php:71
@@ -5285,12 +5211,8 @@ msgstr "Stlovi skupa"
 
 #: admin/includes/classes/class-msp-admin-assets.php:381
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:381
-msgid ""
-"By deleting preset style it also will be removed from other sliders in your "
-"website. Are you sure you want to delete \"%s\"?"
-msgstr ""
-"Brisanjem stila skupa, uklonićete stil i sa drugih slajdera na svom web site-"
-"u. Jeste li sigurni da želite da obrišete \"%s\"?"
+msgid "By deleting preset style it also will be removed from other sliders in your website. Are you sure you want to delete \"%s\"?"
+msgstr "Brisanjem stila skupa, uklonićete stil i sa drugih slajdera na svom web site-u. Jeste li sigurni da želite da obrišete \"%s\"?"
 
 #: admin/includes/classes/class-msp-admin-assets.php:385
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:385
@@ -5299,12 +5221,8 @@ msgstr "Master Slider Šabloni "
 
 #: admin/includes/classes/class-msp-admin-assets.php:386
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:386
-msgid ""
-"Changing template will reset all slider controls and will change some slider "
-"settings. Continue?"
-msgstr ""
-"Promena šablona će vratiti na početne vrednosti sve kontrole slajdera i "
-"promeniće neka podešavanja slajdera. Želite li da nastavite?"
+msgid "Changing template will reset all slider controls and will change some slider settings. Continue?"
+msgstr "Promena šablona će vratiti na početne vrednosti sve kontrole slajdera i promeniće neka podešavanja slajdera. Želite li da nastavite?"
 
 #: admin/includes/classes/class-msp-admin-assets.php:388
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:388
@@ -5536,12 +5454,8 @@ msgstr "Link za fotografiju"
 
 #: admin/includes/classes/class-msp-admin-assets.php:470
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:470
-msgid ""
-"The changes you made will be lost if you navigate away from this page. To "
-"exit preview mode click on close (X) button."
-msgstr ""
-"Sve vaše izmene će nestati ako napustite ovu stranicu. Da biste izašli iz "
-"režima pregleda, kliknite na taster (X) zatvori."
+msgid "The changes you made will be lost if you navigate away from this page. To exit preview mode click on close (X) button."
+msgstr "Sve vaše izmene će nestati ako napustite ovu stranicu. Da biste izašli iz režima pregleda, kliknite na taster (X) zatvori."
 
 #: admin/includes/classes/class-msp-admin-assets.php:471
 #: build/masterslider/admin/includes/classes/class-msp-admin-assets.php:471
@@ -5591,12 +5505,8 @@ msgstr "Uzvoz Master Slider-a"
 #: admin/views/slider-dashboard/list-sliders.php:126
 #: build/masterslider/admin/includes/classes/class-msp-importer.php:161
 #: build/masterslider/admin/views/slider-dashboard/list-sliders.php:126
-msgid ""
-"To import sliders select Masterslider Export file that you downloaded before "
-"then click import button."
-msgstr ""
-"Da biste uvezli slajdere, odaberite Master Slider datoteku za izvoz koju ste "
-"ranije preuzeli, a zatim kliknite na taster ‘uvezi’."
+msgid "To import sliders select Masterslider Export file that you downloaded before then click import button."
+msgstr "Da biste uvezli slajdere, odaberite Master Slider datoteku za izvoz koju ste ranije preuzeli, a zatim kliknite na taster ‘uvezi’."
 
 #: admin/includes/classes/class-msp-importer.php:174
 #: build/masterslider/admin/includes/classes/class-msp-importer.php:174
@@ -5687,12 +5597,8 @@ msgstr "Prazan naziv datoteke"
 
 #: admin/includes/classes/class-msp-importer.php:815
 #: build/masterslider/admin/includes/classes/class-msp-importer.php:815
-msgid ""
-"Unable to create directory %s. Is its parent directory writable by the "
-"server?"
-msgstr ""
-"Nije moguće kreirati direktorijum %s. Da li server može da piše u njegovom "
-"nadređenom direktorijumu?"
+msgid "Unable to create directory %s. Is its parent directory writable by the server?"
+msgstr "Nije moguće kreirati direktorijum %s. Da li server može da piše u njegovom nadređenom direktorijumu?"
 
 #: admin/includes/classes/class-msp-importer.php:821
 #: build/masterslider/admin/includes/classes/class-msp-importer.php:821
@@ -5746,12 +5652,8 @@ msgstr "Da li vam treba pomoć za Master Slider?"
 
 #: admin/includes/classes/class-msp-pointers.php:170
 #: build/masterslider/admin/includes/classes/class-msp-pointers.php:170
-msgid ""
-"Please open contextual help panel (click the %s button at top right side of "
-"this page)"
-msgstr ""
-"Molim vas, otvorite panel za kontekstualnu pomoć (kliknite na %s taster u "
-"gornjem desnom uglu ove stranice)"
+msgid "Please open contextual help panel (click the %s button at top right side of this page)"
+msgstr "Molim vas, otvorite panel za kontekstualnu pomoć (kliknite na %s taster u gornjem desnom uglu ove stranice)"
 
 #: admin/includes/classes/class-msp-pointers.php:170
 #: build/masterslider/admin/includes/classes/class-msp-pointers.php:170
@@ -5765,9 +5667,7 @@ msgstr ""
 
 #: admin/includes/classes/class-msp-pointers.php:187
 #: build/masterslider/admin/includes/classes/class-msp-pointers.php:187
-msgid ""
-"You can create your slider from scratch or use one of 33 ready to use sample "
-"sliders to start"
+msgid "You can create your slider from scratch or use one of 33 ready to use sample sliders to start"
 msgstr ""
 
 #: admin/includes/classes/class-msp-screen-help.php:33
@@ -5833,8 +5733,7 @@ msgstr "Opšta podešavanja"
 
 #: admin/views/setting/class-msp-settings.php:98
 #: build/masterslider/admin/views/setting/class-msp-settings.php:98
-msgid ""
-"You need to install and activate WooCommerce plugin to use following options."
+msgid "You need to install and activate WooCommerce plugin to use following options."
 msgstr ""
 
 #: admin/views/setting/class-msp-settings.php:102
@@ -5849,9 +5748,5 @@ msgstr "Sakrij info tabelu"
 
 #: admin/views/setting/class-msp-settings.php:127
 #: build/masterslider/admin/views/setting/class-msp-settings.php:127
-msgid ""
-"If you want to hide \"Latest video tutorials\" table on master slider admin "
-"panel check this field."
-msgstr ""
-"Ako želite da sakrijete tabelu \"Najnoviji video-tutorijali\" master slider "
-"panelu administratora, štiklirajte ovo polje."
+msgid "If you want to hide \"Latest video tutorials\" table on master slider admin panel check this field."
+msgstr "Ako želite da sakrijete tabelu \"Najnoviji video-tutorijali\" master slider panelu administratora, štiklirajte ovo polje."

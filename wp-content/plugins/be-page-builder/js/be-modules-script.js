@@ -3,9 +3,7 @@
     /*jslint browser: true, unparam: true, regexp: true, node: true*/
     /*global $, jQuery, alert, google, no_ajax_pages*/
     var $page_loader = jQuery('.page-loader'), ajax_url = jQuery('#ajax_url').val(), transition, $exclude_links;
-
-
-
+ 
     /************************************
         COUNTDOWN
     ************************************/
@@ -56,100 +54,10 @@
             });
         }
     }
+
     /************************************
-        PORTFOLIO LAYOUTS
+       TEAM
     ************************************/
-    function be_portfolio_layout() {
-        if(jQuery('.portfolio-container').length > 0) {
-            jQuery('.portfolio-container').each(function () {
-                var $this = jQuery(this), $width, $col, $columnWidth, $gutter_width = Number($this.closest('.portfolio').attr('data-gutter-width'));
-                if (!$this.closest('.portfolio').hasClass('full-screen-gutter')) {
-                    $gutter_width = 0;
-                }
-                if ($this.closest('.portfolio').hasClass('full-screen')) {
-                    $width = Number($this.closest('.portfolio').width());
-                    if ($this.closest('.portfolio').hasClass('five-col')) {
-                        $col = 5;
-                    } else if ($this.closest('.portfolio').hasClass('four-col')) {
-                        $col = 4;
-                    } else if ($this.closest('.portfolio').hasClass('two-col')) {
-                        $col = 2;
-                    } else {
-                        $col = 3;
-                    }
-                    if ((jQuery(window).width() + jQuery.getScrollbarWidth()) < 1280) {
-                        if ($this.closest('.portfolio').hasClass('two-col')) {
-                            $col = 2;
-                        } else {
-                            $col = 3;
-                        }
-                    }
-                    if ((jQuery(window).width() + jQuery.getScrollbarWidth()) < 768) {
-                        $col = 2;
-                    }
-                    if ((jQuery(window).width() + jQuery.getScrollbarWidth()) < 480) {
-                        $col = 1;
-                    }
-                    while (($width % $col) !== 0) {
-                        $width = $width + 1;
-                    }
-                    $this.width($width);
-                    $columnWidth = $this.width() / $col;
-                } else {
-                    if ($this.closest('.portfolio').hasClass('four-col')) {
-                        $columnWidth = (($this.width() - 120) / 4);
-                    } else if ($this.closest('.portfolio').hasClass('three-col')) {
-                        $columnWidth = (($this.width() - 80) / 3);
-                    } else {
-                        $columnWidth = (($this.width() - 40) / 2);
-                    }
-                    if ($this.closest('.portfolio').width() <= 740) {
-                        $columnWidth = (($this.width() - 40) / 2);
-                    }
-                    if ($this.closest('.portfolio').width() <= 440) {
-                        $columnWidth = (($this.width() - 40) / 2);
-                    }
-                }
-                $this.imagesLoaded(function () {
-                    if ($this.closest('.portfolio').hasClass('full-screen-gutter') && Number($this.closest('.portfolio').attr('data-masonry')) !== 1  ) {
-                       
-                        $this.find('.element.wide-width-height, .element.wide-height')
-                        .find('.element-inner .flip-wrap .flip-img-wrap')
-                        .height( ($this.find('.element.no-wide-width-height:visible').find('.flip-wrap').height() * 2) + $gutter_width );
-
-                        $this.find('.element.wide-width').find('.element-inner .flip-wrap .flip-img-wrap').height( $this.find('.element.no-wide-width-height:visible').find('.flip-wrap').height() );
-
-                        $this.find('.element.wide-width-height, .element.wide-height, .element.wide-width').find('.element-inner .flip-wrap .flip-img-wrap img').resizeToParent();
-                    }
-                    $this.isotope({
-                        itemSelector : '.element',
-                        masonry: {
-                            columnWidth : $columnWidth
-                        }
-                    }).addClass('masonry-activated');
-                    if ($this.hasClass('portfolio-shortcode')) {
-                        var delay = 1;
-                        $this.find('.element').each(function () {
-                            jQuery(this).find('img').one("load", function () {
-                                jQuery(this).parent().delay(delay).addClass('img-loaded', 300);
-                                delay += 200;
-                            }).each(function () {
-                                if (this.complete) {
-                                    jQuery(this).load();
-                                    Waypoint.refreshAll();
-                                }
-                            });
-                        });
-                    }
-                });
-                if($this.hasClass('portfolio-item-parallax')) {
-                    $this.parentsUntil('.be-section').css('overflow', 'visible');
-                    $this.closest('.be-section').css('overflow', 'visible');
-                    $this.css('overflow', 'visible').find('.element').css('overflow', 'visible');
-                }
-            });
-        }
-    }
     function arrange_team() {
         jQuery('.grid-wrap:not(.changed)').each(function () {
             var $this = jQuery(this), $col = Number($this.attr('data-col')), i = 0;
@@ -182,17 +90,50 @@
             }
             $this.css('opacity', 1);
         });
-        jQuery('.animate-icon-module-style2').each(function () {
+        jQuery('.animate-icon-module-style2-wrap').each(function(){
+
             var $this = jQuery(this), $normal_content_height = 0, $hover_content_height = 0, $module_height = 0;
-            // $this.width((100 / $this.siblings().length) + '%');
-            $normal_content_height = Number($this.find('.animate-icon-module-style2-normal-content').height());
-            $hover_content_height = Number($this.find('.animate-icon-module-style2-hover-content').height());
-            $module_height = $normal_content_height + $hover_content_height;
-            //$this.height($module_height * 2);
+            var $max_module_height = 0;
+            var i=1;
+
+            // Find the Height of the Tallest Sibling
+            $this.find('.animate-icon-module-style2').each(function () {
+                var $this_module = jQuery(this);
+
+                $normal_content_height = Number($this_module.find('.animate-icon-module-style2-normal-content').innerHeight());
+                $hover_content_height = Number($this_module.find('.animate-icon-module-style2-hover-content').innerHeight());
+                $module_height = $normal_content_height + $hover_content_height;
+                
+                if(jQuery(window).width() <= 960){
+                    $this_module.closest('.animate-icon-module-style2-wrap').css('height', 'auto');
+                    $this_module.find('.animate-icon-module-style2-inner-wrap').css('height', $module_height + 115 + 'px');
+                }else{
+                    if(i==1){
+                        $max_module_height = $module_height; 
+                    }else{
+                        if($module_height >= $max_module_height){
+                            $max_module_height = $module_height;    
+                        }
+                    }
+                    i=i+1;
+                }
+            });
+            // Set the Padding and Height to individual modules
+            // jQuery('.animate-icon-module-style2').each(function () {
+            //     var $this_module = jQuery(this);
+
+            //     $normal_content_height = Number($this_module.find('.animate-icon-module-style2-normal-content').innerHeight());
+
+            //     $this_module.find('.animate-icon-module-style2-normal-content').css('padding-top', ($max_module_height - ($normal_content_height / 2)));
+                
+            // });
+            if(jQuery(window).width() > 960){
+                $this.css('height', $max_module_height * 2 + 40 + 'px');
+                $this.find('.animate-icon-module-style2-inner-wrap').css('height', 'auto');
+            }
             
-            $this.find('.animate-icon-module-style2-normal-content').css('padding-top', ($module_height - ($normal_content_height / 2)));
-            $this.find('.animate-icon-module-style2-inner-wrap').css('height', $module_height * 2 + 'px');
-            $this.css('opacity', 1);
+            $this.find('.animate-icon-module-style2').css('opacity', 1);
+
         });
     }
     function be_lightbox() {
@@ -217,7 +158,7 @@
                 removalDelay: 300,
                 callbacks: {
                     afterClose: function () {
-                        jQuery(window).trigger('resize');
+                        // jQuery(window).trigger('resize');
                         if (jQuery('body').hasClass('smooth-scroll')) {
                             jQuery('html').css('overflow-y', 'scroll');
                         }
@@ -230,6 +171,24 @@
                     },
                     close: function () {
                         jQuery('body').removeClass('mfp-active-state');
+                    }
+                }
+            });
+        }
+        if (jQuery('.mfp-iframe').length > 0) {
+            jQuery('.mfp-iframe').magnificPopup({
+                iframe: {  
+                    patterns: {
+                        youtube: {
+                          index: 'youtube.com/', // String that detects type of video (in this case YouTube). Simply via url.indexOf(index).
+
+                          id: 'v=', // String that splits URL in a two parts, second part should be %id%
+                          // Or null - full URL will be returned
+                          // Or a function that should return %id%, for example:
+                          // id: function(url) { return 'parsed id'; }
+
+                          src: '//www.youtube.com/embed/%id%?autoplay=1&rel=0&showinfo=0' // URL that will be set as a source for iframe.
+                        }
                     }
                 }
             });
@@ -251,7 +210,7 @@
                 preloader: true,
                 callbacks: {
                     afterClose: function () {
-                        jQuery(window).trigger('resize');
+                        // jQuery(window).trigger('resize');
                         if (jQuery('body').hasClass('smooth-scroll')) {
                             jQuery('html').css('overflow-y', 'scroll');
                         }
@@ -380,10 +339,130 @@
             }
         }
     }
+    /************************************    
+    Column Block Min Height Reset
+    ************************************/
+    function be_reset_colblock_height(){
+        if(jQuery(window).width() < 768){   
+            jQuery('.be-no-space .column-block').each(function() {
+                if(jQuery(this).children('div').children().length > 0){
+                    jQuery(this).css('min-height','initial');    
+                }
+            });       
+        }   
+    }
     /************************************
         DOCUMEnT READY EVENT
     ************************************/
     function do_ajax_complete() {
+
+        /********************************
+            Justified Gallery
+        ********************************/
+        if(jQuery('.justified-gallery').length > 0){
+            jQuery('.justified-gallery').each(function () {
+                var $this = jQuery(this),
+                    $gutter_width = $this.attr('data-gutter-width'),
+                    $image_height = $this.attr('data-image-height');
+
+                $this.imagesLoaded(function () {
+                    $this.justifiedGallery({
+                        rowHeight : $image_height,
+                        margins : $gutter_width,
+                    })
+
+                    var delay = 1;
+                    $this.find('.element').each(function () {
+                    jQuery(this).find('img').one("load", function () {
+                            jQuery(this).parent().delay(delay).addClass('img-loaded',300);
+                            delay += 200;
+                        }).each(function () {
+                            if (this.complete) {
+                                jQuery(this).load();
+                            }
+                        });
+                    });
+                });
+            });
+        }
+        /********************************
+            Justified Gallery Infinite Scroll
+        ********************************/
+        if(jQuery(".trigger_infinite_scroll.justified_gallery_infinite_scroll").length > 0) {
+            jQuery(".trigger_infinite_scroll.justified_gallery_infinite_scroll").each(function () {
+                var $this = jQuery(this),
+                $justified_gallery_wrap = $this.closest('.justified-gallery-inner-wrap'),
+                $justified_gallery = $justified_gallery_wrap.find('.justified-gallery'),
+                $paged = Number($justified_gallery_wrap.attr("data-paged")),
+                $action = $justified_gallery_wrap.attr("data-action"),
+                $source = $justified_gallery_wrap.attr("data-source"),
+                $images_arr = $justified_gallery_wrap.attr("data-images-array"),
+                $items_per_load = $justified_gallery_wrap.attr("data-items-per-load"),
+                $hover_style = $justified_gallery_wrap.attr("data-hover-style"),
+                $img_grayscale = $justified_gallery_wrap.attr("data-image-grayscale"),
+                $image_effect = $justified_gallery_wrap.attr("data-image-effect"),
+                $thumb_overlay_color = $justified_gallery_wrap.attr("data-thumb-overlay-color"),
+                $gradient_style_color = $justified_gallery_wrap.attr("data-grad-style-color"),
+                $like_button =  $justified_gallery_wrap.attr("data-like-button"),
+                $disable_overlay =  $justified_gallery_wrap.attr("data-disable-overlay"),
+                $ajaxData = "action=" + $action + "&source=" + $source + "&images_arr=" + $images_arr + "&items_per_load=" + $items_per_load + "&hover_style=" + $hover_style + "&img_grayscale=" + $img_grayscale + "&image_effect=" + $image_effect + "&thumb_overlay_color=" + $thumb_overlay_color + "&gradient_style_color=" + $gradient_style_color + "&like_button=" + $like_button + "&disable_overlay=" + $disable_overlay ;
+                
+                var be_waypoint = new Waypoint({
+                    element: $this,
+                    handler: function (direction) {
+                        if (direction === 'down') {
+                            var $this_waypoint = this, 
+                            $page_loader = jQuery('.page-loader');
+                            $this_waypoint.disable(); //Disable Waypoint untill Images are Loaded
+                            $page_loader.fadeIn();
+                            jQuery.ajax({
+                                type: "POST",
+                                url: ajax_url,
+                                data: $ajaxData + "&paged=" + $paged 
+                            }).done(function (data) {
+                                if (data != 'Array0' ) {
+                                    var $newItems = jQuery(data);
+                                    $newItems.imagesLoaded(function () {
+                                        
+                                        $justified_gallery.append($newItems).justifiedGallery('norewind').on('jg.complete', function () {
+                                            Waypoint.refreshAll();    
+                                            $this_waypoint.enable(); //Enable Waypoint 
+                                        });
+                                        
+                                        var delay = 1;
+                                        $justified_gallery.find('.element').each(function () {
+                                        jQuery(this).find('img').one("load", function () {
+                                                jQuery(this).parent().delay(delay).addClass('img-loaded',300);
+                                                delay += 200;
+                                            }).each(function () {
+                                                if (this.complete) {
+                                                    jQuery(this).load();
+                                                }
+                                            });
+                                        });
+                                        $paged = Number($paged) + 1;
+                                        $page_loader.fadeOut();
+
+                                    });
+                                } else {
+                                    $this_waypoint.destroy();
+                                    $this.fadeOut();
+                                    $page_loader.fadeOut();
+                                }
+                            });
+                       }
+                    }, 
+                    offset: 'bottom-in-view'
+                })
+
+            });
+        }
+        /********************************
+            Force Show Portfolio Title
+        ********************************/        
+        jQuery('.portfolio-container').imagesLoaded(function () {
+            jQuery('.portfolio-container.force-show-thumb-overlay').css('opacity','1');
+        });
         /********************************
             Accordion
         ********************************/
@@ -610,6 +689,7 @@
                         // Pass data to PhotoSwipe and initialize it
                         gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
 
+
                         // see: http://photoswipe.com/documentation/responsive-images.html
                         var realViewportWidth,
                             useLargeImages = false,
@@ -676,6 +756,7 @@
                     galleryElements.each( function() {
                         var $this = jQuery(this);
                         $this.attr('data-pswp-uid',i+1);
+                        $this.off('click');
                         $this.on('click', 'a.thumb-wrap', function(e) {
                             e.preventDefault();
                             openPhotoSwipe(jQuery(this).closest('.element').index(), $this );
@@ -699,7 +780,7 @@
         /********************************
             Portfolio 
         ********************************/
-        be_portfolio_layout();
+        // be_portfolio_layout();
         if(jQuery('.portfolio-container').length > 0) {
             jQuery('.portfolio-container').each(function () {
                 var $this = jQuery(this), $i = 0;
@@ -720,7 +801,7 @@
                     $this.find('.element:odd').addClass('parallax-effect');
                     $this.find('.element:even').addClass('no-parallax-effect');
                 }
-            });
+            }); 
         }
         if(jQuery('.element.style3-hover .element-inner').length > 0) {
             jQuery('.element.style3-hover .element-inner').each(function () {
@@ -734,207 +815,6 @@
                 });
             });
         }
-        if(jQuery(".trigger_infinite_scroll.portfolio_infinite_scroll").length > 0) {
-            jQuery(".trigger_infinite_scroll.portfolio_infinite_scroll").each(function () {
-                var $this = jQuery(this),
-                    $action = $this.closest('.portfolio').attr("data-action"),
-                    $col = $this.closest('.portfolio').attr("data-col"),
-                    $data_gutter_width = Number($this.closest('.portfolio').attr("data-gutter-width")),
-                    $category = $this.closest('.portfolio').attr("data-category"),
-                    $masonry = $this.closest('.portfolio').attr("data-masonry"),
-                    $showposts = $this.closest('.portfolio').attr("data-showposts"),
-                    $paged = Number($this.closest('.portfolio').attr("data-paged")),
-                    $gallery = $this.closest('.portfolio').attr("data-gallery"),
-                    $filter = $this.closest('.portfolio').attr("data-filter"),
-                    $show_filters = $this.closest('.portfolio').attr("data-show_filters"),
-                    $data_thumbnail_bg_color = $this.closest('.portfolio').attr("data-thumbnail-bg-color"),
-                    $data_title_style = $this.closest('.portfolio').attr("data-title-style"),
-                    $data_title_color = $this.closest('.portfolio').attr("data-title-color"),
-                    $data_cat_color = $this.closest('.portfolio').attr("data-cat-color"),
-                    $title_animation_type = $this.closest('.portfolio').attr("data-title-animation-type"),
-                    $cat_animation_type = $this.closest('.portfolio').attr("data-cat-animation-type"),
-                    $img_grayscale = $this.closest('.portfolio').attr("data-img-grayscale"),
-                    $image_effect = $this.closest('.portfolio').attr("data-image-effect"),
-                    $gradient_style_color = $this.closest('.portfolio').attr("data-gradient-style-color"),
-                    $data_hover_style = $this.closest('.portfolio').attr("data-hover-style"),
-                    $dat_cat_hide = $this.closest('.portfolio').attr("data-cat-hide"),
-                    opts = {
-                        offset: '100%'
-                    };
-                $this.waypoint({
-                    handler: function (direction) {
-                        if (direction === 'down') {
-                            var $this_waypoint = this;
-                            jQuery('.page-loader').fadeIn();
-                            jQuery.ajax({
-                                type: "POST",
-                                url: ajax_url,
-                                data: "action=" + $action + "&category=" + $category + "&masonry=" + $masonry + "&showposts=" + $showposts + "&paged=" + $paged + "&col=" + $col + "&gallery=" + $gallery + "&filter=" + $filter + "&show_filters=" + $show_filters + "&thumb_overlay_color=" + $data_thumbnail_bg_color + "&title_style=" + $data_title_style + "&title_color=" + $data_title_color + "&cat_color=" + $data_cat_color + "&title_animation_type=" + $title_animation_type + "&cat_animation_type=" + $cat_animation_type + "&gutter_width=" + $data_gutter_width + "&hover_style=" + $data_hover_style + "&img_grayscale=" + $img_grayscale + "&image_effect=" + $image_effect + "&gradient_style_color=" + $gradient_style_color + "&cat_hide=" + $dat_cat_hide
-                            }).done(function (data) {
-                                if (data !== 0 && data !== '0' && data) {
-                                    var $newItems = jQuery(data);
-                                    $newItems.imagesLoaded(function () {
-
-                                        $this.closest('.portfolio').find('.portfolio-container').append($newItems).isotope('appended', $newItems).isotope('on', 'layoutComplete', function( laidOutItems ) { Waypoint.refreshAll(); });
-                                        jQuery(window).trigger('resize');
-                                        $paged = $paged + 1;
-                                        
-                                        jQuery('.page-loader').fadeOut();
-                                        be_lightbox();
-                                        jQuery('.element.style3-hover .element-inner').each(function () {
-                                            jQuery(this).hoverdir();
-                                        });
-                                        jQuery('.element.style4-hover .element-inner').each(function () {
-                                            jQuery(this).hoverdir({
-                                                inverse : true
-                                            });
-                                        });
-                                    });
-                                } else {
-                                    $this_waypoint.destroy();
-                                    jQuery('.page-loader').fadeOut();
-                                }
-                            });
-                        }
-                    }, 
-                    offset: 'bottom-in-view'
-                });
-            });
-        }
-        if(jQuery(".trigger_infinite_scroll.blog_infinite_scroll").length > 0) {
-            jQuery(".trigger_infinite_scroll.blog_infinite_scroll").each(function () {
-                var $this = jQuery(this),
-                    $total_items = $this.attr('data-total-items'),
-                    $action = $this.closest('.portfolio').attr("data-action"),
-                    $showposts = $this.closest('.portfolio').attr("data-showposts"),
-                    $data_gutter_width = Number($this.closest('.portfolio').attr("data-gutter-width")),
-                    $paged = Number($this.closest('.portfolio').attr("data-paged")),
-                    opts = {
-                        offset: '100%'
-                    };
-                $this.waypoint({
-                    handler: function (direction) {
-                        if (direction === 'down') {
-                            var $this_waypoint = this;
-                            jQuery('.page-loader').fadeIn();
-                            jQuery.ajax({
-                                type: "POST",
-                                url: ajax_url,
-                                data: "action=" + $action + "&showposts=" + $showposts + "&paged=" + $paged + "&gutter_width=" + $data_gutter_width + "&total_items=" + $total_items
-                            }).done(function (data) {
-                                if (data !== 0 && data !== '0' && data) {
-                                    var $newItems = jQuery(data);
-                                    $newItems.imagesLoaded(function () {
-                                        $this.closest('.portfolio').find('.portfolio-container').append($newItems).isotope('appended', $newItems).isotope('on', 'layoutComplete', function( laidOutItems ) { Waypoint.refreshAll(); });
-                                        $newItems.find('.be-flex-slider').each(function () {
-                                            var $animation_type = jQuery(this).attr('data-animation'), $slideshow = false, $slide_interval = Number(jQuery(this).attr('data-slide-interval'));
-                                            if (jQuery(this).attr('data-auto-slide') === 'yes') {
-                                                $slideshow = true;
-                                            }
-                                            jQuery(this).flexslider({
-                                                start : function (slider) {
-                                                    slider.closest(".be-flex-slider").removeClass('flex-loading');
-                                                    slider.closest(".be-flex-slider").find('.loader-icon').remove();
-                                                    if (slider.find('ul.slides li').length < 2) {
-                                                        slider.closest(".be-flex-slider").find('.flex-control-nav,.flex-direction-nav').remove();
-                                                    }
-                                                    if (slider.closest('.portfolio-container').length > 0) {
-                                                        jQuery(window).trigger('resize');
-                                                    }
-                                                },
-                                                after: function (slider) {
-                                                    if (slider.closest('.portfolio-container').length > 0) {
-                                                        jQuery(window).trigger('resize');
-                                                    }
-                                                },
-                                                animation : $animation_type,
-                                                slideshow : $slideshow,
-                                                slideshowSpeed : $slide_interval,
-                                                controlNav : true,
-                                                smoothHeight : true,
-                                                directionNav : true,
-                                                prevText : '',
-                                                nextText : ''
-                                            });
-                                        });
-                                        $newItems.fitVids();
-                                        jQuery(window).trigger('resize');
-                                        $paged = $paged + 1;
-                                        jQuery('.page-loader').fadeOut();
-                                        be_lightbox();
-                                    });
-                                } else {
-                                    $this_waypoint.destroy();
-                                    jQuery('.page-loader').fadeOut();
-                                }
-                            });
-                        }
-                    }, 
-                    offset: 'bottom-in-view'
-                });
-            });
-        }
-        /****************************************************
-            Gallery - Script for Infite Scroll and Load More
-        ****************************************************/
-        if(jQuery(".trigger_infinite_scroll.gallery_infinite_scroll").length > 0) {
-            jQuery(".trigger_infinite_scroll.gallery_infinite_scroll").each(function () {
-                var $this = jQuery(this),
-                    $action = $this.closest('.portfolio').attr("data-action"),
-                    $paged = $this.closest('.portfolio').attr("data-paged"),
-                    $masonry = $this.closest('.portfolio').attr("data-masonry"),
-                    $source = $this.closest('.portfolio').attr("data-source"),
-                    $gutter_width = $this.closest('.portfolio').attr("data-gutter-width"),
-                    $col = $this.closest('.portfolio').attr("data-col"),
-                    $data_gutter_width = Number($this.closest('.portfolio').attr("data-gutter-width")),
-                    $images_arr = $this.closest('.portfolio').attr("data-images-array"),
-                    $items_per_load = $this.closest('.portfolio').attr("data-items-per-load"),
-                    $hover_style = $this.closest('.portfolio').attr("data-hover-style"),
-                    $img_grayscale = $this.closest('.portfolio').attr("data-image-grayscale"),
-                    $lightbox_type = $this.closest('.portfolio').attr("data-lightbox-type"),
-                    $image_source = $this.closest('.portfolio').attr("data-image-source"),
-                    $image_effect = $this.closest('.portfolio').attr("data-image-effect"),
-                    $thumb_overlay_color = $this.closest('.portfolio').attr("data-thumb-overlay-color"),
-                    $gradient_style_color = $this.closest('.portfolio').attr("data-thumb-overlay-color"),
-                    $like_button =  $this.closest('.portfolio').attr("data-like-button"),
-                    opts = {
-                        offset: '120%'
-                    };
-
-                $this.waypoint({
-                    handler: function (direction) {
-                        if (direction === 'down') {
-                            var $this_waypoint = this;
-                            jQuery('.page-loader').fadeIn();
-                            jQuery.ajax({
-                                type: "POST",
-                                url: ajax_url,
-                                data: "action=" + $action + "&paged=" + $paged + "&masonry=" + $masonry + "&source=" + $source + "&gutter_width=" + $gutter_width + "&col=" + $col + "&data_gutter_width=" + $data_gutter_width + "&images_arr=" + $images_arr + "&items_per_load=" + $items_per_load + "&hover_style=" + $hover_style + "&img_grayscale=" + $img_grayscale + "&lightbox_type=" + $lightbox_type + "&image_source=" + $image_source + "&image_effect=" + $image_effect + "&thumb_overlay_color=" + $thumb_overlay_color + "&gradient_style_color=" + $gradient_style_color + "&like_button=" + $like_button
-                            }).done(function (data) {
-                                if (data !== 0 && data !== '0' && data) {
-
-                                    var $newItems = jQuery(data);
-                                    $newItems.imagesLoaded(function () {
-                                       // $this.closest('.portfolio').find('.portfolio-container').isotope();
-                                        $this.closest('.portfolio').find('.portfolio-container').append($newItems).isotope('appended', $newItems).isotope('on', 'layoutComplete', function( laidOutItems ) { Waypoint.refreshAll(); });
-                                        jQuery(window).trigger('resize');
-                                        $paged = Number($paged) + 1;
-                                        jQuery('.page-loader').fadeOut();
-                                        be_lightbox();
-                                    });
-                                } else {
-                                    $this_waypoint.destroy();
-                                    jQuery('.page-loader').fadeOut();
-                                }
-                            });
-                       }
-                    }, 
-                    offset: 'bottom-in-view'
-                });
-            });
-        }
-// :not(.disabled)
-           
         /********************************
             Text Rotate
         ********************************/
@@ -975,151 +855,289 @@
                 $this.animate({opacity: 1});
             });
         }
-        /********************************
-            Sliders
+
+        /**********************************
+            Client Carousel - Owl Implementation
         ********************************/
-        jQuery('body').imagesLoaded(function () {
-            /********************************
-                Carousel 
-            ********************************/
-            if (jQuery(".be-carousel").length > 0) {
-                jQuery(".be-carousel:not(.portfolios-carousel)").each(function () {
-                    var $this = jQuery(this), col = $this.parent().width() / 5, $max, $slideshow = Number($this.attr('data-slide-show'), 10), $slideshowspeed = Number($this.attr('data-slide-show-speed'));
-                    if (jQuery(window).width() < 767) {
-                        $max = 2;
-                    } else {
-                        $max = 5;
+
+        if(jQuery('.client-carousel-module').length > 0){
+            jQuery('.client-carousel-module').imagesLoaded(function () {
+                jQuery('.client-carousel-module').each(function () {
+                    var $this = jQuery(this),
+                    $slideShow = $this.attr('data-slide-show'),
+                    $slideshowspeed = 4000,
+                    $item_number = $this.children('.client-carousel-item').length;
+
+                    if($item_number > 5){
+                        $item_number = 5;
                     }
-                    if ($slideshow) {
-                        $slideshow = true;
-                    } else {
+
+                    if(0 == $slideShow){
+                        $slideShow = false;
+                    }else{
+                        $slideShow = true;
+                        $slideshowspeed = $this.attr('data-slide-show-speed');
+                    }
+
+                    if($item_number == 1){
+                        $this.fadeIn();
+                    }else{                    
+                        $this.owlCarousel({
+                            navSpeed: 500,
+                            autoplay: $slideShow,
+                            autoplayTimeout: $slideshowspeed,
+                            autoplaySpeed: 1000,
+                            autoplayHoverPause: true,
+                            loop: true,
+                            navRewind: false,
+                            nav: false,
+                            responsiveRefreshRate: 0,
+                            responsive: {
+                                0:{
+                                    items:2,
+                                    dots:true
+                                },
+                                768:{
+                                    items:$item_number,
+                                    dots:false
+                                }
+                            },
+                            onInitialize: function() {
+                                $this.fadeIn(500);
+                                $this.trigger('refresh.owl.carousel');
+                            },
+                        });
+                    }
+                });
+            });
+        }   
+
+        /**********************************
+            Portfolio Carousel - Owl Implementation
+        ********************************/  
+
+        if(jQuery('.portfolio-carousel-module').length > 0){
+            jQuery('.portfolio-carousel-module').imagesLoaded(function () {
+                jQuery('.portfolio-carousel-module').each(function () {
+                    var $this = jQuery(this),
+                    $item_number = $this.children('.carousel-item').length;
+
+                    if($item_number > 5){
+                        $item_number = 5;
+                    }
+
+                    if($item_number == 1){
+                        $this.fadeIn();
+                    }else{
+                        $this.owlCarousel({
+                            autoplay: false,
+                            autoplayHoverPause: true,
+                            navRewind: false,
+                            navText: ['<i class="font-icon icon-arrow_carrot-left"></i>','<i class="font-icon icon-arrow_carrot-right"></i>'],
+                            responsiveRefreshRate: 0,
+                            responsive: {
+                                0:{
+                                    items:2,
+                                    dots:true,
+                                    nav: false
+                                },
+                                767:{
+                                    items:$item_number,
+                                    dots:false,
+                                    nav: true
+                                }
+                            },
+                            onInitialize: function() {
+                                $this.fadeIn(500);
+                                $this.trigger('refresh.owl.carousel');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        /********************************
+            Image Slider(Flex Slider in the Past)
+        ********************************/   
+        
+        if (jQuery('.be_image_slider').length > 0) {
+            jQuery('.be_image_slider').imagesLoaded(function () {
+                jQuery('.be_image_slider').each(function () {
+                    var $this = jQuery(this).find('.image_slider_module'), 
+                        $slideshow = $this.attr('data-auto-slide'), 
+                        $slideshowspeed = 5000,
+                        $number = $this.find('.be_image_slide').length;  
+
+                    if('no' == $slideshow){
                         $slideshow = false;
+                    }else{
+                        $slideshow = true;
+                        $slideshowspeed = $this.attr('data-slide-interval');
                     }
-                    $this.carouFredSel({
-                        prev: $this.closest('.carousel-wrap').find('a.prev'),
-                        next: $this.closest('.carousel-wrap').find('a.next'),
-                        items: {
-                            width: col,
-                            height: '250',
-                            visible: {
-                                min: 2,
-                                max: $max
+
+                    if($number == 1){
+                        $this.fadeIn();
+                    }else{
+                        $this.owlCarousel({
+                            items:1,
+                            autoHeight: true,
+                            autoplay: $slideshow,
+                            autoplayTimeout: $slideshowspeed, 
+                            autoplaySpeed: 1000,
+                            autoplayHoverPause: true,
+                            navRewind: false,
+                            nav: true,
+                            loop: true,
+                            navText: ['<i class="font-icon icon-arrow_carrot-left"></i>','<i class="font-icon icon-arrow_carrot-right"></i>'],
+                            dots:false,
+                            onInitialize: function() {
+                                $this.fadeIn(500);
+                                $this.trigger('refresh.owl.carousel');
                             }
-                        },
-                        responsive: true,
-                        width: '100%',
-                        mousewheel: false,
-                        swipe: {
-                            onMouse: true,
-                            onTouch: true
-                        },
-                        scroll: {
-                            items: 1,
-                            pauseOnHover: false
-                        },
-                        auto: {
-                            play: $slideshow,
-                            timeoutDuration: $slideshowspeed
-                        }
-                    }).css('opacity',  1);
-                    $this.closest('.carousel-wrap').find('a.prev, a.next').css('opacity',  1);
-                });
-                jQuery(".be-carousel.portfolios-carousel").each(function () {
-                    var $this = jQuery(this), col = $this.parent().width() / 4, $max;
-                    if (jQuery(window).width() < 767) {
-                        $max = 2;
-                    } else {
-                        $max = 4;
+                        });
                     }
-                    $this.carouFredSel({
-                        prev: $this.closest('.carousel-wrap').find('a.prev'),
-                        next: $this.closest('.carousel-wrap').find('a.next'),
-                        items: {
-                            width: col,
-                            height: '385',
-                            visible: {
-                                min: 2,
-                                max: $max
-                            }
-                        },
-                        responsive: true,
-                        width: '100%',
-                        mousewheel: false,
-                        swipe: {
-                            onMouse: true,
-                            onTouch: true
-                        },
-                        scroll: {
-                            items: 1,
-                            pauseOnHover: false
-                        },
-                        auto: {
-                            play: false
-                        }
-                    }).css('opacity',  1);
-                    $this.closest('.carousel-wrap').find('a.prev, a.next').css('opacity',  1);
                 });
-            }
-            /********************************
+            });
+        }
+
+        /********************************
                 Testimonial Slider 
-            ********************************/
-            if (jQuery('.flexslider.testimonial-flex-slider').length > 0) {
-                jQuery('.flexslider.testimonial-flex-slider').each(function () {
-                    var $this = jQuery(this), $slideshow = Number($this.attr('data-slide-show')), $slideshowspeed = $this.attr('data-slide-show-speed'), $animation_type = $this.attr('data-slide-animation-type');
-                    $this.flexslider({
-                        animation : $animation_type,
-                        slideshow : $slideshow,
-                        slideshowSpeed : $slideshowspeed,
-                        controlNav : false,
-                        smoothHeight : true,
-                        directionNav: false,
-                        useCSS: false
-                    });
+        ********************************/
+        if (jQuery('.testimonials-slides').length > 0) {
+            jQuery('.testimonials-slides').imagesLoaded(function () {
+                jQuery('.testimonials-slides').each(function () {
+                    
+                    var $slide = jQuery(this),
+                        $this = jQuery(this).find('.testimonial_module'), 
+                        $slideshow = Number($this.attr('data-slide-show')), 
+                        $slideshowspeed = 4000, 
+                        $pagination = Number($this.attr('data-pagination')),
+                        $number = $slide.find('.testimonial_slide').length;  
+
+                    if(0 == $slideshow){
+                        $slideshow = false;
+                    }else{
+                        $slideshow = true;
+                        $slideshowspeed = $this.attr('data-slide-show-speed');
+                    }
+
+                    if($pagination == 0){
+                        $pagination = false;
+                    }else{
+                        $pagination = true;
+                    }
+                    
+                    if($number == 1){
+                        $slide.fadeIn();
+                    }else{
+                        $this.owlCarousel({
+                            items: 1 ,
+                            autoHeight: true,
+                            autoplay: $slideshow,
+                            autoplayTimeout: $slideshowspeed,
+                            autoplaySpeed: 1000,
+                            autoplayHoverPause: true,
+                            navRewind: false,
+                            loop: true,
+                            dots: $pagination,
+                            onInitialize: function() {
+                                $slide.fadeIn();
+                                $this.trigger('refresh.owl.carousel');
+                            }
+                        });
+                    }
                 });
-            }
-            /********************************
+            });
+        }
+
+        /********************************
                 Tweets Slider 
-            ********************************/
-            if (jQuery('.flexslider.tweet-flex-slider').length > 0) {
-                jQuery('.flexslider.tweet-flex-slider').each(function () {
-                    var $this = jQuery(this);
-                    $this.flexslider({
-                        animation : 'slide',
-                        slideshow : true,
-                        slideshowSpeed : 4000,
-                        controlNav : false,
-                        smoothHeight : true,
-                        directionNav: false,
-                        useCSS: false
-                    });
-                });
-            }
-            /********************************
-                Testimonial Slider 
-            ********************************/
-            if (jQuery('.flexslider.content-flex-slider').length > 0) {
-                jQuery('.flexslider.content-flex-slider').each(function () {
-                    var $this = jQuery(this), $slideshow = Number($this.attr('data-slide-show')), $slideshowspeed = $this.attr('data-slide-show-speed'), $animation_type = $this.attr('data-slide-animation-type'), $i=0, $control_nav_length = $this.find('.slides').find('.testimonial_slide').length, $controls, $append = '';
-                    if($control_nav_length !== 0) {
-                        for($i=0; $i<$control_nav_length; $i++) {
-                            $append += '<li><a href="#"></a></li>';
+        ********************************/
+        if (jQuery('.tweet-slides').length > 0) {
+            jQuery('.tweet-slides').each(function () {
+                var $slide = jQuery(this),
+                $this = jQuery(this).find('.twitter_module'), 
+                $autoplayTime = Number($this.attr('data-autoplay')) , 
+                $autoplay = false,
+                $pagination = Number($this.attr('data-pagination')),
+                $number = $this.children('.tweet_list').length;
+
+                if($autoplayTime == 0){
+                    $autoplay = false;
+                }else{
+                    $autoplay = true;
+                }
+                if($pagination == 0){
+                    $pagination = false;
+                }else{
+                    $pagination = true;
+                }
+
+                if($number == 1){
+                    $slide.fadeIn();
+                }else{
+                    $this.owlCarousel({
+                        items:1,
+                        autoHeight: true,
+                        autoplay: $autoplay,
+                        autoplayTimeout: $autoplayTime,
+                        autoplaySpeed: 1000,
+                        autoplayHoverPause: true,
+                        navRewind: false,
+                        loop: true,
+                        dots: $pagination,
+                        onInitialize: function () {
+                            $slide.fadeIn();
+                            $this.trigger('refresh.owl.carousel');
                         }
-                        $this.siblings('.flexslider-controls').find('.flex-control-nav').append($append);   
+                    });  
+                }
+            });
+        }
+
+        /********************************
+            Content Slider 
+        ********************************/
+        if (jQuery('.content-slider').length > 0) {
+            jQuery('.content-slider').imagesLoaded(function () {
+                jQuery('.content-slider').each(function () {
+                    var $slide = jQuery(this),
+                        $this = jQuery(this).find('.content_slider_module'), 
+                        $slideshow = Number($this.attr('data-slide-show')), 
+                        $slideshowspeed = 4000,
+                        $item_number = $this.children('.content_slide').length;
+                    
+                    if(0 == $slideshow){
+                        $slideshow = false;
+                    }else{
+                        $slideshow = true;
+                        $slideshowspeed = $this.attr('data-slide-show-speed');
                     }
-                    $controls = $this.siblings('.flexslider-controls').find('.flex-control-nav li');
-                    $this.flexslider({
-                        animation : $animation_type,
-                        slideshow : $slideshow,
-                        slideshowSpeed : $slideshowspeed,
-                        controlNav : true,
-                        manualControls: $controls,
-                        smoothHeight : true,
-                        directionNav: false,
-                        useCSS: false
-                    });
+
+                    if($item_number == 1){
+                        $slide.fadeIn();
+                    }else{
+                        $this.owlCarousel({
+                            items:1,
+                            autoHeight: true,
+                            autoplay: $slideshow,
+                            autoplayTimeout: $slideshowspeed,
+                            autoplaySpeed: 1000,
+                            autoplayHoverPause: true,
+                            navRewind: false,
+                            loop: true,
+                            dots: true,
+                            onInitialize: function () {
+                                $slide.fadeIn();
+                                $this.trigger('refresh.owl.carousel');
+                            }
+                        });
+                    }
                 });
-            }
-        });
+            });
+        }
+
         /********************************
             Skill bar
         ********************************/
@@ -1134,6 +1152,8 @@
         be_google_maps();
         be_custom_scroll_animation();
         be_countdown();
+        be_lightbox();
+        be_reset_colblock_height();
     }
     /*******************************************************
     Ajax Load Pages with HTML Pushstate and page transitions
@@ -1146,6 +1166,14 @@
     ************************************/
     jQuery(document).ready(function () {
         do_ajax_complete();
+        
+        /********************************
+            Lightbox 
+        ********************************/
+        jQuery(document).on('click', '.be-lightbox-gallery', function (e) {
+            e.preventDefault();
+            jQuery(this).next('.popup-gallery').magnificPopup('open');
+        });
         /********************************
             Notifications 
         ********************************/
@@ -1153,136 +1181,47 @@
             e.preventDefault();
             jQuery(this).closest('.be-notification').slideUp(500);
         });
+        jQuery(document).on('mouseenter', '.owl-carousel', function () {
+            jQuery(this).find('.owl-buttons').css('opacity',1);
+        });
+        jQuery(document).on('mouseleave', '.owl-carousel', function () {
+            jQuery(this).find('.owl-buttons').css('opacity',0);
+        });
+        /********************************
+            Columns 
+        ********************************/
+        jQuery(document).on('mouseenter', '.column-block', function () {
+            var data_opacity = jQuery(this).find('.section-overlay.animate-hide').attr("data-opacity");
+            jQuery(this).find('.section-overlay.animate-hide').css('opacity',data_opacity);
+        });
+        jQuery(document).on('mouseleave', '.column-block', function () {
+            jQuery(this).find('.section-overlay.animate-hide').css('opacity',0);
+        });
+        jQuery(document).on('mouseenter', '.column-block', function () {
+            jQuery(this).find('.section-overlay.animate-show').css('opacity',0);
+        });
+        jQuery(document).on('mouseleave', '.column-block', function () {
+            var data_opacity = jQuery(this).find('.section-overlay.animate-show').attr("data-opacity");
+            jQuery(this).find('.section-overlay.animate-show').css('opacity',data_opacity);
+        });
         /********************************
             Portfolio 
         ********************************/
-        jQuery(document).on('click', '.sort', function () {
-            var $this = jQuery(this), myClass = $this.attr("data-id");
-            $this.closest(".filters").find(".sort").removeClass("current_choice");
-            $this.addClass("current_choice");
-            $this.closest('.portfolio').find('.portfolio-container').isotope({ filter: '.' + myClass });
-        });
-        jQuery(document).on('mouseenter', '.style1-hover .element-inner', function () {
+        // Hover effect moved to CSS
+        // jQuery(document).on('mouseenter', '.style1-hover .element-inner', function () {
+        //     jQuery(this).find('.thumb-overlay').stop(true, true).fadeIn(400);
+        // });
+        // jQuery(document).on('mouseleave', '.style1-hover .element-inner', function () {
+        //     jQuery(this).find('.thumb-overlay').stop(true, true).fadeOut(400);
+        // });
+
+        jQuery(document).on('mouseenter', '.no-touch .justified-gallery .style1-hover .element-inner', function () {
             jQuery(this).find('.thumb-overlay').stop(true, true).fadeIn(400);
         });
-        jQuery(document).on('mouseleave', '.style1-hover .element-inner', function () {
+        jQuery(document).on('mouseleave', '.no-touch .justified-gallery .style1-hover .element-inner', function () {
             jQuery(this).find('.thumb-overlay').stop(true, true).fadeOut(400);
         });
-        jQuery(document).on('click', '.trigger_load_more.portfolio_load_more:not(.disabled)', function () {
-            var $this = jQuery(this),
-                $action = $this.closest('.portfolio').attr("data-action"),
-                $col = $this.closest('.portfolio').attr("data-col"),
-                $data_gutter_width = Number($this.closest('.portfolio').attr("data-gutter-width")),
-                $category = $this.closest('.portfolio').attr("data-category"),
-                $masonry = $this.closest('.portfolio').attr("data-masonry"),
-                $showposts = $this.closest('.portfolio').attr("data-showposts"),
-                $paged = Number($this.closest('.portfolio').attr("data-paged")),
-                $gallery = $this.closest('.portfolio').attr("data-gallery"),
-                $filter = $this.closest('.portfolio').attr("data-filter"),
-                $show_filters = $this.closest('.portfolio').attr("data-show_filters"),
-                $data_thumbnail_bg_color = $this.closest('.portfolio').attr("data-thumbnail-bg-color"),
-                $data_title_style = $this.closest('.portfolio').attr("data-title-style"),
-                $data_title_color = $this.closest('.portfolio').attr("data-title-color"),
-                $data_cat_color = $this.closest('.portfolio').attr("data-cat-color"),
-                $title_animation_type = $this.closest('.portfolio').attr("data-title-animation-type"),
-                $cat_animation_type = $this.closest('.portfolio').attr("data-cat-animation-type"),
-                $img_grayscale = $this.closest('.portfolio').attr("data-img-grayscale"),
-                $image_effect = $this.closest('.portfolio').attr("data-image-effect"),
-                $gradient_style_color = $this.closest('.portfolio').attr("data-gradient-style-color"),
-                $data_hover_style = $this.closest('.portfolio').attr("data-hover-style"),
-                $dat_cat_hide = $this.closest('.portfolio').attr("data-cat-hide");
-            jQuery('.page-loader').fadeIn();
-            $this.addClass('disabled');
-            jQuery.ajax({
-                type: "POST",
-                url: ajax_url,
-                data: "action=" + $action + "&category=" + $category + "&masonry=" + $masonry + "&showposts=" + $showposts + "&paged=" + $paged + "&col=" + $col + "&gallery=" + $gallery + "&filter=" + $filter + "&show_filters=" + $show_filters + "&thumb_overlay_color=" + $data_thumbnail_bg_color + "&title_style=" + $data_title_style + "&title_color=" + $data_title_color + "&cat_color=" + $data_cat_color + "&title_animation_type=" + $title_animation_type + "&cat_animation_type=" + $cat_animation_type + "&gutter_width=" + $data_gutter_width + "&hover_style=" + $data_hover_style + "&img_grayscale=" + $img_grayscale + "&image_effect=" + $image_effect + "&gradient_style_color=" + $gradient_style_color + "&cat_hide=" + $dat_cat_hide,
-                success: function (data) {
-                    if (data !== 0 && data !== '0' && data) {
-                        var $newItems = jQuery(data);
-                        $newItems.imagesLoaded(function () {
-                            $this.closest('.portfolio').find('.portfolio-container').append($newItems).isotope('appended', $newItems);
-                            jQuery(window).trigger('resize');
-                            $this.closest('.portfolio').attr("data-paged", $paged + 1);
-                            $this.attr("data-total-items", function () {
-                                return (Number(jQuery(this).attr('data-total-items')) - $newItems.length);
-                            });
-                            if ($this.attr("data-total-items") < 1) {
-                                $this.fadeOut(500, function () {
-                                    $this.remove();
-                                });
-                            }
-                            $this.removeClass('disabled');
-                            jQuery('.page-loader').fadeOut();
-                            be_lightbox();
-                            jQuery('.element.style3-hover .element-inner').each(function () {
-                                jQuery(this).hoverdir();
-                            });
-                            jQuery('.element.style4-hover .element-inner').each(function () {
-                                jQuery(this).hoverdir({
-                                    inverse : true
-                                });
-                            });
-                        });
-                    } else {
-                        $this.addClass('disabled');
-                        jQuery('.page-loader').fadeOut();
-                    }
-                }
-            });
-        });
-
-        jQuery(document).on('click', '.trigger_load_more.gallery_load_more:not(.disabled)', function () {
-            var $this = jQuery(this),
-                $action = $this.closest('.portfolio').attr("data-action"),
-                $paged = $this.closest('.portfolio').attr("data-paged"),
-                $masonry = $this.closest('.portfolio').attr("data-masonry"),
-                $source = $this.closest('.portfolio').attr("data-source"),
-                $gutter_width = $this.closest('.portfolio').attr("data-gutter-width"),
-                $col = $this.closest('.portfolio').attr("data-col"),
-                $data_gutter_width = Number($this.closest('.portfolio').attr("data-gutter-width")),
-                $images_arr = $this.closest('.portfolio').attr("data-images-array"),
-                $items_per_load = $this.closest('.portfolio').attr("data-items-per-load"),
-                $hover_style = $this.closest('.portfolio').attr("data-hover-style"),
-                $img_grayscale = $this.closest('.portfolio').attr("data-image-grayscale"),
-                $lightbox_type = $this.closest('.portfolio').attr("data-lightbox-type"),
-                $image_source = $this.closest('.portfolio').attr("data-image-source"),
-                $image_effect = $this.closest('.portfolio').attr("data-image-effect"),
-                $thumb_overlay_color = $this.closest('.portfolio').attr("data-thumb-overlay-color"),
-                $gradient_style_color = $this.closest('.portfolio').attr("data-thumb-overlay-color"),
-                $like_button =  $this.closest('.portfolio').attr("data-like-button");
-            jQuery('.page-loader').fadeIn();
-            $this.addClass('disabled');
-            jQuery.ajax({
-                type: "POST",
-                url: ajax_url,
-                data: "action=" + $action + "&paged=" + $paged + "&masonry=" + $masonry + "&source=" + $source + "&gutter_width=" + $gutter_width + "&col=" + $col + "&data_gutter_width=" + $data_gutter_width + "&images_arr=" + $images_arr + "&items_per_load=" + $items_per_load + "&hover_style=" + $hover_style + "&img_grayscale=" + $img_grayscale + "&lightbox_type=" + $lightbox_type + "&image_source=" + $image_source + "&image_effect=" + $image_effect + "&thumb_overlay_color=" + $thumb_overlay_color + "&gradient_style_color=" + $gradient_style_color + "&like_button=" + $like_button,
-                success: function (data) {
-                    if (data !== 0 && data !== '0' && data) {
-                        var $newItems = jQuery(data);
-                        $newItems.imagesLoaded(function () {
-                            $this.closest('.portfolio').find('.portfolio-container').append($newItems).isotope('appended', $newItems);
-                            jQuery(window).trigger('resize');
-                            $this.closest('.portfolio').attr("data-paged", Number($paged) + 1);
-                            $this.attr("data-total-items", function () {
-                                return (Number(jQuery(this).attr('data-total-items')) - $newItems.length);
-                            });
-                            if ($this.attr("data-total-items") <= 0) {
-                                $this.fadeOut(500, function () {
-                                    $this.remove();
-                                });
-                            }
-                            $this.removeClass('disabled');
-                            jQuery('.page-loader').fadeOut();
-                            be_lightbox();
-                        });
-                    } else {
-                        $this.addClass('disabled');
-                        jQuery('.page-loader').fadeOut();
-                    }
-                }
-            });
-        }); 
+        
         /********************************
             Contact Form
         ********************************/
@@ -1438,43 +1377,46 @@
             Animate Icon Module
         ********************************/
         jQuery(document).on('mouseenter', '.animate-icon-module-style2', function () {
-            var $this = jQuery(this), $normal_content_height = Number($this.find('.animate-icon-module-style2-normal-content').height()), $distence = 2;
+            var $this = jQuery(this);
+                // $normal_content_height = Number($this.find('.animate-icon-module-style2-normal-content').height()), 
+                // $distence = 2;
             $this.css('background-color', $this.attr('data-hover-bg-color'));
             $this.find('.animate-icon-title').css('color', $this.attr('data-hover-title-color'));
             $this.find('.animate-icon-icon').css('color', $this.attr('data-hover-icon-color'));
-            if ($this.find('.animate-icon-module-style2-hover-content').height() < 1) {
-                $distence = 4;
-            }
-            jQuery(this).find('.animate-icon-module-style2-normal-content').stop().animate({
-                top: '-' + ($normal_content_height / $distence)
-            }, {
-                duration: 400,
-                easing: 'easeOutBack'
-            });
-            jQuery(this).find('.animate-icon-module-style2-hover-content').stop().animate({
-                top: '50%'
-            }, {
-                duration: 400,
-                easing: 'easeOutExpo'
-            });
+            // if ($this.find('.animate-icon-module-style2-hover-content').height() < 1) {
+            //     $distence = 4;
+            // }
+            // jQuery(this).find('.animate-icon-module-style2-normal-content').stop().animate({
+            //     top: '-' + ($normal_content_height / $distence)
+            // }, {
+            //     duration: 400,
+            //     easing: 'easeOutBack'
+            // });
+            // jQuery(this).find('.animate-icon-module-style2-hover-content').stop().animate({
+            //     top: '50%'
+            // }, {
+            //     duration: 400,
+            //     easing: 'easeOutExpo'
+            // });
         });
         jQuery(document).on('mouseleave', '.animate-icon-module-style2', function () {
             var $this = jQuery(this);
             $this.css('background-color', $this.attr('data-bg-color'));
             $this.find('.animate-icon-title').css('color', $this.attr('data-title-color'));
             $this.find('.animate-icon-icon').css('color', $this.attr('data-icon-color'));
-            $this.find('.animate-icon-module-style2-normal-content').stop().animate({
-                top: '0%'
-            }, {
-                duration: 400,
-                easing: 'easeOutBack'
-            });
-            $this.find('.animate-icon-module-style2-hover-content').stop().animate({
-                top: '100%'
-            }, {
-                duration: 400,
-                easing: 'easeOutExpo'
-            });
+            // $this.find('.animate-icon-module-style2-normal-content').stop().animate({
+            //     top: '0%'
+            // }, {
+            //     duration: 400,
+            //     easing: 'easeOutBack'
+            // });
+            // $this.find('.animate-icon-module-style2-hover-content').stop().animate({
+            //     top: '100%',
+            //     opacity: 1
+            // }, {
+            //     duration: 400,
+            //     easing: 'easeOutExpo'
+            // });
         });
         jQuery(document).on('mouseenter', '.animate-icon-module-style1.be-bg-overlay', function (e) {
             var $this = jQuery(this);
@@ -1486,9 +1428,11 @@
         });
     });// END DOCUMENT READY EVENT
     jQuery(window).smartresize(function() {
-        be_portfolio_layout();
+        // be_portfolio_layout();
         arrange_animate_icon();
         be_custom_scroll_animation();
+        be_reset_colblock_height();
+
     });// END WINDOW RESIZE EVENT
     jQuery(window).on('scroll', function() {
         be_custom_scroll_animation();

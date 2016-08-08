@@ -4,7 +4,7 @@ Plugin Name: BE Page Builder
 Plugin URI: http://www.brandexponents.com
 Description: A minimal and beautiful Visual layout builder for Wordpress by Brand Exponents
 Author: Brandexponents
-Version: 2.2
+Version: 4.5.1
 Author URI: http://www.brandexponents.com
 */
 //load_textdomain( 'be-themes', false, BE_PB_ROOT_PATH. 'languages' ); 
@@ -23,12 +23,20 @@ define('BE_PB_ROOT_URL', plugin_dir_url(__FILE__));
 
 require_once( BE_PB_ROOT_PATH.'be-pb-options.php' );
 require_once( BE_PB_ROOT_PATH.'be-pb-backend-output.php' );
-require_once( BE_PB_ROOT_PATH.'functions/shortcodes.php' );
-require_once( BE_PB_ROOT_PATH.'functions/be-pb-ajax-handler.php' );
-
-
 
 add_action( 'plugins_loaded', 'bepagebuilder_load_textdomain' );
+
+add_action( 'init' , 'be_pb_include_shortcodes' );
+function be_pb_include_shortcodes() {
+	require_once( BE_PB_ROOT_PATH.'functions/shortcodes.php' );
+	// require_once( BE_PB_ROOT_PATH.'functions/helpers.php' );
+	// require_once( BE_PB_ROOT_PATH.'functions/be-pb-ajax-handler.php' );
+}
+add_action( 'plugins_loaded' , 'be_pb_include_helpers' );
+function be_pb_include_helpers() {
+	require_once( BE_PB_ROOT_PATH.'functions/helpers.php' );
+	require_once( BE_PB_ROOT_PATH.'functions/be-pb-ajax-handler.php' );
+}
 /**
  * Load plugin textdomain.
  *
@@ -77,9 +85,6 @@ $row_controls = '<div class="be-pb-row-controls clearfix toggled">
 							<a class="med-btn mini-btn-light copy-shortcode" title="Copy" data-action="copy">
 								<span class="btn-icon-row-view"><i class="font-icon icon-download icon-be-pb-download"></i>Copy Row</span>
 							</a>
-							<a class="med-btn mini-btn-light" title="View" data-action="view">
-								<span class="btn-icon-row-view"><i class="font-icon icon-icon_image icon-be-pb-eye"></i>View Row</span>
-							</a>
 							<a class="med-btn mini-btn-light" title="Duplicate" data-action="duplicate">
 								<span class="btn-icon-row-duplicate"><i class="font-icon  icon-icon_documents_alt icon-be-pb-book-open"></i>Duplicate Row</span>
 							</a>
@@ -97,9 +102,6 @@ $section_controls = '<div class="be-pb-section-controls clearfix toggled">
 							<div class="section-controls">
 								<a class="med-btn mini-btn-light copy-shortcode" title="Copy" data-action="view">
 									<span class="btn-icon-section-view"><i class="font-icon icon-download icon-be-pb-download"></i>Copy Section</span>
-								</a>
-								<a class="med-btn mini-btn-light" title="View" data-action="view">
-									<span class="btn-icon-section-view"><i class="font-icon icon-icon_image icon-be-pb-eye"></i>View Section</span>
 								</a>
 								<a class="med-btn mini-btn-light" title="Duplicate" data-action="duplicate">
 									<span class="btn-icon-section-duplicate"><i class="font-icon icon-duplicate icon-paste icon-icon_documents_alt icon-be-pb-book-open"></i>Duplicate Section</span>
@@ -168,7 +170,7 @@ function get_multi_shortcode_block($shortcode_name, $output = '', $inner_shortco
 	$html = '';
 	$html .= '<div class="be-pb-multi-wrap be-pb-element toggled be-pb-module-wrap" data-shortcode="'.$shortcode_name.'">';
 	$html .= '<pre class="shortcode">'.$output.'</pre>';
-	$html .= '<div class="be-pb-multi-fields-header-wrap clearfix"><h4 class="clearfix"><div class="left">'.$be_shortcode[$shortcode_name]['name'].'</div><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$shortcode_name.'" data-action="edit"></span><span class="be-pb-control-icon icon-icon_image icon-be-pb-eye" title="View"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></h4></div>';
+	$html .= '<div class="be-pb-multi-fields-header-wrap clearfix"><h4 class="clearfix"><div class="left">'.$be_shortcode[$shortcode_name]['name'].'</div><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$shortcode_name.'" data-action="edit"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></h4></div>';
 	$html .= '<div class="be-pb-multi-fields-wrap"><div class="be-pb-multi-fields be-pb-shortcode-col be-pb-sortable">';
 	if(!empty($inner_shortcode)){
 		$html .= $inner_shortcode;
@@ -187,9 +189,9 @@ function get_single_shortcode_block($shortcode_name, $output = ''){
 	}
 	$html ='';
 	$html .='<div class="portlet be-pb-element be-pb-module-wrap">';
-	$html .= '<div class="portlet-header"><div class="portlet-header-controls-wrap right"><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit icon-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$shortcode_name.'" data-action="edit"></span><span class="be-pb-control-icon icon-icon_image icon-be-pb-eye" title="View"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></div>'.$be_shortcode[$shortcode_name]['name'].'</div>';
+	$html .= '<div class="portlet-header"><div class="portlet-header-controls-wrap right"><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit icon-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$shortcode_name.'" data-action="edit"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></div>'.$be_shortcode[$shortcode_name]['name'].'</div>';
 	if(isset($be_shortcode[$shortcode_name]['backend_output']) && $be_shortcode[$shortcode_name]['backend_output'] === true) {
-		$html .='<div class="portlet-content clearfix">'.be_pb_output($output, $shortcode_name).'</div>';
+		$html .='<div class="portlet-content be-pb-content-preview clearfix">'.wp_kses_post( be_pb_output($output, $shortcode_name) ).'</div>';
 	}
 	$html .= '<pre class="shortcode">'.$output.'</pre>';
 	$html .= '</div>';
@@ -354,7 +356,7 @@ function be_pb_print_form($shortcode_name,$action='generate', $atts = array(), $
 						echo '<div class="right-section"><input type="text" name="be_shortcode_atts['.$option_key.']" id="#'.$option_key.'" value="'.$att_value.'" class="be-shortcode-atts be-pb-text" /></div>';
 						break;
 					case 'number':
-						echo '<div class="right-section"><input type="number" name="be_shortcode_atts['.$option_key.']" id="#'.$option_key.'" value="'.$att_value.'" class="be-shortcode-atts be-pb-text" /></div>';
+						echo '<div class="right-section"><input type="number" name="be_shortcode_atts['.$option_key.']" id="#'.$option_key.'" value="'.$att_value.'" class="be-shortcode-atts be-pb-text" /><span>'.' '.$option['metric'].'</span></div>';
 						break;
 					case 'select':		
 						echo
@@ -439,7 +441,7 @@ function be_pb_print_form($shortcode_name,$action='generate', $atts = array(), $
 							foreach ($att_value as $attachment_id) {
 								echo '<div class="seleced-images-wrap">
 									<input type="hidden" name="be_shortcode_atts['.$option_key.'][]" value="'.$attachment_id.'">
-									<img src="'.wp_get_attachment_url( $attachment_id ).'">
+									<img src="'.wp_get_attachment_thumb_url( $attachment_id ).'">
 									<span class="remove"></span>
 									</div>';
 							}
@@ -520,8 +522,8 @@ function be_pb_add_row(){
 **************************************/
 
 // function is_assoc($array){
-//      $keys = array_keys($array);
-//     return array_keys($keys) !== $keys;
+//  ????$keys = array_keys($array);
+// ????return array_keys($keys) !== $keys;
 // }
 
 function is_assoc($arr)
@@ -634,10 +636,10 @@ function be_page_builder_init() {
 			wp_nonce_field('be_pb_save_nonce', 'be_pb_save_nonce');
 
 		?>
-		<input type="hidden" id="ajax_url" value="<?php echo admin_url(); ?>admin-ajax.php" />
+		<input type="hidden" id="ajax_url" value="<?php echo admin_url('admin-ajax.php'); ?>" />
 		<input type="hidden" id="themefile_url" value="<?php echo BE_PB_ROOT_URL; ?>js/jquery.clipboard/" />
 		<div id="be-pb-disable">
-			<?php $be_pb_disabled = get_post_meta(get_the_ID(),'_be_pb_disable',true); ?>
+			<?php $be_pb_disabled = get_post_meta(get_the_ID(),'_be_pb_disable',true);?>
 			<input type="checkbox" id="be-pb-disable-check"  name="be_pb_disable" value="yes" class="be-pb-checkbox" <?php echo checked($be_pb_disabled,'yes',false); ?> /><label for="be-pb-disable-check" class="be-pb-label">Disable Page Builder </label>
 		</div>
 		<h2><?php _e('Add Rows, organize content into column blocks and style the page using a myraid collection of shortcodes','be-themes') ?></h2>
@@ -690,7 +692,7 @@ function be_page_builder_init() {
 			</p>
 		</div>
 
-		<div id="be-pb-main" class="be-pb-sortable clearfix">
+		<div id="be-pb-main" class="be-pb-sortable notranslate clearfix">
 			<?php 
 				global $post_id;
 
@@ -765,35 +767,81 @@ function be_page_builder_enqueue() {
 add_action( 'wp_enqueue_scripts', 'be_page_builder_frontend_enqueue',11);
 function be_page_builder_frontend_enqueue() {
 
-	wp_register_script( 'be-themes-modules-plugins-js', BE_PB_ROOT_URL.'/js/be-modules-plugin.js', array( 'jquery'), FALSE, TRUE );
-	wp_enqueue_script( 'be-themes-modules-plugins-js' );
+	global $be_themes_data; 
+	$google_map_api_key = ( isset($be_themes_data['google_map_api_key']) && !empty($be_themes_data['google_map_api_key']) && $be_themes_data['google_map_api_key'] != '' ) ? '?key='.$be_themes_data['google_map_api_key'] : '' ;
 
-	wp_deregister_script( 'be-themes-modules-script-js' );
-	wp_register_script( 'be-themes-modules-script-js', BE_PB_ROOT_URL.'/js/be-modules-script.js', array( 'jquery','be-themes-plugins-js', 'be-themes-script-js','be-themes-countdown-js'), FALSE, TRUE );
-	wp_enqueue_script( 'be-themes-modules-script-js' );
+	//Main Plugin File
+	wp_deregister_script( 'be-main-plugins-js' );
+	wp_register_script( 'be-main-plugins-js', BE_PB_ROOT_URL. 'js/main-plugins.js', array( 'jquery','vimeo-api' ), FALSE, TRUE ); //common
+	wp_enqueue_script( 'be-main-plugins-js' );
 
-	wp_register_script( 'be-themes-countdown-js', BE_PB_ROOT_URL.'/js/countdown/jquery.countdown.min.js', array( 'jquery', 'be-themes-modules-plugins-js'), FALSE, TRUE );
+	//Mandatory Plugins for Page Builder 
+	wp_register_script( 'be-modules-plugin', BE_PB_ROOT_URL.'js/be-modules-plugin.js', array( 'jquery'), FALSE, TRUE );
+	wp_enqueue_script( 'be-modules-plugin' );
+
+	//Optional Plugins 
+
+	wp_register_script( 'be-textRotator-js', BE_PB_ROOT_URL.'js/opt_plugins/plugin-textRotator.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-textRotator-js' );
+
+	wp_register_script( 'be-easyPieChart-js', BE_PB_ROOT_URL.'js/opt_plugins/plugin-easyPieChart.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-easyPieChart-js' );
+
+	wp_register_script( 'be-hoverdir-js', BE_PB_ROOT_URL.'js/opt_plugins/plugin-hoverdir.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-hoverdir-js' );
+
+	wp_register_script( 'be-typed-js', BE_PB_ROOT_URL.'js/opt_plugins/plugin-typed.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-typed-js' );
+
+	wp_register_script( 'be-countTo-js', BE_PB_ROOT_URL.'js/opt_plugins/plugin-countTo.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-countTo-js' );
+
+	wp_register_script( 'be-themes-countdown-js', BE_PB_ROOT_URL.'js/opt_plugins/jquery.countdown.min.js', array( 'jquery', 'be-main-plugins-js'), FALSE, TRUE );
 	wp_enqueue_script( 'be-themes-countdown-js' );
 
-	// wp_register_script( 'be-themes-countdown-js', BE_PB_ROOT_URL.'/js/countdown/jquery.countdown.min.js', array( 'jquery'), FALSE, TRUE );
-	// wp_enqueue_script( 'be-themes-countdown-js' );
+	wp_deregister_script( 'be-magnificpopup-js' );
+	wp_register_script( 'be-magnificpopup-js', BE_PB_ROOT_URL. 'js/opt_plugins/plugin-magnificpopup.js', array(), FALSE, TRUE );
+	wp_enqueue_script( 'be-magnificpopup-js' );
+
+	wp_deregister_script( 'be-backgroundcheck-js' );
+	wp_register_script( 'be-backgroundcheck-js', BE_PB_ROOT_URL. 'js/opt_plugins/plugin-backgroundcheck.js', array(), FALSE, TRUE );
+	wp_enqueue_script( 'be-backgroundcheck-js' );
+
+	wp_deregister_script( 'be-justifiedgrid-js' );
+	wp_register_script( 'be-justifiedgrid-js', BE_PB_ROOT_URL. 'js/opt_plugins/jquery.justifiedGallery.min.js', array(), FALSE, TRUE );
+	wp_enqueue_script( 'be-justifiedgrid-js' );
+	//End Optional Plugins
+
+	wp_deregister_script( 'be-themes-modules-script-js' );
+	//wp_register_script( 'be-themes-modules-script-js', BE_PB_ROOT_URL.'js/be-modules-script.js', array( 'jquery','jquery-ui-core','jquery-ui-widget','jquery-ui-mouse','jquery-ui-position','jquery-ui-draggable','jquery-ui-resizable','jquery-ui-selectable','jquery-ui-sortable','jquery-ui-accordion','jquery-ui-tabs','jquery-effects-core','jquery-effects-blind','jquery-effects-bounce','jquery-effects-clip','jquery-effects-drop','jquery-effects-explode','jquery-effects-fade','jquery-effects-fold','jquery-effects-core','jquery-effects-pulsate','jquery-effects-scale','jquery-effects-shake','jquery-effects-slide','jquery-effects-transfer','be-main-plugins-js','be-modules-plugin','be-themes-countdown-js'), FALSE, TRUE );
+	wp_register_script( 'be-themes-modules-script-js', BE_PB_ROOT_URL.'js/be-modules-script.js', array( 'jquery','jquery-ui-core','jquery-ui-accordion','jquery-ui-tabs','be-main-plugins-js','be-modules-plugin','be-themes-countdown-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-themes-modules-script-js' );
+
+	wp_deregister_script( 'be-themes-portfolio-layout-js' );
+	wp_register_script( 'be-themes-portfolio-layout-js', BE_PB_ROOT_URL.'js/be-portfolio-layout.js', array( 'jquery','be-main-plugins-js'), FALSE, TRUE );
+	wp_enqueue_script( 'be-themes-portfolio-layout-js' );
 
 	wp_deregister_script( 'map-api' );
-	wp_register_script( 'map-api', 'https://maps.googleapis.com/maps/api/js', array(), FALSE, TRUE );
+	wp_register_script( 'map-api', 'https://maps.googleapis.com/maps/api/js'.$google_map_api_key, array(), FALSE, TRUE );
 	wp_enqueue_script( 'map-api' );
 
 	$lang = explode('_', get_locale() );
 	
 	if ( is_array($lang) && !empty( $lang[0]) && 'en' != $lang[0] ) {
-		wp_register_script( 'be-themes-countdown-js-'.$lang[0], BE_PB_ROOT_URL.'/js/countdown/jquery.countdown-'.$lang[0].'.js', array( 'jquery'), FALSE, TRUE );
+		wp_register_script( 'be-themes-countdown-js-'.$lang[0], BE_PB_ROOT_URL.'js/countdown/jquery.countdown-'.$lang[0].'.js', array( 'jquery'), FALSE, TRUE );
 		wp_enqueue_script( 'be-themes-countdown-js-'.$lang[0] );	
 	}
+	wp_deregister_style('be-themes-layout');
 	wp_register_style( 'be-themes-layout', BE_PB_ROOT_URL.'css/layout.css' );
 	wp_enqueue_style( 'be-themes-layout' );
 	
+	wp_deregister_style('be-pb-frontend-output');
 	wp_register_style( 'be-pb-frontend-output', BE_PB_ROOT_URL.'css/shortcodes.css' );
 	wp_enqueue_style( 'be-pb-frontend-output');
 
+	wp_deregister_style('be-justifiedgrid-css');
+	wp_register_style( 'be-justifiedgrid-css', BE_PB_ROOT_URL.'css/justifiedGallery.min.css' );
+	wp_enqueue_style( 'be-justifiedgrid-css');
 
 }
 
@@ -847,7 +895,7 @@ function be_pb_do_shortcode_tag( $m ) {
 
 		return 	 '<div class="be-pb-multi-wrap be-pb-element toggled be-pb-module-wrap" data-shortcode="'.$m[2].'">
 				<pre class="shortcode">['.$m[2].$m[3].']</pre>
-				<div class="be-pb-multi-fields-header-wrap clearfix"><h4 class="clearfix"><div class="left">'.$be_shortcode[$m[2]]['name'].'</div><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$m[2].'" data-action="edit"></span><span class="be-pb-control-icon icon-icon_image icon-be-pb-eye" title="View"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></h4></div>
+				<div class="be-pb-multi-fields-header-wrap clearfix"><h4 class="clearfix"><div class="left">'.$be_shortcode[$m[2]]['name'].'</div><span class="be-pb-control-icon icon-icon_trash_alt icon-delete icon-be-pb-cancel icon-trash bottom-border" title="Delete"></span><span class="be-pb-control-icon icon-duplicate icon-icon_documents_alt icon-be-pb-book-open bottom-border" title="Duplicate"></span><span class="be-pb-control-icon icon-icon_pencil-edit edit-shortcode icon-be-pb-pencil-1 '.$hide.'" title="Edit" data-shortcode="'.$m[2].'" data-action="edit"></span><span class="be-pb-control-icon icon-download copy-shortcode icon-be-pb-download" title="Copy"></span></h4></div>
 		 <div class="be-pb-multi-fields-wrap"><div class="be-pb-multi-fields be-pb-shortcode-col be-pb-sortable">'.be_pb_do_shortcode($m[5]).'
 		 </div>
 		 <div class="be-pb-controls"><a class="mini-btn mini-btn-dark add-multi-field" title="Add" role="button" data-single-field='.$be_shortcode[$m[2]]['single_field'].'><span class="btn-icon-plus"><i class="font-icon icon-be-pb-plus"></i></span></a><a class="mini-btn mini-btn-dark paste-shortcode" data-shortcode-name="multi-module" title="Paste Module" role="button"><span class="btn-icon-plus"><i class="font-icon icon-be-pb-upload"></i></span></a></div>
@@ -859,14 +907,23 @@ function be_pb_do_shortcode_tag( $m ) {
 }
 
 add_filter( 'the_content', 'be_pb_content_filter');
+// Filter to hook BE Page Builder Content to SEO by Yoast Plugin
+//add_filter( 'wpseo_pre_analysis_post_content', 'be_pb_content_filter', 10, 2 );
 
 function be_pb_content_filter($content) {
 	global $post;
 	global $be_themes_data;
 	$be_pb_disabled = get_post_meta( $post->ID, '_be_pb_disable', true );
-    if( (!isset($be_pb_disabled) || false == $be_pb_disabled || $be_pb_disabled == 'no') && ( $post->post_type =='page' || $post->post_type =='portfolio' || ( $post->post_type =='post' && isset($be_themes_data['enable_pb_blog_posts']) && 1 == $be_themes_data['enable_pb_blog_posts'] ) ) && ( isset( $be_themes_data['enable_pb'] ) && 1 == $be_themes_data['enable_pb'] ) ) {
-		$be_pb_content = get_post_meta($post->ID,'_be_pb_content',true);
-		$content = $be_pb_content;
+	$be_pb_universal_use = apply_filters('be_pb_universal_use', false );
+
+    if( ( $be_pb_universal_use ) 
+    	|| ( ( !isset($be_pb_disabled) || false == $be_pb_disabled || $be_pb_disabled == 'no')
+     	&& ( $post->post_type =='page' || $post->post_type =='portfolio' || ( $post->post_type =='post' && isset( $be_themes_data['enable_pb_blog_posts'] ) && 1 == $be_themes_data['enable_pb_blog_posts'] ) ) 
+     	&& ( isset( $be_themes_data['enable_pb'] ) && 1 == $be_themes_data['enable_pb'] ) ) ) {
+
+			$be_pb_content = get_post_meta($post->ID,'_be_pb_content',true);
+			$content = $be_pb_content;
+
 	}
 	return $content;
 }

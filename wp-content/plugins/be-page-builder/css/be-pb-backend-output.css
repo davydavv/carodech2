@@ -535,20 +535,34 @@ p .be-button {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
 }
+.be-button.circular {
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+}
 .smallbtn {
     font-size: 11px;
     line-height: 12px;
     padding: 12px 15px;
+}
+.circular.smallbtn{
+    padding: 12px 25px;
 }
 .mediumbtn {
     font-size: 13px;
     line-height: 14px;
     padding: 15px 20px;
 }
+.circular.mediumbtn{
+    padding: 15px 30px;
+}
 .largebtn {
     font-size: 15px;
     line-height: 16px;
     padding: 18px 25px;
+}
+.circular.largebtn{
+    padding: 18px 35px;
 }
 .blockbtn{
     font-size: 20px;
@@ -912,7 +926,7 @@ html body .be-section .be-row .special-heading-wrap.style3 .special-h-tag {
 }
 .error, .wpcf7-response-output.wpcf7-validation-errors{
     background: #dd6868;
-    color:#fff;
+    color:#000;
 }
 .be-notification, .wpcf7-response-output.wpcf7-validation-errors, .wpcf7-response-output.wpcf7-mail-sent-ok {
     cursor: default;

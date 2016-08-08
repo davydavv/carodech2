@@ -1,30 +1,17 @@
 <?php
+
 do_action('be_shortcode_override');
 /******************************************
 			SHORTCODES 
 ******************************************/
-if (!function_exists('be_themes_formatter')) {
-	function be_themes_formatter( $content ) {
-		$new_content = '';
-		$pattern_full = '{(\[raw\].*?\[/raw\])}is';
-		$pattern_contents = '{\[raw\](.*?)\[/raw\]}is';
-		$pieces = preg_split($pattern_full, $content, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-		foreach ( $pieces as $piece ) {
-			$new_content .= ( 1 == preg_match( $pattern_contents, $piece, $matches ) ? $matches[1] : wptexturize( wpautop( $piece ) ) );
-		}
-
-		return $new_content;
-	}
-}
 
 if ( ! function_exists( 'be_search_query_join' ) ) :
 	function be_search_query_join( $join )
 	{
-		global $wpdb; 
+		global $wpdb, $wp_query; 
 		$table_prefix = $wpdb->prefix;
-		if( is_search() ) {
-			$join .= " JOIN ".$table_prefix."postmeta as be_meta_table ON ID = be_meta_table.post_id ";
+		if($wp_query->is_main_query() && is_search() && (!is_admin() ) )  {
+			$join .= " LEFT JOIN ".$table_prefix."postmeta as be_meta_table ON ID = be_meta_table.post_id AND be_meta_table.meta_key = '_be_pb_content' ";
 		}
 		return $join;
 	}
@@ -34,21 +21,33 @@ endif;
 if ( ! function_exists( 'be_search_query_where' ) ) :
 	function be_search_query_where( $where )
 	{
+		global $wp_query; 
 		$args = array('public' => true, '_builtin' => false);
 		$post_types = get_post_types($args);
 		$post_types = "'" . implode("', '", $post_types) . "'";
-		if( is_search() ) {
+
+		if($wp_query->is_main_query() && is_search() && (!is_admin() ) ) {
 		    $where = " AND ((post_title LIKE '%" .$_GET['s']. "%') 
 						OR (post_content LIKE '%" .$_GET['s']. "%')
 						OR (be_meta_table.meta_value LIKE '%" .$_GET['s']. "%')) 
 						AND post_type IN ('post', 'page', 'attachment',".$post_types.")
-						AND (post_status = 'publish' OR post_status = 'private')
-						AND be_meta_table.meta_key = '_be_pb_content'";
+						AND (post_status = 'publish' OR post_status = 'private')";
 	    }
 	    return $where;
 	}
 	add_filter('posts_where', 'be_search_query_where' );  
 endif;
+
+if ( ! function_exists( 'be_search_distinct' ) ) :
+function be_search_distinct() { 
+ 	if( is_search() && (!is_admin() ) ) {
+ 		return "DISTINCT"; 
+ 	}else{
+ 		return '';
+ 	}
+}
+endif;
+add_filter('posts_distinct', 'be_search_distinct');
 
 /**************************************LAYOUT MODULES**************************************/
 
@@ -69,6 +68,8 @@ if (!function_exists('be_section')) {
 	        'border_color' => '',
 	        'padding_top' => '',
 	        'padding_bottom' => '',
+	        'padding_edge' => '',
+	        'offset_section' => '',
 	        'bg_video' => 0,
 	        'bg_video_mp4_src' => '',
 	        'bg_video_ogg_src' => '',
@@ -78,6 +79,7 @@ if (!function_exists('be_section')) {
 			'overlay_color' => '',
 			'overlay_opacity' => '',
 			'section_id' => '',
+			'section_class' => '',
 			'section_title' => '',
 			'full_screen' => 0,
 			'full_screen_header_scheme' => 'background--dark',
@@ -85,12 +87,17 @@ if (!function_exists('be_section')) {
 	    ),$atts));
 
 	    $background = '';
+	    $offset_section_class = '';
+	    $offset_value = '';
+	    $offset_wrapper_start = '';
+	    $offset_wrapper_end = '';
 	    $border = '';
 	    $output = '';
 	    $hide_mobile = (isset($hide_mobile) && $hide_mobile == 1) ? 'hide-mobile' : '';
 	    if( !isset($bg_animation) || empty($bg_animation) || $bg_animation == 'none' ) {
 	    	$bg_animation = '';
 	    }
+
 	    if((isset( $bg_stretch ) && 1 == $bg_stretch) || (isset( $bg_animation ) && $bg_animation == 'be-bg-parallax')) {
 			$bg_stretch = 'be-bg-cover';
 		} else {
@@ -112,14 +119,32 @@ if (!function_exists('be_section')) {
 	    		$background = 'background:'.$bg_color.' url('.$attachment_url.') '.$bg_repeat.' '.$bg_attachment.' '.$bg_position.';';
 	    	}
 	    }
-
+	    $data_padding_top = $padding_top;
 	    $border = ( ! empty( $border_color ) ) ? 'border-bottom:'.$border_size.'px solid '.$border_color.';' : $border;
 	    $padding_top  = ( isset( $padding_top ) && $padding_top != '' ) ? 'padding-top:'.$padding_top.'px;' : $padding_top;
 	    $padding_bottom = ( isset( $padding_bottom ) && $padding_bottom != '' ) ? 'padding-bottom:'.$padding_bottom.'px;' : $padding_bottom;
+	    if( isset( $padding_edge ) && $padding_edge != '' && $padding_edge != 0){
+	    	$padding_edge = 'padding-left:'.$padding_edge.'%; padding-right:'.$padding_edge.'%;';
+	    	$padding_edge_class = 'be-edge-padding';
+	    }else{
+	    	$padding_edge = '';
+	    	$padding_edge_class = '';
+	    }
+
+	    if( isset($offset_section) && $offset_section == 1 ){
+	    	$offset_section_class = 'be-section-offset';
+	    	$padding_top = 'padding-top:0px; ';
+	    	$offset_value = "transform:translateY(-".$data_padding_top."px) ; -moz-transform: translateY(-".$data_padding_top."px); -ms-transform: translateY(-".$data_padding_top."px);  -o-transform:translateY(-".$data_padding_top."px); -webkit-transform:translateY(-".$data_padding_top."px);";
+	    	$offset_wrapper_start = '<div class="be-section-offset-wrap" style="'.$offset_value.'" >';
+	    	$offset_wrapper_end = '</div>';
+	    }
+
+	    // $padding_edge = ( isset( $padding_edge ) && $padding_edge != '' ) ? 'padding-left:'.$padding_edge.'%; padding-right:'.$padding_edge.'%;' : '';
 	    $bg_overlay_class = ( isset( $bg_overlay ) && 1 == $bg_overlay ) ? 'be-bg-overlay' : '' ;
 	    $bg_video_class =  ( isset( $bg_video ) && 1 == $bg_video ) ? 'be-video-section' : '' ;
  	    $section_skew = ( isset( $skew ) && 1 == $skew ) ? 'section-skew' : '' ;
 		$section_id = !empty($section_id) ? 'id = "'.$section_id.'"' : '';
+		$section_class = !empty($section_class) ? str_replace(',', ' ', $section_class) : '' ;
 		$section_title = !empty($section_title) ? 'data-title = "'.$section_title.'"' : '';
 		if( isset( $full_screen_header_scheme ) && $full_screen_header_scheme ) {
 			$full_screen_header_scheme = 'data-headerscheme="'.$full_screen_header_scheme.'"';
@@ -127,11 +152,12 @@ if (!function_exists('be_section')) {
 			$full_screen_header_scheme = 'data-headerscheme="background--dark"';
 		}
 		$full_screen = ( isset( $full_screen ) && 1 == $full_screen ) ? 'full-screen-section' : '' ;
-	    $output .= '<div class="be-section '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' '.$full_screen.' '.$hide_mobile.' clearfix" '.$full_screen_header_scheme.' style="'.$background.$border.'" '.$section_id.' '.$section_title.'>';
+	    $output .= '<div class="be-section '.$offset_section_class.' '.$section_class.' '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' '.$full_screen.' '.$hide_mobile.' clearfix" '.$full_screen_header_scheme.' style=" '.$background. $border.'" '.$section_id.' '.$section_title.'>';
 	    if( 'full-screen-section' == $full_screen ) {
 	    	$output .= '<div class="full-screen-section-wrap">';
 	    }
-	    $output .= '<div class="be-section-pad clearfix" style="'.$padding_top.$padding_bottom.'">';
+	    $output .= '<div class="be-section-pad clearfix '.$padding_edge_class.'" style=" '.$padding_top.$padding_bottom.$padding_edge.'" data-padding-top = "'.$data_padding_top.'">';
+	    $output .= $offset_wrapper_start;
 		$output .=  ( isset( $skew ) && 1 == $skew ) ? '<div class="section-skew-normal">' : '' ;
 		if( isset( $bg_video ) && 1 == $bg_video ) {
 			$output .= '<video class="be-bg-video" autoplay="autoplay" loop="loop" muted="muted" preload="auto">';
@@ -166,6 +192,7 @@ if (!function_exists('be_section')) {
 			$output .= '</div>';
 		}
 		$output .= '</div>';
+		$output .= $offset_wrapper_end;
 		if( 'full-screen-section' == $full_screen ) {
 	    	$output .= '</div>';
 	    }
@@ -174,7 +201,6 @@ if (!function_exists('be_section')) {
 	}
 	add_shortcode( 'section', 'be_section' );
 }
-
 /**************************************
 			ROW
 **************************************/
@@ -184,19 +210,44 @@ if (!function_exists('be_row')) {
 	        'no_wrapper'=>0,
 	        'no_margin_bottom'=>0,
 	        'no_space_columns'=>0,
+	        'column_spacing'=>0,
+	        'row_id' => '',
+	        'row_class' => '',
 	        'hide_mobile' => 0,
 	    ),$atts ) );
-		$class = 'be-wrap clearfix';
+	    $row_wrap_flag = 0;
+	    $row_wrapper = '';
+
+		if(isset( $column_spacing ) && isset( $no_space_columns ) && $column_spacing != '' && $column_spacing != 0 ){
+			$row_wrapper = '<div class="be-row-wrap be-column-spacing clearfix" style="border-spacing:'.$column_spacing.'px 0;">';
+			$row_wrap_flag = 1;
+		}
+
+		if($row_wrap_flag != 1){
+			$class = 'be-wrap clearfix';
+		}else{
+			$class = 'be-wrap ';
+		}
+
 		$class = ( isset( $no_wrapper ) &&  1 == $no_wrapper ) ? '' : $class ;
 	    $class .= ( isset( $no_margin_bottom ) &&  1 == $no_margin_bottom ) ? ' zero-bottom' : '' ;
 	    $class .= ( isset( $no_space_columns ) &&  1 == $no_space_columns ) ? ' be-no-space' : '' ;
 	    $class .= ( isset($hide_mobile) && $hide_mobile == 1) ? ' hide-mobile' : '';
 		
-		return '<div class="be-row '.$class.'">'.do_shortcode( $content ).'</div>';
+		$row_id = !empty($row_id) ? 'id = "'.$row_id.'"' : '';
+		$row_class = !empty($row_class) ? str_replace(',', ' ', $row_class) : '' ;
+		
+		$output = $row_wrapper;
+		$output .= '<div '.$row_id.' class="be-row '.$class.' '.$row_class.'">'.do_shortcode( $content ).'</div>';
+
+		if($row_wrap_flag == 1){
+			$output .= '</div>';
+		}
+
+		return $output;
 	}
 	add_shortcode( 'row','be_row' );
 }
-
 /**************************************
 			COLUMNS
 **************************************/
@@ -223,7 +274,11 @@ if (!function_exists('columns_extract')) {
 	        'bg_overlay' => 0,
 			'overlay_color' => '',
 			'overlay_opacity' => '',
+			'animate_overlay' => 'none',
+			'link_overlay' => '',
 			'vertical_align' => 'none',
+			'col_id' => '',
+			'column_class' => '',
 			'hide_mobile' => 0,
 			'animate' => 0,
 	        'animation_type' => 'fadeIn',
@@ -261,19 +316,53 @@ if (!function_exists('columns_extract')) {
 			$column_atts['video'] .=  ($bg_video_mp4_src_webm) ? '<source src="'.$bg_video_mp4_src_webm.'" type="video/webm">' : '' ;
 			$column_atts['video'] .= '</video>';
 		}
+		$column_atts['col_id'] = !empty($col_id) ? 'id = "'.$col_id.'"' : '';
+		$column_atts['column_class'] = !empty($column_class) ? str_replace(',', ' ', $column_class) : '' ;
+
+		if ((empty( $bg_image  ) || !isset( $bg_image)) && (empty($bg_video) || !isset( $bg_video ) ) && (empty( $bg_color ) || !isset($bg_color) ) ){
+			$column_atts['bg_indicator'] = 'no-background' ;
+		}else{
+			$column_atts['bg_indicator'] = 'with-background' ;
+		}
+
 		if( isset( $bg_overlay ) && 1 == $bg_overlay ) {
 			$opacity = '';
+
 			if($overlay_opacity) {
-				$opacity .= '-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity='.floatval($overlay_opacity).');';
-				$opacity .= 'filter: alpha(opacity='.floatval($overlay_opacity).');';
-				$opacity .= '-moz-opacity: '.floatval($overlay_opacity/100).';';
-				$opacity .= '-khtml-opacity: '.floatval($overlay_opacity/100).';';
-				$opacity .= 'opacity: '.floatval($overlay_opacity/100).';';
+				if(isset( $animate_overlay ) && 'hide' == $animate_overlay){
+					$animate_overlay_class = 'animate-hide';
+					$opacity = '';
+					$opacity_attr = 'data-opacity="'.floatval($overlay_opacity/100).'"';
+				}else if(isset( $animate_overlay ) && 'show' == $animate_overlay){
+					$animate_overlay_class = 'animate-show';
+					$opacity_attr = 'data-opacity="'.floatval($overlay_opacity/100).'"';
+					$opacity .= '-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity='.floatval($overlay_opacity).');';
+					$opacity .= 'filter: alpha(opacity='.floatval($overlay_opacity).');';
+					$opacity .= '-moz-opacity: '.floatval($overlay_opacity/100).';';
+					$opacity .= '-khtml-opacity: '.floatval($overlay_opacity/100).';';
+					$opacity .= 'opacity: '.floatval($overlay_opacity/100).';';
+				}else{
+					$animate_overlay_class = '';
+					$opacity_attr = '';
+					$opacity .= '-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity='.floatval($overlay_opacity).');';
+					$opacity .= 'filter: alpha(opacity='.floatval($overlay_opacity).');';
+					$opacity .= '-moz-opacity: '.floatval($overlay_opacity/100).';';
+					$opacity .= '-khtml-opacity: '.floatval($overlay_opacity/100).';';
+					$opacity .= 'opacity: '.floatval($overlay_opacity/100).';';
+				}
 			}
-			$column_atts['overlay'] .= '<div class="section-overlay" style="background: '.$overlay_color.'; '.$opacity.'"></div>';
+			if(isset( $link_overlay ) && !empty( $link_overlay )){
+				$overlay_link = '<a href="'.$link_overlay.'" class="be-col-overlay-link"></a>';
+			}
+			else{
+				$overlay_link = "";
+			}
+			$column_atts['overlay'] .= '<div class="'.$animate_overlay_class.' section-overlay" style="background: '.$overlay_color.'; '.$opacity.'" '.$opacity_attr.'></div>';
+			$column_atts['overlay'] .= $overlay_link;
 		}
 		$column_atts['animate'] = ( isset( $animate ) && 1 == $animate ) ? ' be-animate' : '';
 		$column_atts['animation_type'] = ( isset( $animation_type ) && !empty($animate) ) ? $animation_type : '';
+
 		return $column_atts;
 	}
 }
@@ -281,7 +370,7 @@ if (!function_exists('be_one_col')) {
 	function be_one_col( $atts, $content ) {
 		$column_atts = columns_extract($atts, $content);
 		$output = '';
-		$output .= '<div class="one-col column-block clearfix '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-col column-block clearfix ' .$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -296,7 +385,7 @@ if (!function_exists('be_one_third')) {
 	function be_one_third( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output .= '<div class="one-third column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-third column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -310,7 +399,7 @@ if (!function_exists('be_one_third_last')) {
 	function be_one_third_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output .= '<div class="one-third column-block last '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-third column-block last '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -325,7 +414,7 @@ if (!function_exists('be_one_fourth')) {
 	function be_one_fourth( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="one-fourth column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="one-fourth column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -339,7 +428,7 @@ if (!function_exists('be_one_fourth_last')) {
 	function be_one_fourth_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output .= '<div class="one-fourth column-block last '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-fourth column-block last '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -353,7 +442,7 @@ if (!function_exists('be_one_fifth')) {
 	function be_one_fifth( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="one-fifth column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="one-fifth column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -367,7 +456,7 @@ if (!function_exists('be_one_fifth_last')) {
 	function be_one_fifth_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="one-fifth column-block last '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="one-fifth column-block last '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -382,7 +471,7 @@ if (!function_exists('be_one_half')) {
 	function be_one_half( $atts, $content )  {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output .= '<div class="one-half column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-half column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -396,7 +485,7 @@ if (!function_exists('be_one_half_last')) {
 	function be_one_half_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output .= '<div class="one-half column-block last'.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output .= '<div '.$column_atts['col_id'].' class="one-half column-block last'.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -411,7 +500,7 @@ if (!function_exists('be_two_third')) {
 	function be_two_third( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="two-third column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="two-third column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -425,7 +514,7 @@ if (!function_exists('be_two_third_last')) {
 	function be_two_third_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="two-third column-block last '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="two-third column-block last '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -440,7 +529,7 @@ if (!function_exists('be_three_fourth')) {
 	function be_three_fourth( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="three-fourth column-block '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="three-fourth column-block '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -454,7 +543,7 @@ if (!function_exists('be_three_fourth_last')) {
 	function be_three_fourth_last( $atts, $content ) {
 		$column_atts = columns_extract($atts);
 		$output = '';
-		$output = '<div class="three-fourth column-block last '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
+		$output = '<div '.$column_atts['col_id'].' class="three-fourth column-block last '.$column_atts['column_class'].' '.$column_atts['bg_indicator'].' '.$column_atts['bg_stretch'].' '.$column_atts['animate'].' '.$column_atts['video_class'].' '.$column_atts['overlay_class'].'" data-animation="'.$column_atts['animation_type'].'" style="'.$column_atts['background'].' '.$column_atts['bottom_margin'] .' '.$column_atts['vertical_align'].'">';
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '<div class="be-custom-column-pad" style="'.$column_atts['padding'].'">' : '<div class="be-custom-column-inner">';
 		$output .= do_shortcode( $content );
 		$output .= ($column_atts['center_pad'] == 'be-column-pad') ? '</div>' : '</div>';
@@ -464,7 +553,6 @@ if (!function_exists('be_three_fourth_last')) {
 	}
 	add_shortcode('three_fourth_last','be_three_fourth_last');
 }
-
 /**************************************
 			TEXT BLOCK
 **************************************/
@@ -517,7 +605,6 @@ if (!function_exists('be_text')) {
 	}
 	add_shortcode( 'text', 'be_text' );
 }
-
 /**************************************
 			Html
 **************************************/
@@ -551,7 +638,6 @@ if (!function_exists('be_html')) {
 	}
 	add_shortcode( 'html', 'be_html' );
 }
-
 /**************************************STYLING MODULES**************************************/
 
 /**************************************
@@ -580,7 +666,6 @@ if (!function_exists('be_toggle')) {
 	}
 	add_shortcode( 'toggle', 'be_toggle' );
 }
-
 /**************************************
 			ANIMATED CHARTS
 **************************************/
@@ -611,7 +696,6 @@ if (!function_exists('be_chart')) {
 	}
 	add_shortcode( 'chart', 'be_chart' );
 }
-
 /**************************************
 			ANIMATED NUMBERS
 **************************************/
@@ -655,7 +739,7 @@ if (!function_exists('be_button')) {
 			'border_width' => 0,			
 			'border_color'=> '',
 			'hover_border_color'=> '',
-			'rounded' => '',		
+			'button_style' => 'none',	
 			'image' => '',
 			'background_animation' => '',
 			'animate' => 0,
@@ -689,12 +773,20 @@ if (!function_exists('be_button')) {
 		$background_animation = (isset($background_animation) && !empty($background_animation)) ? $background_animation : 'bg-animation-none';
 		$border_width = (!isset($border_width) || empty($border_width) || $border_width == '0') ? 0 : $border_width;
 		$border_style = 'border-style: solid; border-width:'.$border_width.'px; border-color: '.$border_color;
+
 		$alignment = ("block" == $type) ? 'center' : $alignment;
-		if( isset($alignment) && $alignment != 'none') {
-			$alignment = 'align-block block-'.$alignment;
+		if( isset($alignment) ){
+			if($alignment != 'none'){
+				$alignment = 'align-block block-'.$alignment;
+			}else{
+				$alignment = '';
+			}
 		}
 		$animate = ( isset( $animate ) && 1 == $animate ) ? ' be-animate' : ''; 
-		$rounded = ( $rounded == "1" && "block" != $type) ? "rounded" : '' ; 
+		// $rounded = ( $rounded == "1" && "block" != $type) ? "rounded" : '' ; 
+		$button_style = (isset($button_style) && !empty($button_style)) ? $button_style : '';
+
+		
 		$url = ( empty( $url ) ) ? '#' : $url ;
 		$image_wrap_class = '';
 		if ( isset( $image ) && !empty( $image ) ) {
@@ -732,14 +824,13 @@ if (!function_exists('be_button')) {
 		$icon_alignment = ( isset($icon_alignment) && !empty($icon_alignment) ) ? $icon_alignment : 'left' ;
 		$button_text = ( $icon_alignment == 'right' ) ? $button_text.$icon : $icon.$button_text ;
 		$output .= '<div class="be-button-wrap '.$alignment.' '.$image_wrap_class.'">';
-		$output .= '<a class="be-shortcode '.$type.'btn be-button '.$icon_alignment.'-icon '.$rounded.' '.$animate.' '.$mfp_class.' '.$background_animation.'" href="'.$url.'" style= "'.$border_style.';background-color: '.$bg_color.'; color: '.$color.'; '.$bg_animation_css.'" data-animation="'.$animation_type.'" '.$data_bg_color.' '.$data_hover_bg_color.' '.$data_color.' '.$data_hover_color.' '.$data_border_color.' '.$data_hover_border_color.' '.$new_tab.'>'.$button_text.'</a>' ; 
+		$output .= '<a class="be-shortcode '.$type.'btn be-button '.$icon_alignment.'-icon '.$button_style.' '.$animate.' '.$mfp_class.' '.$background_animation.'" href="'.$url.'" style= "'.$border_style.';background-color: '.$bg_color.'; color: '.$color.'; '.$bg_animation_css.'" data-animation="'.$animation_type.'" '.$data_bg_color.' '.$data_hover_bg_color.' '.$data_color.' '.$data_hover_color.' '.$data_border_color.' '.$data_hover_border_color.' '.$new_tab.'>'.$button_text.'</a>' ; 
 		$output .= '</div>'; 
 		
 		return $output;
 	}
 	add_shortcode( 'button', 'be_button' );
 }
-
 /**************************************
 			CALL TO ACTION
 **************************************/	
@@ -812,7 +903,6 @@ if ( ! function_exists( 'be_call_to_action' ) ) {
 	}
 	add_shortcode( 'call_to_action', 'be_call_to_action' );
 }
-
 /**************************************
 			CLIENTS
 **************************************/
@@ -826,10 +916,11 @@ if ( ! function_exists( 'be_clients' ) ) {
 	    $slide_show = ( isset( $slide_show ) && !empty($slide_show) && $slide_show == 'yes' ) ? 1 : 0 ;
 		$slide_show_speed = ( isset( $slide_show_speed ) && !empty($slide_show_speed) ) ? $slide_show_speed : 4000 ;
 		$output = '<div class="carousel-wrap clearfix">';
-		$output .='<ul class="be-carousel client-carousel" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'">';
+		// $output .='<ul class="be-carousel client-carousel" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'">';
+		$output .='<ul class="be-owl-carousel client-carousel-module" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'">';
 		$output .=do_shortcode($content);
 		$output .='</ul>';
-		$output .='<a class="prev be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-left"></i></a><a class="next be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-right"></i></a>';
+		// $output .='<a class="prev be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-left"></i></a><a class="next be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-right"></i></a>';
 		$output .='</div>';
 		return $output;
 	}
@@ -870,7 +961,6 @@ if ( ! function_exists( 'be_client' ) ) {
 	}
 	add_shortcode( 'client', 'be_client' );
 }
-
 /**************************************
 			DIVIDER
 **************************************/
@@ -892,7 +982,6 @@ if ( ! function_exists( 'be_separator' ) ) {
 	}
 	add_shortcode( 'separator', 'be_separator' );
 }
-
 /**************************************
 			DROP CAPS
 **************************************/
@@ -927,9 +1016,8 @@ if ( ! function_exists( 'be_dropcap' ) ) {
 	}
 	add_shortcode( 'dropcap', 'be_dropcap' );
 }
-
 /**************************************
-			FLEX SLIDER
+			BE IMAGE SLIDER
 **************************************/
 if (!function_exists('be_flex_slider')) {
 	function be_flex_slider( $atts, $content ) {
@@ -945,9 +1033,10 @@ if (!function_exists('be_flex_slider')) {
 			$arrow_style = $be_themes_data['slider_navigation_style'];
 		}
 	    $output = "";
-	    $output .= '<div class="be-flex-slider flexslider flex-loading '.$arrow_style.'" data-animation="'.$animation.'" data-auto-slide='.$auto_slide.' data-slide-interval="'.$slide_interval.'"><ul class="slides">';
+	    $output .= '<div class="be_image_slider '.$arrow_style.'"><div class="image_slider_module slides" data-animation="'.$animation.'" data-auto-slide="'.$auto_slide.'" data-slide-interval="'.$slide_interval.'">';
 		$output .= do_shortcode( $content );
-	    $output .= '</ul><div class="font-icon loader-style4-wrap loader-icon"></div></div>';
+	    // $output .= '</ul><div class="font-icon loader-style4-wrap loader-icon"></div>';
+	    $output .= '</div></div>';
 	    return $output;
 	}
 	add_shortcode( 'flex_slider', 'be_flex_slider' );
@@ -961,16 +1050,16 @@ if (!function_exists('be_flex_slide')) {
 	    	), $atts ) );
 
 			$output = '';
-	    	$output .= '<li>';
+	    	$output .= '<div class="be_image_slide">';
 			if( ! empty( $video ) ) {	
 				$videoType = be_themes_video_type( $video );
 				if( $videoType == "youtube" ) {
 					$video_id = ( preg_match( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $video, $match ) ) ? $match[1] : $video_id ; 
-					$output.='<iframe width="940" height="450" src="http://www.youtube.com/embed/'.$video_id.'" allowfullscreen></iframe>';
+					$output.='<iframe width="940" height="450" src="https://www.youtube.com/embed/'.$video_id.'" allowfullscreen></iframe>';
 				}
 				elseif( $videoType == "vimeo" ) {
 					sscanf( parse_url( $video, PHP_URL_PATH ), '/%d', $video_id );
-					$output.='<iframe src="http://player.vimeo.com/video/'.$video_id.'" width="500" height="281" allowFullScreen></iframe>';
+					$output.='<iframe src="https://player.vimeo.com/video/'.$video_id.'" width="500" height="281" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 				}
 			} else {
 				if ( !empty( $image ) ) { // check if the post has a Post Thumbnail assigned to it.
@@ -979,7 +1068,7 @@ if (!function_exists('be_flex_slide')) {
 					$output .=  '<img src="'.$attachment_url.'" alt="" />';
 				}
 			}
-	        $output .='</li>';
+	        $output .='</div>';
 
 	        return $output;
 	}
@@ -1051,7 +1140,9 @@ if (!function_exists('be_portfolio_carousel')) {
 				$global_gradient_style_color = $gradient_style_color = 'background-image: -o-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -moz-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -webkit-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -ms-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: linear-gradient(to '.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);';
 			}
 		}
-		$output .= '<div class="carousel-wrap portfolio-carousel"><div class="caroufredsel_wrapper clearfix"><ul class="be-carousel portfolios-carousel">';
+		$output .= '<div class="carousel-wrap portfolio-carousel">';
+		// $output .= '<div class="caroufredsel_wrapper clearfix"><ul class="be-carousel portfolios-carousel">';
+		$output .= '<ul class="be-owl-carousel portfolio-carousel-module">';
 		$items_per_page = (empty($items_per_page)) ? -1 : $items_per_page ; 
 		if( empty( $category[0] ) ) {
 			$args = array(
@@ -1139,7 +1230,7 @@ if (!function_exists('be_portfolio_carousel')) {
 				$trigger_animation = ($hover_style == 'style9-hover' || $hover_style == 'style10-hover') ? '' : 'animation-trigger';
 				$output .='<li class="carousel-item element be-hoverlay '.$hover_style.' '.$img_grayscale.' '.$title_style.'-title"><div class="element-inner">';
 				$output .= '<a href="'.$attachment_full_url.'" class="thumb-wrap '.$thumb_class.' '.$mfp_class.'" title="'.$attachment_info['title'].'">';
-				$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt /></div></div>';
+				$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt="'.$attachment_info['alt'].'" /></div></div>';
 				$output .= '<div class="thumb-overlay"><div class="thumb-bg" style="background-color:'.$thumb_overlay_color.'; '.$gradient_style_color.'">';
 				$output .= '<div class="thumb-title-wrap ">';
 				$output .= '<div class="thumb-title be-animate animated '.$trigger_animation.'" data-animation-type="'.$title_animation_type.'" style="color: '.$title_color.';">'.get_the_title().'</div>';
@@ -1158,7 +1249,27 @@ if (!function_exists('be_portfolio_carousel')) {
 				}
 				$output .= '</div>';
 				$output .= '</div></div>'; //End Thumb Bg & Thumb Overlay
-				$output .= '</a>';
+				$output .= '</a>'; //End Thumb Wrap
+				if(isset($open_with) && $open_with == 'lightbox-gallery') :
+					$output .='<div class="popup-gallery">';
+					$attachments = get_post_meta(get_the_ID(),'be_themes_single_portfolio_slider_images');
+					if(!empty($attachments)) {
+						foreach ( $attachments as $attachment_id ) {
+							$attach_img = wp_get_attachment_image_src($attachment_id, 'full');
+							$video_url = get_post_meta($attachment_id, 'be_themes_featured_video_url', true);
+							$attachment_info = be_wp_get_attachment($attachment_id);
+							if($video_url) {
+								$url = $video_url;
+								$mfp_class = 'mfp-iframe';
+							} else {
+								$url = $attach_img[0];
+								$mfp_class ='mfp-image';
+							}
+							$output .='<a href="'.$url.'" class="'.$mfp_class.'" title="'.$attachment_info['title'].'"></a>';
+						}
+					}
+					$output .= '</div>'; //End Gallery
+				endif;
 				$output .= '</div>';
 				$output .= ($like_button != 1) ? be_get_like_button(get_the_ID()) : '';
 				$output .= '</li>';
@@ -1166,8 +1277,9 @@ if (!function_exists('be_portfolio_carousel')) {
 		endif;
 		wp_reset_postdata();
 		$output .='</ul>';
-		$output .='<a class="prev be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-left"></i></a><a class="next be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-right"></i></a>';
-		$output .='</div></div>';
+		// $output .='<a class="prev be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-left"></i></a><a class="next be-carousel-nav" href="#"><i class="font-icon icon-arrow_carrot-right"></i></a>';
+		// $output .='</div>'; 'Caroufredsel Wrapper Close'
+		$output .='</div>';
 		return $output;
 	}
 	add_shortcode( 'portfolio_carousel' , 'be_portfolio_carousel' );
@@ -1199,6 +1311,7 @@ if (!function_exists('be_portfolio')) {
 			'gradient' => '0',
 			'gradient_direction' => 'bottom',
 			'overlay_opacity' => '85',
+			'show_overlay' => '',
 			'title_style' => 'style1',
 			'title_color' => '',
 			'cat_color' => '',
@@ -1214,6 +1327,7 @@ if (!function_exists('be_portfolio')) {
 		$col = ((!isset($col)) || empty($col)) ? 'three' : $col;
 		$gutter_style = ((!isset($gutter_style)) || empty($gutter_style)) ? 'style1' : $gutter_style;
 		$gutter_width = (isset($gutter_width) || $gutter_width == 0 || !empty($gutter_width)) ? intval( $gutter_width ) : intval(40);
+		$masonry_enable = ((!isset($masonry)) || empty($masonry)) ? 'masonry_disable' : 'masonry_enable';
 		$show_filters = ((!isset($show_filters)) || empty($show_filters)) ? 'yes' : $show_filters;
 		$tax_name = ((!isset($tax_name)) || empty($tax_name)) ? 'portfolio_categories' : $tax_name;
 		$filter_to_use = ((!isset($filter)) || empty($filter)) ? 'categories' : $filter;
@@ -1225,13 +1339,21 @@ if (!function_exists('be_portfolio')) {
 		$cat_animation_type = ((!isset($cat_animation_type)) || empty($cat_animation_type)) ? 'none' : $cat_animation_type;
 		$image_effect = ((!isset($image_effect)) || empty($image_effect)) ? 'none' : $image_effect;
 		$initial_load_style = ((!isset($initial_load_style)) || empty($initial_load_style)) ? 'none' : $initial_load_style;
-		$hover_style = ((!isset($hover_style)) || empty($hover_style) )  ? 'style1-hover' : $hover_style;
-		$hover_style = (($title_style == 'style5') || ($title_style == 'style6') || ($title_style == 'style7')) ? '' : $hover_style;
 		$gradient_direction = ((!isset($gradient_direction)) || empty($gradient_direction)) ? 'bottom' : $gradient_direction;
 		$global_title_color = $title_color = (isset($title_color) && !empty($title_color)) ? $title_color : '';
 		$global_cat_color = $cat_color = (isset($cat_color) && !empty($cat_color)) ? $cat_color : '';
 		$cat_hide = (isset($cat_hide) && !empty($cat_hide) && intval($cat_hide) != 0) ? $cat_hide : 0;
 		$item_parallax = (isset($item_parallax) && !empty($item_parallax) && intval($item_parallax) != 0) ? 'portfolio-item-parallax' : '';
+		$show_overlay = (isset($show_overlay) && !empty($show_overlay) && intval($show_overlay) != 0) ? 'force-show-thumb-overlay' : '';
+		$hover_style = ((!isset($hover_style)) || empty($hover_style) )  ? 'style1-hover' : $hover_style;
+		$hover_style = (($show_overlay == 'force-show-thumb-overlay') || ($title_style == 'style5') || ($title_style == 'style6') || ($title_style == 'style7')) ? '' : $hover_style;
+
+		if($show_overlay != ''){
+			$title_animation_type = 'none';
+			$cat_animation_type = 'none';
+			// $initial_load_style = 'none';
+		}
+
 		if(isset($title_alignment_static) && !empty($title_alignment_static) && ($title_style == 'style5' || $title_style == 'style6')) {
 			$title_alignment_static = 'text-align: '.$title_alignment_static.';';
 		} else {
@@ -1273,22 +1395,26 @@ if (!function_exists('be_portfolio')) {
 				$global_gradient_style_color = $gradient_style_color = 'background-image: -o-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -moz-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -webkit-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: -ms-linear-gradient('.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);background-image: linear-gradient(to '.$gradient_direction.', '.$global_thumb_overlay_color.' 0%, '.$global_thumb_gradient_overlay_color.' 100%);';
 			}
 		}
-		$output .= '<div class="portfolio-all-wrap"><div class="portfolio full-screen full-screen-gutter '.$gutter_style.'-gutter '.$col.'-col" data-action="get_ajax_full_screen_gutter_portfolio" data-category="'.$category.'" data-masonry="'.$masonry.'" data-showposts="'.$items_per_page.'" data-paged="2" data-col="'.$col.'" data-gallery="'.$gallery.'" data-filter="'.$filter_to_use.'" data-show_filters="'.$show_filters.'" data-thumbnail-bg-color="'.$global_thumb_overlay_color.'" data-thumbnail-bg-gradient="'.$gradient_style_color.'" data-title-style="'.$title_style.'" data-cat-color="'.$cat_color.'" data-title-color="'.$title_color.'" data-title-animation-type="'.$title_animation_type.'" data-cat-animation-type="'.$cat_animation_type.'" data-hover-style="'.$hover_style.'" data-gutter-width="'.$gutter_width.'" data-img-grayscale="'.$img_grayscale.'" data-image-effect="'.$image_effect.'" data-gradient-style-color="'.$global_gradient_style_color.'" data-cat-hide="'.$cat_hide.'" '.$portfolio_wrap_style.'>';
+		$output .= '<div class="portfolio-all-wrap"><div class="portfolio full-screen full-screen-gutter '.$masonry_enable.' '.$gutter_style.'-gutter '.$col.'-col" data-action="get_ajax_full_screen_gutter_portfolio" data-category="'.$category.'" data-masonry="'.$masonry.'" data-showposts="'.$items_per_page.'" data-paged="2" data-col="'.$col.'" data-gallery="'.$gallery.'" data-filter="'.$filter_to_use.'" data-show_filters="'.$show_filters.'" data-thumbnail-bg-color="'.$global_thumb_overlay_color.'" data-thumbnail-bg-gradient="'.$gradient_style_color.'" data-title-style="'.$title_style.'" data-cat-color="'.$cat_color.'" data-title-color="'.$title_color.'" data-title-animation-type="'.$title_animation_type.'" data-cat-animation-type="'.$cat_animation_type.'" data-hover-style="'.$hover_style.'" data-gutter-width="'.$gutter_width.'" data-img-grayscale="'.$img_grayscale.'" data-image-effect="'.$image_effect.'" data-gradient-style-color="'.$global_gradient_style_color.'" data-cat-hide="'.$cat_hide.'" data-like-indicator="'.$like_button.'" '.$portfolio_wrap_style.'>';
 		$category = explode(',', $category);
 		
 		if($filter_to_use == 'portfolio_tags' || empty( $category ) ) {
+			// $terms = get_terms( $filter_to_use , array( 'orderby' => 'count' , 'order' => 'DESC') );
 			$terms = get_terms( $filter_to_use );
 		} else {
 	 	 	$args_cat = array( 'taxonomy' => 'portfolio_categories' ) ;
+	 	 	
 			$stack = array();
 			foreach(get_categories( $args_cat ) as $single_category ) {
 				if ( in_array( $single_category->slug, $category ) ) {
 					array_push( $stack, $single_category->cat_ID );
 				}
 			}
-			$terms = get_terms($filter_to_use, array('include' => $stack) );
-		}
 
+			// $terms = get_terms($filter_to_use, array( 'orderby' => 'count' , 'order' => 'DESC', 'include' => $stack) );
+			$terms = get_terms($filter_to_use, array( 'include' => $stack) );
+		}
+		// var_dump($terms);
 	    if(!empty( $terms ) && $show_filters == 'yes') {
 	    	if($gutter_style == 'style2') {
 				$portfolio_filter_style = 'style="margin-left: '.$gutter_width.'px;"';
@@ -1304,29 +1430,29 @@ if (!function_exists('be_portfolio')) {
 	    	}
 	    	$output .= '</div>';
 		}
-		$output .= '<div class="portfolio-container clickable clearfix portfolio-shortcode '.$initial_load_style.' '.$item_parallax.'">';
+		$output .= '<div class="portfolio-container clickable clearfix portfolio-shortcode '.$show_overlay.' '.$initial_load_style.' '.$item_parallax.'">';
 		if( empty( $category[0] ) ) {
 			$args = array(
 				'post_type' => 'portfolio',
 				'posts_per_page' => $items_per_page,
-				'orderby'=> 'date',
-				'order'=> 'DESC',
-				'status'=> 'publish'
+				'orderby'=> apply_filters('be_portfolio_order_by','date'),
+				'order'=> apply_filters('be_portfolio_order','DESC'),
+				'post_status'=> 'publish'
 			);
 		} else {
 			$args = array (
 				'post_type' => 'portfolio',
 				'posts_per_page' => $items_per_page,
-				'orderby'=> 'date',
-				'order'=> 'DESC',
-				'status'=> 'publish',
+				'orderby'=> apply_filters('be_portfolio_order_by','date'),
+				'order'=> apply_filters('be_portfolio_order','DESC'),
+				'post_status'=> 'publish',
 				'tax_query' => array (
 					array (
 						'taxonomy' => $tax_name,
 						'field' => 'slug',
 						'terms' => $category,
 						'operator' => 'IN',
-					)
+					),
 				),
 			);	
 		}
@@ -1393,15 +1519,16 @@ if (!function_exists('be_portfolio')) {
 						$attachment_full_url = $video_url;
 						$mfp_class = 'mfp-iframe';
 					}
-					if(isset($open_with) && $open_with == 'lightbox-gallery') {
+					if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'lightbox-gallery') {
 						$thumb_class = 'be-lightbox-gallery';
-					} else if(isset($open_with) && $open_with == 'lightbox') {
+					} else if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'lightbox') {
 						$thumb_class = 'image-popup-vertical-fit single-image';
-					} else if(isset($open_with) && $open_with == 'none') {
+					} else if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'none') {
 						$thumb_class = 'no-link';
 						$attachment_full_url = '#';
 					} else {
 						$thumb_class = '';
+						$mfp_class = '';
 						$attachment_full_url = $permalink;
 					}
 					if($title_style == 'style5' || $title_style == 'style6') {
@@ -1412,8 +1539,8 @@ if (!function_exists('be_portfolio')) {
 					$output .= '<div class="element be-hoverlay '.$filter_classes.' '.$image_atts['class'].' '.$image_atts['alt_class'].' '.$hover_style.' '.$img_grayscale.' '.$title_style.'-title" style="margin-bottom: '.$gutter_width.'px !important;">';
 					$output .= '<div class="element-inner" style="margin-left: '.$gutter_width.'px;">';
 					$output .= '<a href="'.$attachment_full_url.'" class="thumb-wrap '.$thumb_class.' '.$mfp_class.'" title="'.$attachment_info['title'].'" '.$target.'>';
-					$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt /></div></div>';
-					$output .= '<div class="thumb-overlay"><div class="thumb-bg" style="background-color:'.$thumb_overlay_color.'; '.$gradient_style_color.'">';
+					$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt="'.$attachment_info['alt'].'" /></div></div>';
+					$output .= '<div class="thumb-overlay "><div class="thumb-bg " style="background-color:'.$thumb_overlay_color.'; '.$gradient_style_color.'">';
 					$output .= '<div class="thumb-title-wrap ">';
 					$output .= '<div class="thumb-title be-animate animated '.$trigger_animation.'" data-animation-type="'.$title_animation_type.'" style="color: '.$title_color.'; '.$title_alignment_static.'">'.get_the_title().'</div>';
 					$terms = be_themes_get_taxonomies_by_id(get_the_ID(), 'portfolio_categories');
@@ -1465,7 +1592,7 @@ if (!function_exists('be_portfolio')) {
 			if( $pagination == 'infinite' ) {
 				$output .='<div class="trigger_infinite_scroll portfolio_infinite_scroll"></div>';
 			} elseif( $pagination == 'loadmore' ) {
-				$output .='<div class="trigger_load_more portfolio_load_more" data-total-items="'.($the_query->found_posts-$items_initial_load).'"><a class="be-shortcode mediumbtn be-button rounded" href="#">Load More</a></div>';
+				$output .='<div class="trigger_load_more portfolio_load_more" data-total-items="'.($the_query->found_posts-$items_initial_load).'"><a class="be-shortcode mediumbtn be-button rounded" href="#">'.__( 'Load More', 'be-themes' ).'</a></div>';
 			}
 		}
 		$output .='</div></div>'; //end portfolio
@@ -1489,7 +1616,9 @@ if (!function_exists('be_gallery')) {
 			'masonry'=> '0',
 			'initial_load_style' => 'none',
 			'item_parallax' => 0,
+			'hover_content_option' => 'icon',
 			'disable_hover_icon' => '0',
+			'hover_content_color' => '',
 			'hover_style' => 'style1-hover',
 			'default_image_style' => 'color',
 			'hover_image_style' => 'color',
@@ -1503,19 +1632,54 @@ if (!function_exists('be_gallery')) {
 			'image_source' => 'selected',
 			'images' => '',
 			'account_name' => 'themeforest',
-			'count' => 10
+			'count' => 10,
+			'ids'	=> '',
+			'columns' => 0,
+			'link' => 'none',
 		) , $atts ) );
+
 		$output = $thumb_overlay_color = $gradient_style_color = '';
 		$col = ((!isset($col)) || empty($col)) ? 'three' : $col;
+		$columns = ((!isset($columns)) || empty($columns)) ? 0 : $columns;
+		$link = ((!isset($link)) || empty($link)) ? '' : $link;
 		$items_per_load = ((!isset($items_per_load)) || empty($items_per_load)) ? '' : $items_per_load;
 		$gallery_paginate =  ((!isset($gallery_paginate)) || empty($gallery_paginate)) ? 'none' : $gallery_paginate;
 		$gutter_style = ((!isset($gutter_style)) || empty($gutter_style)) ? 'style1' : $gutter_style;
 		$gutter_width = (isset($gutter_width) || $gutter_width == 0 || !empty($gutter_width)) ? intval( $gutter_width ) : intval(40);
 		$images = ((!isset($images)) || empty($images)) ? '' : $images;
+		
+		//Conditions if default WP gallery is used
+		if($columns != 0 || (!empty($ids) && $images == '') ) {
+			// $masonry = 1;
+			$lightbox_type = 'photoswipe';
+			$gutter_width = 10;
+			if($columns > 5){
+				$columns = 'three';
+			}elseif($columns == 1){
+				$columns = 'one';
+			}elseif($columns == 2){
+				$columns = 'two';
+			}elseif($columns == 3){
+				$columns = 'three';
+			}elseif($columns == 4){
+				$columns = 'four';
+			}elseif($columns == 5){
+				$columns = 'five';
+			}
+			$col = $columns;
+		}
+
+		//Condition if default WP gallery is used
+		$images = (isset($ids) && $images == '') ? $ids : $images;
 		$masonry = ((!isset($masonry)) || empty($masonry)) ? 0 : $masonry;
+		
+		
+
 		$initial_load_style = ((!isset($initial_load_style)) || empty($initial_load_style)) ? 'none' : $initial_load_style;
 		$hover_style = ((!isset($hover_style)) || empty($hover_style)) ? 'style1-hover' : $hover_style;
-		$disable_hover_icon = ((!isset($disable_hover_icon)) || empty($disable_hover_icon)) ? '' : 'hover-icon-no-show';
+		// $disable_hover_icon = ((!isset($disable_hover_icon)) || empty($disable_hover_icon)) ? '' : 'hover-icon-no-show';
+		// $hover_content_option = ((!isset($hover_content_option)) || empty($hover_content_option)) ? 'icon' : $hover_content_option;
+		$hover_content_color = ((!isset($hover_content_color)) || empty($hover_content_color)) ? '' : $hover_content_color;
 		$default_image_style = ((!isset($default_image_style)) || empty($default_image_style)) ? 'color' : $default_image_style;
 		$hover_image_style = ((!isset($hover_image_style)) || empty($hover_image_style)) ? 'color' : $hover_image_style;
 		$image_effect = ((!isset($image_effect)) || empty($image_effect)) ? 'none' : $image_effect;
@@ -1525,6 +1689,12 @@ if (!function_exists('be_gallery')) {
 		$item_parallax = (isset($item_parallax) && !empty($item_parallax) && intval($item_parallax) != 0) ? 'portfolio-item-parallax' : '';
 		$count = ((!isset($count)) || empty($count)) ? 10 : $count;
 
+		if( ( (!isset($hover_content_option)) || empty($hover_content_option))){
+			$hover_content_option = 'icon';
+		}elseif($hover_content_option == 'none'){
+			$disable_hover_icon = 'hover-icon-no-show';
+		} 
+		
 		// Changes for PhotoSwipe Gallery
 		$element_class = ('photoswipe' == $lightbox_type) ? 'be-photoswipe-gallery' : '' ;
 		//End 
@@ -1583,15 +1753,15 @@ if (!function_exists('be_gallery')) {
 		
 		if($images && is_array($images) && !isset($images['error']) && empty($images['error'])) {
 			$output .= '<div class="portfolio-all-wrap '.$disable_hover_icon.'">';
-			$output .= '<div class="portfolio full-screen full-screen-gutter '.$gutter_style.'-gutter '.$col.'-col" '.$portfolio_wrap_style.' data-action="get_be_gallery_with_pagination" data-paged="1" data-masonry="'.$masonry.'" data-source=\''.json_encode($source).'\' data-gutter-width="'.$gutter_width.'" data-images-array="'.$images_arr.'" data-col="'.$col.'" data-items-per-load="'.$items_per_load.'" data-hover-style="'.$hover_style.'" data-image-grayscale="'.$img_grayscale.'" data-lightbox-type="'.$lightbox_type.'" data-image-source="'.$image_source.'" data-image-effect="'.$image_effect.'" data-thumb-overlay-color="'.$thumb_overlay_color.'" data-grad-style-color="'.$gradient_style_color.'" data-like-button="'.$like_button.'" >';
+			$output .= '<div class="portfolio full-screen full-screen-gutter '.$gutter_style.'-gutter '.$col.'-col" '.$portfolio_wrap_style.' data-action="get_be_gallery_with_pagination" data-paged="1" data-masonry="'.$masonry.'" data-source=\''.json_encode($source).'\' data-gutter-width="'.$gutter_width.'" data-images-array="'.$images_arr.'" data-col="'.$col.'" data-items-per-load="'.$items_per_load.'" data-hover-style="'.$hover_style.'" data-image-grayscale="'.$img_grayscale.'" data-lightbox-type="'.$lightbox_type.'" data-image-source="'.$image_source.'" data-image-effect="'.$image_effect.'" data-thumb-overlay-color="'.$thumb_overlay_color.'" data-grad-style-color="'.$gradient_style_color.'" data-like-button="'.$like_button.'" data-hover-content="'.$hover_content_option.'" data-hover-content-color="'.$hover_content_color.'" >';
 			$output .= '<div class="portfolio-container clickable clearfix portfolio-shortcode '.$element_class.' '.$initial_load_style.' '.$item_parallax.'">';
-			$output .= get_be_gallery_shortcode($images, $col, $masonry, $hover_style, $img_grayscale, $gutter_width, $lightbox_type, $image_source, $image_effect, $thumb_overlay_color, $gradient_style_color, $like_button); //1.9
+			$output .= get_be_gallery_shortcode($images, $col, $masonry, $hover_style, $img_grayscale, $gutter_width, $lightbox_type, $image_source, $image_effect, $thumb_overlay_color, $gradient_style_color, $like_button, $hover_content_option, $hover_content_color); //1.9
 			$output .= '</div>'; //end portfolio-container
 			if('' != $items_per_load && (isset($gallery_paginate)) && 'selected' == $image_source) {
 				if( $gallery_paginate == 'infinite' ) {
 					$output .='<div class="trigger_infinite_scroll gallery_infinite_scroll"></div>';
 				} elseif( $gallery_paginate == 'loadmore' ) {
-					$output .='<div class="trigger_load_more gallery_load_more " data-total-items="'.$data_total_items.'"><a class="be-shortcode mediumbtn be-button rounded" href="#">Load More</a></div>';
+					$output .='<div class="trigger_load_more gallery_load_more " data-total-items="'.$data_total_items.'"><a class="be-shortcode mediumbtn be-button rounded" href="#">'.__( 'Load More', 'be-themes' ).'</a></div>';
 				}
 			}
 			$output .= '</div>'; //end portfolio
@@ -1606,6 +1776,124 @@ if (!function_exists('be_gallery')) {
 		return $output;
 	}
 	add_shortcode( 'gallery' , 'be_gallery' );
+}
+
+/*****************************************************
+		GALLERY
+*****************************************************/
+if (!function_exists('be_justified_gallery')) {
+	function be_justified_gallery( $atts ) {
+		global $be_themes_data;
+		extract( shortcode_atts( array (
+			'gutter_width' => 40,
+			'image_height' => 200,
+			'initial_load_style' => 'none',
+			'hover_style' => 'style1-hover',
+			'default_image_style' => 'color',
+			'hover_image_style' => 'color',
+			'image_effect' => 'none',
+			'disable_overlay' => 0,
+			'overlay_color' => $be_themes_data['color_scheme'],
+			'gradient' => '0',
+			'gradient_color' => $be_themes_data['color_scheme'],
+			'gradient_direction' => 'bottom',
+			'overlay_opacity' => '85',
+			'items_per_load' => '12',
+			'gallery_paginate' => 0,
+			'like_button' => 0,
+			'images' => '',
+		) , $atts ) );
+
+		$output = $thumb_overlay_color = $gradient_style_color = '';
+		$gutter_width = (isset($gutter_width) || $gutter_width == 0 || !empty($gutter_width)) ? intval( $gutter_width ) : intval(40);
+		$image_height = (isset($image_height) || $image_height == 0 || !empty($image_height)) ? intval( $image_height ) : intval(200);
+		$images = ((!isset($images)) || empty($images)) ? '' : $images;
+		$initial_load_style = ((!isset($initial_load_style)) || empty($initial_load_style)) ? 'none' : $initial_load_style;
+		$hover_style = ((!isset($hover_style)) || empty($hover_style)) ? 'style1-hover' : $hover_style;
+		$disable_hover_icon = ((!isset($disable_hover_icon)) || empty($disable_hover_icon)) ? '' : 'hover-icon-no-show';
+		$default_image_style = ((!isset($default_image_style)) || empty($default_image_style)) ? 'color' : $default_image_style;
+		$hover_image_style = ((!isset($hover_image_style)) || empty($hover_image_style)) ? 'color' : $hover_image_style;
+		$image_effect = ((!isset($image_effect)) || empty($image_effect)) ? 'none' : $image_effect;
+		$gradient_direction = ((!isset($gradient_direction)) || empty($gradient_direction)) ? 'bottom' : $gradient_direction;
+		$disable_overlay = (isset($disable_overlay) && !empty($disable_overlay) && $disable_overlay == 1) ? 1 : 0;
+		$items_per_load = ((!isset($items_per_load)) || empty($items_per_load)) ? '' : $items_per_load;
+		$gallery_paginate =  ((isset($gallery_paginate)) && !empty($gallery_paginate) && $gallery_paginate == 1) ? 1 : 0;
+		
+
+		if($default_image_style == 'black_white') {
+			if($hover_image_style == 'black_white') {
+				$img_grayscale = 'bw_to_bw';
+			} else {
+				$img_grayscale = 'bw_to_c';
+			}
+		} else {
+			if($hover_image_style == 'black_white') {
+				$img_grayscale = 'c_to_bw';
+			} else {
+				$img_grayscale = 'c_to_c';
+			}
+		}
+		$overlay_opacity = ((!isset($overlay_opacity)) || empty($overlay_opacity)) ? 85 : $overlay_opacity;
+		if(isset($overlay_color) && !empty($overlay_color)) {
+			$overlay_color = be_themes_hexa_to_rgb( $overlay_color );
+			$thumb_overlay_color = 'rgba('.$overlay_color[0].','.$overlay_color[1].','.$overlay_color[2].','.(intval($overlay_opacity) / 100 ).')';
+			if($gradient) {
+				if(!isset($gradient_color) && empty($gradient_color)) {
+					$gradient_color = $overlay_color;
+				} else {
+					$gradient_color = be_themes_hexa_to_rgb( $gradient_color );
+				}
+				$thumb_gradient_overlay_color = 'rgba('.$gradient_color[0].','.$gradient_color[1].','.$gradient_color[2].','.(intval($overlay_opacity) / 100 ).')';
+				$gradient_style_color = 'background-image: -o-linear-gradient('.$gradient_direction.', '.$thumb_overlay_color.' 0%, '.$thumb_gradient_overlay_color.' 100%);background-image: -moz-linear-gradient('.$gradient_direction.', '.$thumb_overlay_color.' 0%, '.$thumb_gradient_overlay_color.' 100%);background-image: -webkit-linear-gradient('.$gradient_direction.', '.$thumb_overlay_color.' 0%, '.$thumb_gradient_overlay_color.' 100%);background-image: -ms-linear-gradient('.$gradient_direction.', '.$thumb_overlay_color.' 0%, '.$thumb_gradient_overlay_color.' 100%);background-image: linear-gradient(to '.$gradient_direction.', '.$thumb_overlay_color.' 0%, '.$thumb_gradient_overlay_color.' 100%);';
+			}
+		}
+		$source = array (
+			'source' => 'selected',
+			'account_name' => '', 
+			'count' => '',
+			'col' => 'three',
+			'masonry' => 1,
+		);
+
+
+		$paged  = '0';
+		$images_offset = '0';
+
+		$images_arr = $images;	
+		$data_total_items = count(explode(',',$images_arr)) - $items_per_load;
+		
+		if(1 == $gallery_paginate && '' != $items_per_load){
+			$images_subset = array_slice(explode(',', $images), $images_offset, $items_per_load);
+		}else{
+			$images_subset = explode(',', $images);
+		}
+
+		$images = get_gallery_image_from_source($source, implode(",",$images_subset), 'photoswipe');
+		
+
+		// $images = get_gallery_image_from_source($source, $images, 'photoswipe');
+		
+		if($images && is_array($images) && !isset($images['error']) && empty($images['error'])) {
+			$output .= '<div class="justified-gallery-outer-wrap '.$disable_hover_icon.'">';
+			$output .= '<div class=" justified-gallery-inner-wrap " data-action="get_be_justified_gallery_with_pagination" data-paged="1" data-source=\''.json_encode($source).'\' data-images-array="'.$images_arr.'" data-items-per-load="'.$items_per_load.'" data-hover-style="'.$hover_style.'" data-image-grayscale="'.$img_grayscale.'" data-image-effect="'.$image_effect.'" data-thumb-overlay-color="'.$thumb_overlay_color.'" data-grad-style-color="'.$gradient_style_color.'" data-like-button="'.$like_button.'" data-disable-overlay="'.$disable_overlay.'" >';
+			$output .= '<div class=" justified-gallery clickable clearfix be-photoswipe-gallery '.$initial_load_style.'" data-gutter-width="'.$gutter_width.'" data-image-height="'.$image_height.'">';
+			$output .= get_be_justified_gallery_shortcode($images, $hover_style, $img_grayscale, $image_effect, $thumb_overlay_color, $gradient_style_color, $like_button, $disable_overlay);
+			$output .= '</div>'; //end justified-gallery
+			if('' != $items_per_load && (1 == $gallery_paginate) ) {
+				$output .='<div class="trigger_infinite_scroll justified_gallery_infinite_scroll"></div>';  
+			}
+			$output .= '</div>'; //end justified-gallery-inner-wrap
+			$output .= '</div>'; //end justified-gallery-outer-wrap
+		} else {
+			if(is_array($images) && !empty($images['error'])) {
+				$output .= '<p class="element-empty-message">'.$images['error'].'</p>';
+			} else {
+				$output .= '<p class="element-empty-message"><b>'.__('Gallery Error : ', 'be-themes').'</b>'.__('Unknown Error Please try again later', 'be-themes').'</p>';
+			}
+		}
+		return $output;
+	}
+	add_shortcode( 'justified_gallery' , 'be_justified_gallery' );
 }
 
 /*****************************************************
@@ -1688,38 +1976,74 @@ if (!function_exists('portfolio_navigation_module')) {
 		    'animate' => 0,
 			'animation_type'=>'fadeIn',
 	    ), $atts ));
+		global $be_themes_data;
+		$portfolio_home_page = get_post_meta( get_the_ID(), 'be_themes_portfolio_home_page', true); //Get link from Meta Options
+		$portfolio_home_page = ($portfolio_home_page == '' ? $be_themes_data['portfolio_home_page'] : $portfolio_home_page) ; //Get link from Options panel link is not present in Meta Options
+		$portfolio_catg_traversal = (1 == get_post_meta( get_the_ID(), 'be_themes_traverse_catg', true) ? true : false);
 	    $output = "";
 	    $style = ((!isset($style)) || empty($style)) ? 'style1' : $style;
 	    $animate = ( isset( $animate ) && 1 == $animate ) ? 'be-animate' : '' ;
+	    $grid_icon_background = !empty( $nav_links_color ) ? ' style="background: '.$nav_links_color.';"' : '';
+	    $nav_links_color = !empty( $nav_links_color ) ? ' style="color : '.$nav_links_color.';"' : '';
+        if ( is_singular( 'portfolio' ) ) {
+            
+            if(!empty($portfolio_home_page)) {
+                $url = $portfolio_home_page;
+            } else {
+                $url = site_url();
+            }
+        } else {
+            $url = be_get_posts_page_url();
+        }
 		if((!is_page_template( 'gallery.php' )) || (!is_page_template( 'portfolio.php' ))) {
 			if($style == 'style1') {
-				$output .= '<div class="portfolio-nav-wrap '.$animate.' align-'.$title_align.'" data-animation="'.$animation_type.'" style="color : '.$nav_links_color.';">';
-				ob_start();  
-				get_template_part( 'single', 'navigation' ); 
-				$output .= ob_get_contents();  
-				ob_end_clean();
+				$output .= '<div class="portfolio-nav-wrap style1-navigation'.$animate.' align-'.$title_align.'" data-animation="'.$animation_type.'" '.$nav_links_color.'>';
+				// ob_start();  
+				// get_template_part( 'single', 'navigation' ); 
+				// $output .= ob_get_contents();  
+				// ob_end_clean();
+				    $output .= '<div id="nav-below" class="single-page-nav">';
+				    $output .=  get_next_post_link( '%link', '<i class="font-icon icon-arrow_left" title="%title"></i>' , $portfolio_catg_traversal , '' , 'portfolio_categories');				    
+				    $output .= '<a href="'.$url.'">
+				    				<div class="home-grid-icon">
+				    					<span'.$grid_icon_background.'></span>
+				    					<span'.$grid_icon_background.'></span>
+				    					<span'.$grid_icon_background.'></span>
+				    					<span'.$grid_icon_background.'></span>
+				    					<span'.$grid_icon_background.'></span>
+				    					<span'.$grid_icon_background.'></span>
+				    				</div>
+				    			</a>';
+				    $output .= get_previous_post_link( '%link', '<i class="font-icon icon-arrow_right" title="%title"></i>' , $portfolio_catg_traversal , '' , 'portfolio_categories' );
+				    $output .= '</div>';
+
 				$output .= '</div>';
 			} else {
-				$output .= '<div class="portfolio-nav-wrap '.$animate.'" data-animation="'.$animation_type.'" style="color : '.$nav_links_color.';">';
+				$output .= '<div class="portfolio-nav-wrap '.$animate.'" data-animation="'.$animation_type.'" '.$nav_links_color.'>';
 	    		$output .= '<div id="nav-below" class="single-page-nav style2-navigation">';
-	    		$next_post = get_next_post();
-				$prev_post = get_previous_post();
+	    		$next_post = get_previous_post($portfolio_catg_traversal, ' ', 'portfolio_categories');
+				$prev_post = get_next_post($portfolio_catg_traversal, ' ', 'portfolio_categories');
 				if($prev_post) {
-					$output .= '<a href="'.get_permalink($prev_post->ID).'" title="'.str_replace('"', '\'', $prev_post->post_title).'" class="previous-post-link" ><i class="font-icon icon-arrow-left7"></i><h6>'.str_replace('"', '\'', $prev_post->post_title).'</h6></a>';
+					$output .= '<a href="'.get_permalink($prev_post->ID).'" title="'.str_replace('"', '\'', $prev_post->post_title).'" class="previous-post-link" >
+									<i class="font-icon icon-arrow-left7"></i>
+									<h6'.$nav_links_color.'>'.str_replace('"', '\'', $prev_post->post_title).'</h6>
+								</a>';
 				}
-	        	if ( is_singular( 'portfolio' ) ) {
-	            	global $be_themes_data;
-	            	if(!empty($be_themes_data['portfolio_home_page'])) {
-	                	$url = $be_themes_data['portfolio_home_page'];
-	            	} else {
-	                	$url = home_url();
-	            	}
-	        	} else {
-	            	$url = be_get_posts_page_url();
-	        	}
-	        	$output .= '<a href="'.$url.'" class="portfolio-url"><i class="font-icon icon-icon_grid-2x2" title="Posts"></i></a>';
+	        	$output .= '<a href="'.$url.'" class="portfolio-url">
+	        					<div class="home-grid-icon">
+	        						<span'.$grid_icon_background.'></span>
+	        						<span'.$grid_icon_background.'></span>
+	        						<span'.$grid_icon_background.'></span>
+	        						<span'.$grid_icon_background.'></span>
+	        						<span'.$grid_icon_background.'></span>
+	        						<span'.$grid_icon_background.'></span>
+	        					</div>
+	        				</a>';
 	        	if($next_post) {
-	        		$output .= '<a href="'.get_permalink($next_post->ID).'" title="'.str_replace('"', '\'', $next_post->post_title).'" class="next-post-link" ><h6>'.str_replace('"', '\'', $next_post->post_title).'</h6><i class="font-icon icon-arrow-left7"></i></a>';
+	        		$output .= '<a href="'.get_permalink($next_post->ID).'" title="'.str_replace('"', '\'', $next_post->post_title).'" class="next-post-link" >
+	        						<h6'.$nav_links_color.'>'.str_replace('"', '\'', $next_post->post_title).'</h6>
+	        						<i class="font-icon icon-arrow-left7"></i>
+	        					</a>';
 	        	}
 	    		$output .= '</div>';
 	    		$output .= '</div>';
@@ -1752,7 +2076,7 @@ if (!function_exists('be_blog')) {
 			$portfolio_wrap_style = 'style="margin-right: '.$blog_attr['gutter_width'].'px;"';
 		}
 		$output .= '<div class="portfolio-all-wrap">';
-		$output .= '<div class="portfolio full-screen full-screen-gutter '.$gutter_style.'-gutter '.$col.'-col" data-gutter-width="'.$blog_attr['gutter_width'].'" '.$portfolio_wrap_style.'>';
+		$output .= '<div class="portfolio full-screen full-screen-gutter '.$gutter_style.'-gutter '.$col.'-col" data-gutter-width="'.$blog_attr['gutter_width'].'" '.$portfolio_wrap_style.' data-col="'.$col.'">';
 		$output .= '<div class="style3-blog portfolio-container clickable clearfix">';
 		$blog_attr['gutter_width'] = $gutter_width;
 		$args = array( 'post_type' => 'post', 'paged' => $paged );
@@ -1771,6 +2095,7 @@ if (!function_exists('be_blog')) {
 		$output .= ($the_query->max_num_pages > 1) ? '<div class="pagination_parent" style="margin-left: '.$blog_attr['gutter_width'].'px">'.get_be_themes_pagination($the_query->max_num_pages).'</div>' : '' ;
 		$output .= '</div>';
 		$output .= '</div>'; //end portfolio
+		wp_reset_postdata();
 		return $output;
 	}
 	add_shortcode( 'blog' , 'be_blog' );
@@ -1847,7 +2172,9 @@ if ( ! function_exists( 'be_gmaps' ) ) {
 	}
 	add_shortcode( 'gmaps', 'be_gmaps' );
 }
-
+/**************************************
+			LIGHTBOX IMAGE
+**************************************/
 if ( ! function_exists( 'be_lightbox_image' ) ) {
 	function be_lightbox_image( $atts, $content ){
 		extract( shortcode_atts( array(
@@ -1918,47 +2245,6 @@ if (!function_exists('be_grid_content')) {
 	}
 	add_shortcode( 'grid_content', 'be_grid_content' );
 }
-// /**************************************
-// 			Skill Style1
-// **************************************/
-// if (!function_exists('be_skill_style1')) {
-// 	function be_skill_style1( $atts, $content ) {
-// 		extract( shortcode_atts( array (
-// 			'column' => 1,
-// 			'border_color' => '',
-// 	    ), $atts ) );
-// 		if(empty( $column )) {
-// 			$column = 2;
-// 		}
-// 	    $output = "";
-// 	    $output .= '<div class="skill-style1" data-col="'.$column.'" style="border-color: '.$border_color.';">';
-// 	    $output .= do_shortcode( $content );
-// 	    $output .= '</div>';
-// 	    return $output;
-// 	}
-// 	add_shortcode( 'skill_style1', 'be_skill_style1' );
-// }
-// if (!function_exists('be_skill_col')) {
-// 	function be_skill_col( $atts, $content ){
-// 			extract( shortcode_atts( array (
-// 				'icon' => '',
-// 				'icon_size' => 'medium',
-// 				'icon_color' => '',
-// 		        'content' => '',
-// 		        'content_color' => '',
-// 		        'animate' => 0,
-// 				'animation_type'=>'fadeIn',
-// 	    	), $atts ));
-// 	    	$animate = ( isset( $animate ) && 1 == $animate ) ? ' be-animate' : 0 ;
-// 			$output = '';
-// 	    	$output .= '<div class="skill-col '.$animate.' size-'.$icon_size.' align-center" data-animation="'.$animation_type.'">';
-// 			$output .= '<i class="font-icon '.$icon.'" style="color: '.$icon_color.';"></i>';
-// 			$output .= '<h6 class="skill-info" style="color: '.$content_color.';">'.$content.'</h6>';
-// 	        $output .= '</div>';
-// 	        return $output;
-// 	}
-// 	add_shortcode( 'skill_col', 'be_skill_col' );
-// }
 /**************************************
 			FONT ICONS
 **************************************/
@@ -2019,6 +2305,7 @@ if (!function_exists('be_icons')) {
 				$mfp_class = 'mfp-iframe image-popup-vertical-fit';
 			}
 		}
+
 		// $output .= ( $alignment && $alignment != 'none' ) ? '<div class="icon-shortcode align-'.$alignment.'">' : '' ; 
 		$output .= '<div class="icon-shortcode align-'.$alignment.'">'; 
 		$output .= '<a href="'.$href.'" class="icon-shortcode icon-'.$style.' '.$animate.' '.$mfp_class.'" data-animation="'.$animation_type.'" '.$new_tab.'>';
@@ -2030,7 +2317,6 @@ if (!function_exists('be_icons')) {
 	}
 	add_shortcode( 'icon', 'be_icons' );
 }
-
 /**************************************
 			LISTS
 **************************************/
@@ -2062,7 +2348,6 @@ if (!function_exists('be_list')) {
 	}
 	add_shortcode( 'list', 'be_list' );
 }
-
 /**************************************
 			NOTIFICATIONS
 **************************************/
@@ -2081,7 +2366,6 @@ if (!function_exists('be_notifications')) {
 	}
 	add_shortcode( 'notifications', 'be_notifications' );
 }
-
 /**************************************
 			PLUG IN SHORTCODES
 **************************************/
@@ -2145,7 +2429,8 @@ if ( ! function_exists( 'be_project_details' ) ) {
 			if(get_post_meta($post->ID,'be_themes_portfolio_visitsite_url',true)) {
 				if(!isset($be_themes_data['portfolio_visit_site_style']) || empty($be_themes_data['portfolio_visit_site_style'])) {
 					$be_themes_data['portfolio_visit_site_style'] = 'style1';
-				}
+				}				
+
 				$output .= '<a href="'.get_post_meta($post->ID,'be_themes_portfolio_visitsite_url',true).'" class="mediumbtn be-button view-project-link '.$be_themes_data['portfolio_visit_site_style'].'-button" target="_blank">'.__('View Project', 'be-themes').'</a>';
 			}
 			$output .= '</div>';
@@ -2155,7 +2440,6 @@ if ( ! function_exists( 'be_project_details' ) ) {
 	}
 	add_shortcode( 'project_details', 'be_project_details' );
 }
-
 /**************************************
 			PRICING TABLE
 **************************************/
@@ -2233,9 +2517,6 @@ if ( ! function_exists( 'be_pricing_feature' ) ) {
 	}
 	add_shortcode( 'pricing_feature', 'be_pricing_feature' );
 }
-
-
-
 /**************************************
 			SERVICES
 **************************************/
@@ -2248,7 +2529,6 @@ if ( ! function_exists( 'be_services' ) ) {
 	}
 	add_shortcode( 'services', 'be_services' );
 }
-
 if ( ! function_exists( 'be_service' ) ) {
 	function be_service( $atts, $content ) {
 		extract( shortcode_atts( array (
@@ -2269,7 +2549,6 @@ if ( ! function_exists( 'be_service' ) ) {
 	}
 	add_shortcode( 'service', 'be_service' );
 }
-
 /**************************************
 			SKILlS
 **************************************/
@@ -2316,7 +2595,6 @@ if ( ! function_exists( 'be_skill' ) ) {
 	}
 	add_shortcode( 'skill', 'be_skill' );
 }
-
 /**************************************
 			LINEBREAK
 **************************************/
@@ -2337,7 +2615,6 @@ if (!function_exists('be_linebreak')) {
 	}
 	add_shortcode( 'linebreak', 'be_linebreak' );
 }
-
 /**************************************
 			SPECIAL TITLE 1
 **************************************/
@@ -2400,7 +2677,6 @@ if (!function_exists('be_special_heading')) {
 	}
 	add_shortcode( 'special_heading', 'be_special_heading' );
 }
-
 /**************************************
 			SPECIAL TITLE 2
 **************************************/
@@ -2430,42 +2706,6 @@ if (!function_exists('be_special_heading2')) {
 	}
 	add_shortcode( 'special_heading2', 'be_special_heading2' );
 }
-
-/**************************************
-			SPECIAL TITLE 2
-**************************************/
-// if (!function_exists('be_special_heading2')) {
-// 	function be_special_heading2( $atts, $content ) {
-// 		extract( shortcode_atts( array(
-// 	        'title_content' => '',
-// 	        'title_color' => '',
-// 	        'h_tag' => 'h3',
-// 	        'separator_color' => '#323232',
-// 	        'border_color' => '',
-// 	        'bg_color' => '',
-// 	        'bg_opacity' => '',
-// 			'scroll_to_animate'=> 0,
-// 			'animate'=>0,
-// 	        'animation_type'=>'fadeIn',
-// 	    ),$atts ) );
-
-// 		$output ='';
-// 		$bg_opacity = $bg_opacity/100;
-// 		$bg = be_themes_get_background_colors($bg_color, $bg_opacity);
-
-// 		$animate = ( isset( $animate ) && 1 == $animate ) ? ' be-animate' : '' ;
-// 		$scroll_to_animate = ( isset( $scroll_to_animate ) && 1 == $scroll_to_animate ) ? 'scrollToFade' : '' ;
-// 		$separator_color = ( ! empty( $separator_color ) ) ? 'style="background-color:'.$separator_color.';border-color:'.$separator_color.';color:'.$separator_color.';"' : $separator_color ;
-		
-// 		$output.='<div class="special-heading-wrap style2'.$animate.' '.$scroll_to_animate.'" data-animation="'.$animation_type.'" style="border-color: '.$border_color.';">';
-// 		$output.='<div class="special-heading align-center" style="'.$bg.'"><'.$h_tag.' class="special-h-tag" style="color: '.$title_color.'">'.$title_content.'</'.$h_tag.'>';
-// 		$output.= ($content) ? '<hr class="separator style-2" '.$separator_color.' /><span class="sub-title">'.$content.'</span>' : '' ;
-// 		$output .='</div></div>';
-// 		return $output;
-// 	}
-// 	add_shortcode( 'special_heading2', 'be_special_heading2' );
-// }
-
 /**************************************
 			SPECIAL TITLE 3
 **************************************/
@@ -2520,7 +2760,6 @@ if (!function_exists('be_special_heading3')) {
 	}
 	add_shortcode( 'special_heading3', 'be_special_heading3' );
 }
-
 /**************************************
 			SPECIAL SUB TITLE 1
 **************************************/
@@ -2549,7 +2788,6 @@ if (!function_exists('be_special_subtitle')) {
 	}
 	add_shortcode( 'special_sub_title', 'be_special_subtitle' );
 }
-
 /**************************************
 			TABS
 **************************************/
@@ -2590,10 +2828,6 @@ if (!function_exists('be_tab')) {
 	}
 	add_shortcode( 'tab', 'be_tab' );
 }
-
-
-
-
 /**************************************
 			TITLE WITH ICON
 **************************************/
@@ -2621,7 +2855,6 @@ if ( ! function_exists( 'be_title_icon' ) ) {
 	}
 	add_shortcode('title_icon','be_title_icon');
 }
-
 /**************************************
 			VIDEO - YOUTUBE
 **************************************/
@@ -2659,7 +2892,7 @@ if (!function_exists('be_youtube')) {
 		if( ! empty( $url ) ) {
 			$video_id = ( preg_match( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) ? $match[1] : '' ;
 			
-			return '<iframe class="youtube" src="http://www.youtube.com/embed/'.$video_id.'?rel=0&wmode=transparent" style="border: none;" allowfullscreen></iframe>';		
+			return '<iframe class="youtube" id="be-vimeo-'.$video_id.'" src="https://youtube.com/embed/'.$video_id.'?rel=0&wmode=transparent" style="border: none;" allowfullscreen></iframe>';		
 		} else {
 			return '';
 		}
@@ -2675,13 +2908,12 @@ if (!function_exists('be_vimeo')) {
 		$video_id = '';
 		if( ! empty( $url ) ) {
 			sscanf(parse_url($url, PHP_URL_PATH), '/%d', $video_id);
-			return '<iframe src="http://player.vimeo.com/video/'.$video_id.'?api=1" id="be-vimeo-'.$video_id.'" class="be-vimeo-video" width="500" height="281" style="border: none;" allowfullscreen></iframe>';
+			return '<iframe src="https://player.vimeo.com/video/'.$video_id.'?api=1" id="be-vimeo-'.$video_id.'" class="be-vimeo-video" width="500" height="281" style="border: none;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 		} else {
 			return '';
 		}
 	}
 }
-
 /**************************************
 			ROTATES
 **************************************/
@@ -2707,6 +2939,9 @@ if ( ! function_exists( 'be_rotate' ) ) {
 	}
 	add_shortcode( 'rotate', 'be_rotate' );
 }
+/**************************************
+			ANIMATED TEXT
+**************************************/
 if ( ! function_exists( 'be_animate_typed' ) ) {
 	function be_animate_typed( $atts, $content ) {
 		return '<span class="typed">'.do_shortcode( $content ).'</span>';
@@ -2722,7 +2957,6 @@ if ( ! function_exists( 'be_animate_type' ) ) {
 	}
 	add_shortcode( 'type', 'be_animate_type' );
 }
-
 /**************************************
 		Contact Form
 **************************************/
@@ -2778,8 +3012,9 @@ if ( ! function_exists( 'be_contact_form' ) ) {
 	}
 	add_shortcode('contact_form','be_contact_form');
 }
-
-
+/**************************************
+			TWEET
+**************************************/
 if (!function_exists('be_tweet')) {
 	function be_tweet( $atts, $content ) {
 		extract( shortcode_atts( array (
@@ -2789,6 +3024,8 @@ if (!function_exists('be_tweet')) {
 			'content_size' => '12',
 			'tweet_bird_color' => '',
 			'alignment' => 'center',
+			'autoplay' => '0',
+			'pagination' => 0,
 			'animate' => 0,
 			'animation_type' =>'slide-up',
 		), $atts ) );
@@ -2796,12 +3033,13 @@ if (!function_exists('be_tweet')) {
 		$alignment = (isset( $alignment ) && !empty( $alignment )) ? $alignment : 'center';
 		$color = (!isset($color) || empty($color)) ? '' : $color;
 		$tweet_bird_color = (!isset($tweet_bird_color) || empty($tweet_bird_color)) ? '' : $tweet_bird_color;
+		$pagination = (empty($pagination) || (!empty($pagination) && $pagination == 0)) ? '0' : '1' ; 
 		$output = '';
 		if($account_name) {
 			$query = 'count='.$count.'&include_entities=true&include_rts=true&screen_name='.$account_name;
 			$tweets = be_get_tweets( $query );
 			if( $tweets ) {
-				$output .= '<div class="flexslider tweet-flex-slider tweet-slides'.$animate.'" data-animation="'.$animation_type.'"><ul class="twitter_module slides '.$alignment.'-content">';
+				$output .= '<div class="tweet-slides ' .$animate.'" data-animation="'.$animation_type.'" ><ul class="twitter_module slides '.$alignment.'-content" data-autoplay="'.$autoplay.'" data-pagination="'.$pagination.'">';
 				foreach($tweets as $tweet) {
 					$output .= '<li class="tweet_list"><div class="testimonial_slide_inner"><i class="font-icon icon-twitter" style="color: '.$tweet_bird_color.'"></i><span class="tweet-content status" style="font-size: '.$content_size.'px; color: '.$color.'">';
 					$output .= be_tweet_format($tweet);
@@ -2814,7 +3052,6 @@ if (!function_exists('be_tweet')) {
 	}
 	add_shortcode( 'tweets', 'be_tweet' );
 }
-
 /**************************************
 			TEAM
 **************************************/
@@ -2958,10 +3195,6 @@ if ( ! function_exists( 'be_team' ) ) {
 	}
 	add_shortcode( 'team', 'be_team' );
 }
-
-
-
-
 /**************************************
 			TESTIMONIALS
 **************************************/
@@ -2973,9 +3206,10 @@ if (!function_exists('be_testimonials')) {
 			'author_role_font' => 'body',
 			'alignment' => 'center',
 			'slide_animation_type' => 'slide',
-			'slide_show' => 'yes',
+			'slide_show' => 'no',
 			'slide_show_speed' => 4000,
 			'animate' => 0,
+			'pagination' => 0,
 			'animation_type' => 'fadeIn',
 		), $atts ) );
 		$GLOBALS['testimonial_font_size_global'] = 	$testimonial_font_size;
@@ -2985,7 +3219,8 @@ if (!function_exists('be_testimonials')) {
 		$slide_show = ( isset( $slide_show ) && !empty($slide_show) && $slide_show == 'yes' ) ? 1 : 0 ;
 		$slide_show_speed = ( isset( $slide_show_speed ) && !empty($slide_show_speed) ) ? $slide_show_speed : 4000 ;
 		$alignment = (isset( $alignment ) && !empty( $alignment )) ? $alignment : 'center';
-		$return = '<div class="testimonials_wrap '.$animate.'" data-animation="'.$animation_type.'" ><div class="flexslider testimonial-flex-slider" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'" data-slide-animation-type="'.$slide_animation_type.'"><ul class="clearfix slides '.$alignment.'-content">'.do_shortcode( $content ).'</ul></div></div>';		
+		$pagination = (empty($pagination) || (!empty($pagination) && $pagination == 0)) ? '0' : '1' ; 
+		$return = '<div class="testimonials_wrap '.$animate.'" data-animation="'.$animation_type.'" ><div class="testimonials-slides"><div class="clearfix testimonial_module slides '.$alignment.'-content" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'" data-slide-animation-type="'.$slide_animation_type.'" data-pagination="'.$pagination.'">'.do_shortcode( $content ).'</div></div></div>';		
 		return $return;	
 	}	
 	add_shortcode( 'testimonials', 'be_testimonials' );
@@ -3029,7 +3264,7 @@ if (!function_exists('be_testimonial')) {
 			$attachment_url = $attachment_info[0];
 			$author_image =  '<div class="testimonial-author-img"><img src="'.$attachment_url.'" alt="" /></div>';
 		}
-		$output .= '<li class="testimonial_slide slide clearfix"><div class="testimonial_slide_inner">';
+		$output .= '<div class="testimonial_slide slide clearfix"><div class="testimonial_slide_inner">';
 		$output .= '<i class="font-icon icon-quote" '.$quote_color.'></i>';
 		$output .= '<p style= "font-size: '.$global_testimonial_font_size.'px;" class="testimonial-content">'.$content.'</p>';
 		$output .= '<div class="testimonial-author-info-wrap clearfix">';
@@ -3039,14 +3274,14 @@ if (!function_exists('be_testimonial')) {
 		$output .= $author_role;
 		$output .= '</div>';
 		$output .= '</div>';
-		$output .= '</div></li>';
+		$output .= '</div></div>';
 		return $output;
 	}	
 	add_shortcode( 'testimonial', 'be_testimonial' );
 }
-
-// Content Slider
-
+/**************************************
+			CONTENT SLIDER
+**************************************/
 if (!function_exists('be_content_slides')) {	
 	function be_content_slides( $atts, $content ){
 		global $be_themes_data;
@@ -3065,8 +3300,7 @@ if (!function_exists('be_content_slides')) {
 		$slide_show = ( isset( $slide_show ) && !empty($slide_show) && $slide_show == 'yes' ) ? 1 : 0 ;
 		$slide_show_speed = ( isset( $slide_show_speed ) && !empty($slide_show_speed) ) ? $slide_show_speed : 4000 ;
 		$bullets_color = ( isset( $bullets_color ) && !empty($bullets_color) ) ? $bullets_color : '#000' ;
-		$return = '<div class="testimonials_wrap '.$animate.' content-slide-wrap" data-animation="'.$animation_type.'" ><div class="flexslider content-flex-slider clearfix" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'" data-slide-animation-type="'.$slide_animation_type.'"><ul class="clearfix slides clearfix">'.do_shortcode( $content ).'</ul></div>';
-		$return .= '<div class="flexslider-controls clearfix"><ol class="flex-control-nav flex-control-paging" style="border-color: '.$bullets_color.'"></ol></div></div>';
+		$return = '<div class="'.$animate.' content-slide-wrap" data-animation="'.$animation_type.'" ><div class=" content-slider clearfix"><ul class="clearfix slides content_slider_module clearfix" data-slide-show="'.$slide_show.'" data-slide-show-speed="'.$slide_show_speed.'" data-slide-animation-type="'.$slide_animation_type.'">'.do_shortcode( $content ).'</ul></div></div>';
 		return $return;	
 	}	
 	add_shortcode( 'content_slides', 'be_content_slides' );
@@ -3076,7 +3310,7 @@ if (!function_exists('be_content_slide')) {
 		$content = do_shortcode($content);
 		$content_max_width = ( isset( $GLOBALS['content_max_width'] ) && !empty( $GLOBALS['content_max_width'] ) ) ? $GLOBALS['content_max_width'] : 100;
 		$output = '';
-		$output .= '<li class="testimonial_slide slide clearfix"><div class="content_slide_inner" style="width: '.$content_max_width.'%">';
+		$output .= '<li class="content_slide slide clearfix"><div class="content_slide_inner" style="width: '.$content_max_width.'%">';
 		$output .= '<div class="content-slide-content">'.be_themes_formatter( do_shortcode( shortcode_unautop( $content ) ) ).'</div>';
 		$output .= '</div></li>';
 		return $output;
@@ -3292,7 +3526,7 @@ if ( ! function_exists( 'be_animate_icon_style2' ) ) {
 	    $icon_color_hover_state = ( isset( $icon_color_hover_state ) && !empty( $icon_color_hover_state ) ) ? $icon_color_hover_state : $icon_color ;
 	    $title_color = ( isset( $title_color ) && !empty( $title_color ) ) ? $title_color : 'initial' ;
 	    $title_color_hover_state = ( isset( $title_color_hover_state ) && !empty( $title_color_hover_state ) ) ? $title_color_hover_state : $title_color ;
-	    $title = ( isset( $title ) && !empty( $title ) ) ? '<'.$h_tag.' class="animate-icon-title" style="color: '.$title_color.'; margin-bottom: 20px !important;">'.$title.'</'.$h_tag.'>' : '';
+	    $title = ( isset( $title ) && !empty( $title ) ) ? '<'.$h_tag.' class="animate-icon-title" style="color: '.$title_color.'; ">'.$title.'</'.$h_tag.'>' : '';
 	    $bg_color = ( isset( $bg_color ) && !empty( $bg_color ) ) ? $bg_color : 'transparent' ;
 	    $hover_bg_color = ( isset( $hover_bg_color ) && !empty( $hover_bg_color ) ) ? $hover_bg_color : $bg_color ;
 	    $output = '';
@@ -3458,7 +3692,9 @@ if (!function_exists('be_process_col')) {
 	}
 	add_shortcode( 'process_col', 'be_process_col' );
 }
-
+/**************************************
+			MENU CARD
+**************************************/
 if (!function_exists('be_menu_cards')) {
 	function be_menu_cards( $atts, $content ) {
 			extract( shortcode_atts( array (
@@ -3499,6 +3735,9 @@ if (!function_exists('be_menu_cards')) {
 	}
 	add_shortcode( 'menu_card', 'be_menu_cards' );
 }
+/**************************************
+			NEWSLETTER
+**************************************/
 if (!function_exists('be_newsletter')) {
 	function be_newsletter( $atts, $content ) {
 			extract( shortcode_atts( array (
@@ -3562,6 +3801,9 @@ if (!function_exists('be_newsletter')) {
 	}
 	add_shortcode( 'newsletter', 'be_newsletter' );
 }
+/**************************************
+			COUNTDOWN
+**************************************/
 if (!function_exists('be_countdown')) {
 	function be_countdown( $atts, $content ) {
 			extract( shortcode_atts( array (

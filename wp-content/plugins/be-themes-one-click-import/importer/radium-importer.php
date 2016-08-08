@@ -113,38 +113,55 @@ class Radium_Theme_Importer {
               </ul>
          </div>
 
-         <div style="background-color: #F5FAFD; margin:10px 0;padding: 10px;color: #0C518F;border: 3px solid #CAE0F3; claer:both; width:90%; line-height:18px;"><p class="tie_message_hint">Before you begin, make sure all the required plugins are activated.</p></div>
+         <div style="background-color: #F5FAFD; margin:10px 0;padding: 20px 10px 0px 10px;color: #0C518F;border: 3px solid #CAE0F3; claer:both; width:90%; line-height:18px;">
+          <p class="tie_message_hint" style="margin-botton: 0px;">Before you begin, Note that - Server Requirements are very critical in order to seamlessly upload the theme and import the demo data. Below are the list of PHP configurations required for importing the sample content..</p>
+          <ul style="padding-left: 20px;margin-bottom:30px;list-style-position: inside;list-style-type: square;}">
+            <li>MAX_EXECUTION_TIME = 300</li>
+            <li>MAX_INPUT_TIME = 120</li>
+            <li>MEMORY_LIMIT = 128M</li>
+          </ul>
+          <p class="tie_message_hint">You can check this in the php.ini file on your server and modify them as necessary. Alternatively, you can install and activate a plugin called Host PHP Info. On activating the plugin, the PHP Info can be found by navigating to Tools > PHP Info. If you are not familiar with modifying this, you can reach out to your server hosting provider who should be able to configure it.</p>
+         </div>
+       
+
         <form method="post">
             <input type="hidden" name="demononce" value="<?php echo wp_create_nonce('radium-demo-code'); ?>" />
             <span  style="display:inline-block; width:150px;">Choose the Demo</span>
             <select name="be_demo_file" style="width: 100px;">
               <option value="" disabled="disabled" selected="selected">--Select--</option>
-              <option value="primary">Primary</option>
-              <option value="oshinv1">Oshin v1</option>
-              <option value="oshinv2">Oshin v2</option>
-              <option value="oshinv3">Oshin v3</option>
-              <option value="oshinv4">Oshin v4</option>
-              <option value="oshinv5">Oshin v5</option>
-              <option value="oshinv6">Oshin v6</option>
-              <option value="oshinv7">Oshin v7</option>
-              <option value="oshinv8">Oshin v8</option>
-              <option value="oshinv9">Oshin v9</option>
-              <option value="oshinv10">Oshin v10</option>
-              <option value="oshinv11">Oshin v11</option>
-              <option value="oshinv12">Oshin v12</option>
-              <option value="oshinv13">Oshin v13</option>
-              <option value="oshinv14">Oshin v14</option>
-              <option value="oshinv15">Oshin v15</option>
-              <option value="oshinv16">Oshin v16</option>
-              <option value="oshinv17">Oshin v17</option>
-              <option value="oshinv18">Oshin v18</option>
+              <option value="oshinev1">Oshine v1</option>
+              <option value="oshinev2">Oshine v2</option>
+              <option value="oshinev3">Oshine v3</option>
+              <option value="oshinev4">Oshine v4</option>
+              <option value="oshinev5">Oshine v5</option>
+              <option value="oshinev6">Oshine v6</option>
+              <option value="oshinev7">Oshine v7</option>
+              <option value="oshinev8">Oshine v8</option>
+              <option value="oshinev9">Oshine v9</option>
+              <option value="oshinev10">Oshine v10</option>
+              <option value="oshinev11">Oshine v11</option>
+              <option value="oshinev12">Oshine v12</option>
+              <option value="oshinev13">Oshine v13</option>
+              <option value="oshinev14">Oshine v14</option>
+              <option value="oshinev15">Oshine v15</option>
+              <option value="oshinev16">Oshine v16</option>
+              <option value="oshinev17">Oshine v17</option>
+              <option value="oshinev18">Oshine v18</option>
+              <option value="oshinev19">Oshine v19</option>
+              <option value="oshinev20">Oshine v20</option>
+              <option value="oshinev21">Oshine v21</option>
+              <option value="oshinev22">Oshine v22</option>
+              <option value="oshinev23">Oshine v23</option>
+              <option value="oshinev24">Oshine v24</option>
+              <option value="oshinev25">Oshine v25</option>
+              <option value="shop">Shop Samples</option>
             </select>
             <br/><br/>
             <span style="display:inline-block; width:150px;">Choose the contents</span>
             <select name="be_demo_content" style="width: 100px;">
               <option value="all">All</option>
-              <option value="options">Options</option>
-              <option value="content">Content</option>
+              <option value="options">Options Panel Settings</option>
+              <option value="content">Contents</option>
               <option value="widgets">Widgets</option>
             </select>
             <br/><br/>
@@ -275,6 +292,7 @@ class Radium_Theme_Importer {
                $wp_import = new WP_Import();
                $wp_import->fetch_attachments = true;
                $wp_import->import( $file );
+               echo ('Contents Imported Successfully. ');
          	}
     	}
 
@@ -286,7 +304,7 @@ class Radium_Theme_Importer {
     	// File exists?
   		if ( ! file_exists( $file ) ) {
   			wp_die(
-  				__( 'Theme options Import file could not be found. Please try again.', 'radium' ),
+  				// __( 'Theme options Import file could not be found. ', 'radium' ),
   				'',
   				array( 'back_link' => true )
   			);
@@ -308,7 +326,8 @@ class Radium_Theme_Importer {
   				array( 'back_link' => true )
   			);
   		}else{
-        echo('Theme options were imported successfully');
+        echo('');
+        echo('Theme Options Imported successfully');
       }
 
   		// Hook before import
@@ -361,7 +380,7 @@ class Radium_Theme_Importer {
     	// File exists?
     	if ( ! file_exists( $file ) ) {
     		wp_die(
-    			__( 'Widget Import file could not be found. Please try again.', 'radium' ),
+    			// __( 'Widget Import file could not be found. ', 'radium' ),
     			'',
     			array( 'back_link' => true )
     		);

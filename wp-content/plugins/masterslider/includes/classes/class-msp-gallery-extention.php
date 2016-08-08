@@ -42,8 +42,8 @@ class MSP_Gallery_Extention {
 		if( ! ( isset( $attr['masterslider'] ) && ( $attr['masterslider'] == 'yes' || $attr['masterslider'] == 'true' ) ) ) {
 			return $output;
 		}
-		
-		$post = get_post();	
+
+		$post = get_post();
 
 		// Sanitize orderby
 		if ( isset( $attr['orderby'] ) ) {
@@ -52,7 +52,7 @@ class MSP_Gallery_Extention {
 				unset( $attr['orderby'] );
 			}
 		}
-		
+
 		$atts = shortcode_atts( array(
 			'order'      		=> 'ASC',
 			'orderby'    		=> 'menu_order ID',
@@ -72,7 +72,7 @@ class MSP_Gallery_Extention {
 			'delay'      		=> '3',
 			'caption' 			=> 'true',
 			'thumbs_type'		=> 'thumbs', // 'thumbs' or 'tabs'
-			'thumbs'     		=> 'true', 
+			'thumbs'     		=> 'true',
 			'thumbs_align'     	=> 'bottom', // 'bottom', 'top', 'left', 'right'
 			'thumbs_width'  	=> 140,      // thumbnail width in pixel
 			'thumbs_height' 	=> 80,		 // thumbnail height in pixel
@@ -85,7 +85,7 @@ class MSP_Gallery_Extention {
 
 
 		$id = intval( $atts['id'] );
-		
+
 		if ( 'RAND' == $atts['order'] ) {
 			$atts['orderby'] = 'none';
 		}
@@ -122,7 +122,7 @@ class MSP_Gallery_Extention {
 			$slider_attrs['thumbs_margin']   = $atts['thumbs_margin'];
 			if( 'bottom' == $slider_attrs['thumbs_align'] )
 				$slider_attrs['slideinfo_margin']= '80';
-		
+
 		} elseif( $has_tab ){
 			$slider_attrs['thumbs_type'] = 'tabs';
 		}
@@ -133,7 +133,7 @@ class MSP_Gallery_Extention {
 			$slider_attrs['slideinfo_height']= '30';
 		}
 
-		// get attachments 
+		// get attachments
 		if ( ! empty( $atts['include'] ) ) {
 			$_attachments = get_posts( array( 'include' => $atts['include'], 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $atts['order'], 'orderby' => $atts['orderby'] ) );
 
@@ -151,10 +151,10 @@ class MSP_Gallery_Extention {
 		if ( empty( $attachments ) ) {
 			return '';
 		}
-		
+
 		$slides_shortcode = '';
 
-		
+
 		foreach ( $attachments as $id => $attachment ) {
 
 			$attrs   = '';
@@ -175,13 +175,26 @@ class MSP_Gallery_Extention {
 			if( ! empty( $link ) ) {
 				$attrs .= sprintf( '%s="%s" ', 'link', $link );
 			}
-			
-			$info = '';
-			if( empty( $attachment->post_excerpt ) ){
+
+			$info     = '';
+
+            $alt_meta = get_post_meta( $id, '_wp_attachment_image_alt', true );
+
+            if( ! empty( $alt_meta ) ){
+                $attrs .= sprintf( '%s="%s" ', 'alt'  , $alt_meta );
+            } elseif( ! empty( $attachment->post_excerpt ) ){
 				$attrs .= sprintf( '%s="%s" ', 'alt'  , $attachment->post_excerpt );
 			} else {
 				$attrs .= sprintf( '%s="%s" ', 'alt'  , $attachment->post_title   );
 			}
+
+            $title_meta = get_post_meta( $id, '_wp_attachment_image_title', true );
+
+            if( ! empty( $title_meta ) ){
+                $attrs .= sprintf( '%s="%s" ', 'title'  , $title_meta );
+            } else {
+                $attrs .= sprintf( '%s="%s" ', 'title'  , $attachment->post_title   );
+            }
 
 			if( $has_slideinfo ){
 				$caption = $attachment->post_excerpt ? $attachment->post_excerpt : $attachment->post_title;
@@ -196,7 +209,7 @@ class MSP_Gallery_Extention {
 				$thumb = msp_get_the_resized_image_src( $img_src, $atts['thumbs_width'], $atts['thumbs_height'], true );
 				$thumb = msp_get_the_relative_media_url( $thumb );
 				$attrs .= sprintf( '%s="%s" ', 'thumb' , $thumb );
-			
+
 			} elseif( $has_tab ) {
 				$tab    = '<div class=&quot;ms-thumb-alt&quot;>' . $attachment->post_title . '</div>';
 				$attrs .= sprintf( '%s="%s" ', 'tab' , $tab );
@@ -208,7 +221,7 @@ class MSP_Gallery_Extention {
 		/**
 		 * Filter slider default attributes. To find full list of slider options, take a look at "msp_masterslider_wrapper_shortcode"
 		 * function in /includes/msp-shortcodes.php file
-		 * 
+		 *
 		 * @var array      List of slider options with values
 		 */
 		$slider_attrs = apply_filters( 'masterslider_gallery_slider_attrs', $slider_attrs );

@@ -40,7 +40,12 @@
 	overflow: hidden;
 	z-index: 100000 !important;
 }
-
+div.mce-inline-toolbar-grp {
+	z-index:1000110 !important;
+}
+.media-modal,.mce-floatpanel,#wp-link-wrap{
+	z-index: 1000110 !important;
+}
 .ui-widget-overlay,
 .dialog-overlay-custom {
 	z-index: 10000 !important;
@@ -77,6 +82,15 @@ height: auto !important;
 		padding: 1.5em; 
 		background: #fff; 		
 		border-top:1px solid #ddd;
+	}
+	.be-pb-content-preview span,
+	.be-pb-content-preview h1,
+	.be-pb-content-preview h2,
+	.be-pb-content-preview h3,
+	.be-pb-content-preview h4,
+	.be-pb-content-preview h5,
+	.be-pb-content-preview h6{
+		color: #000 !important;
 	}
 	.be-pb-multi-wrap .portlet .portlet-content {
 		background: #f2f3f8;
@@ -394,6 +408,9 @@ select {
 	width: 290px;
 	font-size: 12px;
 	font-family: 'ralewaymedium';
+}
+input[type=number].be-pb-text{
+	width: 100px;
 }
 .be-pb-select {
 	font-size: 12px;

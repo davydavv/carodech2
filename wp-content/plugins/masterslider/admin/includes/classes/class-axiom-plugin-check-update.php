@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  * @package   MasterSlider
  * @author    averta [averta.net]
  * @license   LICENSE.txt
@@ -73,7 +73,7 @@ class Axiom_Plugin_Check_Update
      * @param string $plugin_slug
      * @param string $slug
      */
-    function __construct( $current_version, $update_path, $plugin_slug, $slug, $item_request_name = '', $plugin_file = '' ) {
+    function __construct( $current_version, $update_path, $plugin_slug, $slug, $item_request_name = '' ) {
         // Set the class public variables
         $this->current_version  = $current_version;
         $this->update_path      = $update_path;
@@ -82,15 +82,13 @@ class Axiom_Plugin_Check_Update
 
         $this->request_name     = empty( $item_request_name ) ? $this->slug : $item_request_name;
 
-        $this->plugin_file_path = $plugin_file;
-
         // define the alternative API for updating checking
         add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update') );
 
         // Define the alternative response for information checking
         add_filter( 'plugins_api', array( $this, 'check_info'), 10, 3 );
     }
-    
+
 
     /**
      * Add our self-hosted autoupdate plugin to the filter transient
@@ -99,18 +97,12 @@ class Axiom_Plugin_Check_Update
      * @return object $ transient
      */
     public function check_update( $transient ) {
-        
+
         if( apply_filters( 'masterslider_disable_auto_update', 0 ) )
             return $transient;
 
         // Get the remote version
         $remote_version = $this->get_remote_version();
-
-        // echo '<pre>';
-        // $isl = version_compare( $this->current_version, $remote_version, '<' );
-        // echo 'current is less than remote? : ' . $this->current_version .' < '. $remote_version;
-        // var_dump( $isl );
-        // echo '</pre>';
 
         // If a newer version is available, add the update info to update transient
         if ( version_compare( $this->current_version, $remote_version, '<' ) ) {
@@ -162,10 +154,10 @@ class Axiom_Plugin_Check_Update
                     'item-name' => $this->request_name,
                     'item-info' => $this_plugin,
                     'theme'     => $theme_data->Name
-                ) 
+                )
             )
         );
-        
+
         if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
             return $request['body'];
         }
@@ -208,14 +200,14 @@ class Axiom_Plugin_Check_Update
                 'user-agent' => 'WordPress/'.$wp_version.'; '. get_site_url(),
                 'body' => array(
                     'cat'       => 'info',
-                    'action'    => 'details', 
+                    'action'    => 'details',
                     'item-name' => $this->request_name
                 )
             )
         );
 
         if ( !is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
-            
+
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
             $all_plugins = get_plugins();
             if( ! isset( $all_plugins[ $this->plugin_slug ] ) || empty( $all_plugins[ $this->plugin_slug ] ) ){
@@ -231,24 +223,10 @@ class Axiom_Plugin_Check_Update
 
             $info->banners['low']   = isset( $this->banners['low']  ) ? $this->banners['low']  : '';
             $info->banners['high']  = isset( $this->banners['high'] ) ? $this->banners['high'] : '';
-            // @TODO
-            // $info->download_link    = msp_get_setting( 'token', 'msp_envato_license' );
-            
+
             return $info;
         }
-        return false;
-    }
 
-    /**
-     * Return the status of the plugin licensing
-     * @return boolean $remote_license
-     */
-    public function get_remote_license() {
-
-        $request = wp_remote_post( $this->update_path, array( 'body' => array('action' => 'license') ) );
-        if ( !is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200 ) {
-            return $request['body'];
-        }
         return false;
     }
 }

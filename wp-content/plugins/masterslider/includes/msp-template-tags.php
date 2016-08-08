@@ -82,6 +82,18 @@ function msp_get_general_post_template_tags() {
 		       'callback' 	=> ''
 		),
 
+        array( 'name'       => 'image-alt',
+               'label'      => __( 'Post image alternative text', MSWP_TEXT_DOMAIN ),
+               'type'       => '_general',
+               'callback'   => ''
+        ),
+
+        array( 'name'       => 'image-title',
+               'label'      => __( 'Post image title', MSWP_TEXT_DOMAIN ),
+               'type'       => '_general',
+               'callback'   => ''
+        ),
+
 		array( 'name'		=> 'thumbnail',
 		       'label' 		=> __( 'Post thumbnail', MSWP_TEXT_DOMAIN ),
 		       'type'		=> '_general',
@@ -169,6 +181,12 @@ function msp_get_woocommerce_template_tags() {
 		       'type'		=> 'product',
 		       'callback' 	=> ''
 		),
+
+        array( 'name'       => 'wc_price-3',
+               'label'      => __( 'Price (custom decimals)', MSWP_TEXT_DOMAIN ),
+               'type'       => 'product',
+               'callback'   => ''
+        ),
 
 	    array( 'name'		=> 'wc_regular_price',
 		       'label' 		=> __( 'Regular Price', MSWP_TEXT_DOMAIN ),

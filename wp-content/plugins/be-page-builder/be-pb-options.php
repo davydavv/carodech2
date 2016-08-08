@@ -918,6 +918,20 @@ function be_shortcodes_init() {
 		),
 		'default'=> 'style1-hover'
 	);
+
+	$justified_gal_hover_style = array (
+		'title' =>	__('Hover Style', 'be-themes'),
+		'type' => 	'select',
+		'options' => array (
+			'Style1 - FadeToggle' => 'style1-hover',
+			'Style2 - 3D FLIP Horizontal' => 'style2-hover',
+			'Style3 - FadeIn & Scale' => 'style5-hover',
+			'Style4 - Fall' => 'style6-hover',
+			'Style5 - 3D FLIP Vertical' => 'style7-hover',
+			'Style6 - 3D Rotate' => 'style8-hover',
+		),
+		'default'=> 'style1-hover'
+	);
 	
 	$be_shortcode['portfolio'] = array (
 		'name' => __('Portfolio', 'be-themes'),
@@ -928,6 +942,7 @@ function be_shortcodes_init() {
 				'title' => __('Number of Columns','be-themes'),
 				'type' => 'select',
 				'options' => array (
+					'One Column' => 'one',
 					'Two Columns' => 'two',
 					'Three Columns' => 'three',
 					'Four Columns' => 'four',
@@ -1041,6 +1056,11 @@ function be_shortcodes_init() {
 				'title'=>__('Thumbnail Overlay Opacity','be-themes'),
 				'type'=>'text',
 				'default'=> '85'
+			),			
+			'show_overlay' =>array (
+				'title' => __('Show Overlay and Title by default','be-themes'),
+				'type' => 'checkbox',
+				'default' => '',
 			),
 			'gradient' =>array (
 				'title' => __('Enable Gradient Overlay','be-themes'),
@@ -1238,6 +1258,7 @@ function be_shortcodes_init() {
 				'title'=>__('Number of Columns','be-themes'),
 				'type'=>'select',
 				'options'=> array (
+					'One Column' => 'one',
 					'Two Columns' => 'two',
 					'Three Columns' => 'three',
 					'Four Columns' => 'four',
@@ -1307,11 +1328,22 @@ function be_shortcodes_init() {
 				'default' => 0,
 			),
 			'hover_style' => $portfolio_hover_style,
-			'disable_hover_icon' => array (
-				'title' => __('Disable Hover Icon (+) on Items','be-themes'),
-				'type' => 'checkbox',
-				'default' => 0,
+			'hover_content_option' => array (
+				'title'=>__('On Image Hover','be-themes'),
+				'type'=> 'select',
+				'options'=> array('None' => 'none', 'Show Icon' => 'icon', 'Show Title' => 'title'),
+				'default' => 'icon',
+			), 
+			'hover_content_color' => array(
+				'title' => 'Hover Content Color',
+				'type'  => 'color',
+				'default' => ''
 			),
+			// 'disable_hover_icon' => array (
+			// 	'title' => __('Disable Hover Icon/Title (+) on Items','be-themes'),
+			// 	'type' => 'checkbox',
+			// 	'default' => 0,
+			// ),
 			'default_image_style' => array (
 				'title'=>__('Default Image Style','be-themes'),
 				'type'=> 'select',
@@ -1396,6 +1428,116 @@ function be_shortcodes_init() {
 				'title'=> __('Images Count','be-themes'),
 				'type' => 'text',
 				'default' => 10,
+			),
+		)
+	);
+
+	$be_shortcode['justified_gallery'] = array (
+		'name' => __('Justified Gallery', 'be-themes'),
+		'type' => 'single',
+		'icon' => BE_PB_ROOT_URL.'images/shortcodes/plus-white.png',
+		'options' => array (
+			'gutter_width' => array (
+				'title' => __('Gutter Width','be-themes'),
+				'type' => 'text',
+				'default' => '40'
+			),
+			'image_height' => array (
+				'title' => __('Image Height','be-themes'),
+				'type' => 'text',
+				'default' => '200'
+			),
+			'initial_load_style' => array (
+				'title'=>__('Image Load Animation','be-themes'),
+				'type'=> 'select',
+				'options' => array (
+					'Slide Left' => 'init-slide-left',
+					'Slide Right' => 'init-slide-right',
+					'Slide Top' => 'init-slide-top',
+					'Slide Bottom' => 'init-slide-bottom',
+					'Scale' => 'init-scale',
+					'None' => 'none',
+				),
+				'default'=> 'none'
+			),
+			'hover_style' => $justified_gal_hover_style,
+			'default_image_style' => array (
+				'title'=>__('Default Image Style','be-themes'),
+				'type'=> 'select',
+				'options'=> array('Black And White' => 'black_white', 'Color' => 'color'),
+				'default' => 'color',
+			),
+			'hover_image_style' => array (
+				'title'=>__('Hover Image Style','be-themes'),
+				'type'=> 'select',
+				'options'=> array('Black And White' => 'black_white', 'Color' => 'color'),
+				'default' => 'color',
+			),
+			'image_effect' => array (
+				'title'=>__('Image Effects','be-themes'),
+				'type'=> 'select',
+				'options' => array (
+					'Zoom In' => 'zoom-in',
+					'Zoom Out' => 'zoom-out',
+					'Zoom In Rotate' => 'zoom-in-rotate',
+					'Zoom Out Rotate' => 'zoom-out-rotate',
+					'None' => 'none'
+				),
+				'default'=> 'none'
+			),
+			'disable_overlay' => array (
+				'title' => __('Disable Overlay','be-themes'),
+				'type' => 'checkbox',
+				'default' => 0,
+			),
+			'overlay_color' =>array (
+				'title'=>__('Thumbnail Overlay Color / Gradient Start Color','be-themes'),
+				'type'=>'color',
+				'default'=> (isset($be_themes_data['color_scheme']) && !empty($be_themes_data['color_scheme'])) ? $be_themes_data['color_scheme'] : ''
+			),
+			'gradient' =>array (
+				'title' => __('Enable Gradient Overlay','be-themes'),
+				'type' => 'checkbox',
+				'default' => '',
+			),
+			'gradient_color' =>array (
+				'title' => __('Thumbnail Overlay Gradient End Color','be-themes'),
+				'type' => 'color',
+				'default'=> (isset($be_themes_data['color_scheme']) && !empty($be_themes_data['color_scheme'])) ? $be_themes_data['color_scheme'] : ''
+			),
+			'gradient_direction' => array (
+				'title'=>__('Gradient Direction','be-themes'),
+				'type'=> 'select',
+				'options' => array (
+					'Horizontal' => 'right',
+					'Vertical' => 'bottom'
+				),
+				'default'=> 'style1'
+			),
+			'overlay_opacity' =>array (
+				'title'=>__('Thumbnail Overlay Opacity','be-themes'),
+				'type'=>'text',
+				'default'=> '85'
+			),
+			'gallery_paginate' =>array (
+				'title' => __('Enable Infinite Scroll','be-themes'),
+				'type' => 'checkbox',
+				'default' => '',
+			),
+			'items_per_load' =>array (
+				'title' => __('Items Per Load','be-themes'),
+				'type' => 'text',
+				'default' => '9'
+			),
+			'like_button' =>array (
+				'title' => __('Disable Like Button','be-themes'),
+				'type' => 'checkbox',
+				'default' => 0,
+			),
+			'images' => array (
+				'title'=> __('Upload Image','be-themes'),
+				'type'=>'media',
+				'select'=> 'multiple'
 			),
 		)
 	);
@@ -1772,7 +1914,7 @@ function be_shortcodes_init() {
 	);	
 
 
-	$be_shortcode['separator'] = array (
+	$be_shortcode['separator'] = array(
 	'name' => __('Divider', 'be-themes'),
 	'icon' => BE_PB_ROOT_URL.'images/shortcodes/plus-white.png',
 	'type' => 'single',
@@ -2403,11 +2545,16 @@ function be_shortcodes_init() {
 				'type'=>'color',
 				'default'=> (isset($be_themes_data['color_scheme']) && !empty($be_themes_data['color_scheme'])) ? $be_themes_data['color_scheme'] : ''
 			),
-			'rounded' =>array (
-				'title'=>__('Rounded Corners ?','be-themes'),
-				'type'=>'checkbox',
-				'default'=> '1'
-			),	
+			'button_style' =>array (
+				'title'=>__('Button Style','be-themes'),
+				'type'=>'select',
+				'options'=> array (
+					'None' => 'none', 
+					'Rounded' => 'rounded',
+					'Circular' => 'circular',
+				),
+				'default'=> 'none'
+			),		
 			'image' => array (
 				'title'=> __('Select Lightbox image / video','be-themes'),
 				'type'=>'media',
@@ -2665,18 +2812,18 @@ function be_shortcodes_init() {
 
 
 	$be_shortcode['flex_slider'] = array (
-		'name' => __('Flex Slider', 'be-themes'),
+		'name' => __('BE Image Slider', 'be-themes'),
 		'icon' => BE_PB_ROOT_URL.'images/shortcodes/plus-white.png',
 		'type' => 'multi',
 		'multi_field'=> true,
 		'single_field'=>'flex_slide',
 		'options' => array(
-			'animation' => array(
-				'title'=> __('Animation Style','be-themes'),
-				'type'=>'select',
-				'options' => array('slide','fade'),
-				'default'=>'fade'
-			),
+			// 'animation' => array(
+			// 	'title'=> __('Animation Style','be-themes'),
+			// 	'type'=>'select',
+			// 	'options' => array('slide','fade'),
+			// 	'default'=>'fade'
+			// ),
 			'auto_slide' => array(
 				'title'=> __('Auto Slide','be-themes'),
 				'type'=>'select',
@@ -2684,8 +2831,9 @@ function be_shortcodes_init() {
 				'default'=>'yes'
 			),
 			'slide_interval' => array(
-				'title'=> __('Slide Interval in milli secs if auto slide is enabled','be-themes'),
-				'type'=>'text',
+				'title'=> __('Slide Interval if auto slide is enabled','be-themes'),
+				'type'=>'number',
+				'metric' => 'ms'
 			),
 		)		
 	);
@@ -2732,21 +2880,21 @@ function be_shortcodes_init() {
 				'options' => array('Left' => 'left', 'Center' => 'center', 'Right' => 'right'),
 				'default' => 'center'
 			),
-			'slide_animation_type' =>array (
-				'title' => __('Slide Animation type','be-themes'),
-				'type' => 'select',
-				'options' => array('Fade' => 'fade', 'Slide' => 'slide'),
-				'default' => 'slide'
+			'pagination' => array(
+				'title'=> __('Enable Pagination','be-themes'),
+				'type'=>'checkbox',
+				'default'=>'0',
 			),
 			'slide_show' =>array (
 				'title' => __('Enable Slide Show','be-themes'),
 				'type' => 'select',
 				'options' => array('Yes' => 'yes', 'No' => 'no'),
-				'default' => 'yes'
+				'default' => 'no'
 			),
 			'slide_show_speed' =>array (
 				'title' => __('Slide Show Speed','be-themes'),
-				'type' => 'text',
+				'type'=>'number',
+				'metric' => 'ms',
 				'default' => 4000,
 			),
 			'animate' =>array (
@@ -2815,12 +2963,12 @@ function be_shortcodes_init() {
 		'multi_field' => true,
 		'single_field' => 'content_slide',
 		'options' => array (
-			'slide_animation_type' =>array (
-				'title' => __('Slide Animation type','be-themes'),
-				'type' => 'select',
-				'options' => array('Fade' => 'fade', 'Slide' => 'slide'),
-				'default' => 'slide'
-			),
+			// 'slide_animation_type' =>array (
+			// 	'title' => __('Slide Animation type','be-themes'),
+			// 	'type' => 'select',
+			// 	'options' => array('Fade' => 'fade', 'Slide' => 'slide'),
+			// 	'default' => 'slide'
+			// ),
 			'slide_show' =>array (
 				'title' => __('Enable Slide Show','be-themes'),
 				'type' => 'select',
@@ -2829,7 +2977,8 @@ function be_shortcodes_init() {
 			),
 			'slide_show_speed' =>array (
 				'title' => __('Slide Show Speed','be-themes'),
-				'type' => 'text',
+				'type'=>'number',
+				'metric' => 'ms',
 				'default' => 4000,
 			),
 			'content_max_width' =>array (
@@ -3004,14 +3153,27 @@ function be_shortcodes_init() {
 			),
 			'padding_top' => array(
 				'title'=> __('Top Padding','be-themes'),
-				'type'=>'text',
-				'default'=> '60'
-			),
+				'type'=>'number',
+				'default'=> '60',
+				'metric' => 'px'
+			),		
 			'padding_bottom' => array(
 				'title'=> __('Bottom Padding','be-themes'),
-				'type'=>'text',
-				'default'=> '60'
+				'type'=>'number',
+				'default'=> '60',
+				'metric' => 'px'
 			),
+			'padding_edge' => array(
+				'title'=> __('Left and Right Padding','be-themes'),
+				'type'=>'number',
+				'default'=> '',
+				'metric' => '%'
+			),
+			'offset_section' =>array(
+				'title'=>__('Offset Section (to value equal to Top Padding)','be-themes'),
+				'type'=>'checkbox',
+				'default'=> '',
+			),	
 			'bg_video' =>array(
 				'title'=>__('Enable Background Video','be-themes'),
 				'type'=>'checkbox',
@@ -3052,6 +3214,11 @@ function be_shortcodes_init() {
 				'type'=> 'text',
 				'default'=> ''
 			),
+			'section_class' => array (
+				'title'=> __('Section Class (Split multiple classes using Comma)','be-themes'),
+				'type'=> 'text',
+				'default'=> ''
+			),
 			'section_title' => array (
 				'title'=> __('Section Title','be-themes'),
 				'type'=> 'text',
@@ -3066,8 +3233,8 @@ function be_shortcodes_init() {
 				'title'=>__('Full Screen Section Transparent Header Scheme','be-themes'),
 				'type'=>'select',
 				'options'=> array (
-						"Dark" => "background--dark",
-						"Light" => "background--light"
+						"Dark" => "background--light",
+						"Light" => "background--dark"
 				),
 				'default'=> 'background--dark',
 			),
@@ -3193,6 +3360,17 @@ function be_shortcodes_init() {
 				'type'=>'text',
 				'default'=> ''
 			),
+			'animate_overlay' => array (
+				'title'=> __('Animate Overlay','be-themes'),
+				'type'=> 'select',
+				'options'=> array('None' => 'none', 'Hidden by default and Show on Hover' => 'hide', 'Shown by default and Hide on Hover' => 'show'),
+				'default'=> 'none'
+			),
+			'link_overlay' => array (
+				'title'=> __('Link Overlay/Column URL','be-themes'),
+				'type'=> 'text',
+				'default'=> ''
+			),
 			'vertical_align' => array (
 				'title'=> __('Vertical Alignment','be-themes'),
 				'type'=> 'select',
@@ -3209,6 +3387,16 @@ function be_shortcodes_init() {
 				'type'=> 'select',
 				'options'=> $animations,
 				'default'=> 'fadeIn',
+			),
+			'col_id' => array (
+				'title'=> __('Column Id','be-themes'),
+				'type'=> 'text',
+				'default'=> ''
+			),
+			'column_class' => array (
+				'title'=> __('Column Class (Split multiple classes using Comma)','be-themes'),
+				'type'=> 'text',
+				'default'=> ''
 			),
 			'hide_mobile' => array (
 				'title' => __('Hide If Mobile Devices','be-themes'),
@@ -3242,8 +3430,24 @@ function be_shortcodes_init() {
 				'default'=> ''
 			),
 			'no_space_columns' =>array (
-				'title'=>__('No Space Between Columns ?','be-themes'),
+				'title'=>__('Edge to Edge Columns','be-themes'),
 				'type'=>'checkbox',
+				'default'=> ''
+			),
+			'column_spacing' =>array(
+				'title'=> __('Column Spacing','be-themes'),
+				'type'=> 'number',
+				'default'=> '',
+				'metric'=>'px'
+			),
+			'row_id' => array (
+				'title'=> __('Row Id','be-themes'),
+				'type'=> 'text',
+				'default'=> ''
+			),
+			'row_class' => array (
+				'title'=> __('Row Class (Split multiple classes using Comma)','be-themes'),
+				'type'=> 'text',
 				'default'=> ''
 			),
 			'hide_mobile' => array (
@@ -3681,7 +3885,8 @@ function be_shortcodes_init() {
 			),
 			'slide_show_speed' =>array (
 				'title' => __('Slide Show Speed','be-themes'),
-				'type' => 'text',
+				'type'=>'number',
+				'metric' => 'ms',
 				'default' => 4000,
 			)
 		)
@@ -4176,6 +4381,17 @@ function be_shortcodes_init() {
 				'options' => array('Left' => 'left', 'Center' => 'center'),
 				'default' => 'center'
 			),
+			'autoplay' => array(
+				'title'=> __('Autoplay Duration ( Enter 0 to turn autoplay off)','be-themes'),
+				'type'=>'number',
+				'default'=>'0',
+				'metric' => 'ms'
+			),
+			'pagination' => array(
+				'title'=> __('Enable Pagination','be-themes'),
+				'type'=>'checkbox',
+				'default'=>'0',
+			),
 			'animate' =>array (
 				'title' => __('Enable CSS Animation','be-themes'),
 				'type' => 'checkbox',
@@ -4523,6 +4739,7 @@ function be_shortcodes_init() {
 			),
 		)		
 	);
+
 }
 
 ?>

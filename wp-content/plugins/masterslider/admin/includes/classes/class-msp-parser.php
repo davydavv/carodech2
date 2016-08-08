@@ -91,6 +91,7 @@ class MSP_Parser {
 	        'bg_image'  	=> isset( $setting['bgImage'] ) ? msp_get_the_relative_media_url( $setting['bgImage'] ) : '',
 
 	        'title'         => isset( $setting['name'] )  ? (string) $setting['name']  : __( 'Untitled Slider', MSWP_TEXT_DOMAIN ),       // slider name
+            'alias'         => isset( $setting['slug'] ) ? (string) $setting['slug'] : '',
 
 	        'slider_type'   => isset( $setting['type'] ) ? (string) $setting['type'] : 'custom',   // values: custom, express, flickr, post_view
 
@@ -199,7 +200,8 @@ class MSP_Parser {
 	        'facebook_count'	=> isset( $setting['imgCount'] ) ? (int) $setting['imgCount'] : 10,
 	        'facebook_type' 	=> isset( $setting['setType'] ) ? (string) $setting['setType'] : 'album',
 	        'facebook_size' 	=> isset( $setting['imgSize'] ) ? (string) $setting['imgSize'] : 'orginal',
-	        'facebook_thumb_size' => isset( $setting['thumbSize'] ) ? (string) $setting['thumbSize'] : '320',
+            'facebook_thumb_size' => isset( $setting['thumbSize'] ) ? (string) $setting['thumbSize'] : '320',
+	        'facebook_token'    => isset( $setting['fbtoken'] ) ? (string) $setting['fbtoken'] : '',
 
 	        'arrows'           => 'false',   // display arrows?
 	        'arrows_autohide'  => 'true',   // auto hide arrows?
@@ -389,8 +391,8 @@ class MSP_Parser {
 		      'image-gallery' == $slider_setting['template']
 		  ){
 
-			if( isset( $slide['thumb'] ) && ! empty( $slide['thumb'] ) ) {
-				$thumb = $slide['thumb'];
+			if( isset( $slide['thumbOrginal'] ) && ! empty( $slide['thumbOrginal'] ) ) {
+				$thumb = $slide['thumbOrginal'];
 				$thumb = msp_get_the_relative_media_url( $thumb );
 
 			} elseif( isset( $slide['bg'] ) ) {
@@ -415,8 +417,8 @@ class MSP_Parser {
 		   	  'tabs' == $slider_setting['thumbs_type'] ) &&
 			  'true' == $slider_setting['thumbs_in_tab'] ){
 
-			if( isset( $slide['thumb'] ) && ! empty( $slide['thumb'] ) ) {
-				$tab_thumb = $slide['thumb'];
+			if( isset( $slide['thumbOrginal'] ) && ! empty( $slide['thumbOrginal'] ) ) {
+				$tab_thumb = $slide['thumbOrginal'];
 				$tab_thumb = msp_get_the_relative_media_url( $tab_thumb );
 
 			} elseif( isset( $slide['bg'] ) ) {
@@ -439,8 +441,8 @@ class MSP_Parser {
             'src'       => isset( $slide['bg'] ) ? esc_attr( msp_get_the_relative_media_url( $slide['bg'] ) ) : '',
             'src_full'  => isset( $slide['bg'] ) ? esc_attr( msp_get_the_relative_media_url( $slide['bg'] ) ) : '',
 
-            'title'     => '', // image title
-            'alt'       => isset( $slide['bgAlt'] ) ? esc_attr($slide['bgAlt']) : '', // image alternative text
+            'title'     => isset( $slide['bgTitle'] ) ? esc_attr($slide['bgTitle']) : '', // title for slide image
+            'alt'       => isset( $slide['bgAlt'] ) ? esc_attr($slide['bgAlt']) : '', // alternative text for slide image
 
             'link'       => isset( $slide['link']      ) ? esc_attr( $slide['link'] ) : '',
             'target'     => isset( $slide['linkTarget']) ? (string) $slide['linkTarget'] : '',

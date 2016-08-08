@@ -18,7 +18,7 @@ if ( ! defined('ABSPATH') ) {
  *  Class to load and print master slider panel scripts
  */
 class MSP_Admin_Assets {
-	
+
 
 	/**
 	 * __construct
@@ -45,7 +45,7 @@ class MSP_Admin_Assets {
 			$this->add_panel_variables();
 			$this->add_panel_script_localizations();
 		}
-		
+
 	}
 
 
@@ -55,7 +55,7 @@ class MSP_Admin_Assets {
 		$this->add_global_variables();
 		$this->add_global_script_localizations();
 	}
-	
+
 
 	public function load_global_styles(){
 		// load global style - loads on all admin area
@@ -76,10 +76,10 @@ class MSP_Admin_Assets {
 
 
 	public function add_global_script_localizations(){
-		
+
 	}
 
-	
+
 	/**
 	 * Load scripts for master slider admin panel
 	 * @return void
@@ -93,12 +93,12 @@ class MSP_Admin_Assets {
 		wp_enqueue_script( MSWP_SLUG . '-handlebars'	 ,	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/handlebars.min.js',  			array( 'jquery' ), MSWP_AVERTA_VERSION, true );
 		wp_enqueue_script( MSWP_SLUG . '-ember-js'		 , 	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/ember.min.js',  				array( 'jquery' ), MSWP_AVERTA_VERSION, true );
 		wp_enqueue_script( MSWP_SLUG . '-ember-model'	 , 	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/ember-model.min.js',  			array( 'jquery' ), MSWP_AVERTA_VERSION, true );
-		wp_enqueue_script( MSWP_SLUG . '-msp-required'	 , 	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/msp.required.js',  
-			array( 
-				'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-ui-draggable', 
-				'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-spinner' 
-			), 
-			MSWP_AVERTA_VERSION, true 
+		wp_enqueue_script( MSWP_SLUG . '-msp-required'	 , 	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/msp.required.js',
+			array(
+				'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-ui-draggable',
+				'jquery-ui-sortable', 'jquery-ui-slider', 'jquery-ui-spinner'
+			),
+			MSWP_AVERTA_VERSION, true
 		);
 
 		wp_enqueue_script( MSWP_SLUG . '-masterslider-wp-init', 	MSWP_AVERTA_ADMIN_URL . '/views/slider-panel/js/masterslider.wp.init.js',  		array( 'jquery' ), MSWP_AVERTA_VERSION, false);
@@ -112,26 +112,31 @@ class MSP_Admin_Assets {
 	public function add_panel_variables() {
 
 		wp_localize_script( 'jquery', '__MSP_SKINS', msp_get_skins() );
-		
+        global $mspdb;
+
+        $slider_alias = '';
+
 		// get and print slider id
 		if ( isset( $_REQUEST['slider_id'] ) ) {
 
 			$slider_id  = $_REQUEST['slider_id'];
-		
-		} else {
-			global $mspdb;
-			$slider_id = 0;
 
-			if ( isset( $_REQUEST['action'] ) && 'add' == $_REQUEST['action'] ) {
-				$slider_id = $mspdb->add_slider( array( 'status' => 'draft' ) );
-				wp_localize_script( 'jquery', '__MSP_SLIDER_ID', (string) $slider_id );
-			}
-		}
-		
+        } else {
+
+            $slider_id = 0;
+
+            if ( isset( $_REQUEST['action'] ) && 'add' == $_REQUEST['action'] ) {
+                $slider_id = $mspdb->add_slider( array( 'status' => 'draft' ) );
+                wp_localize_script( 'jquery', '__MSP_SLIDER_ID', (string) $slider_id );
+
+                $slider_alias = $mspdb->generate_slider_alias( $slider_id );
+                wp_localize_script( 'jquery', '__MSP_SLIDER_ALIAS', $slider_alias );
+            }
+        }
+
 		// Get and print panel data
 		if ( $slider_id ) {
 
-			global $mspdb;
 			$slider_data = $mspdb->get_slider( $slider_id );
 
 			$slider_type = isset( $slider_data[ 'type' ] ) ? $slider_data[ 'type' ] : 'custom';
@@ -148,10 +153,14 @@ class MSP_Admin_Assets {
 			$msp_preset_effect = empty( $msp_preset_effect ) ? NULL : $msp_preset_effect;
 			$msp_buttons_style = empty( $msp_buttons_style ) ? NULL : $msp_buttons_style;
 
-			wp_localize_script( 'jquery', '__MSP_DATA'			, $msp_data    );
+            if( empty( $slider_alias ) ){
+                $slider_alias  = isset( $slider_data[ 'alias' ] ) && ! empty( $slider_data[ 'alias' ] ) ? $slider_data[ 'alias' ] : $mspdb->generate_slider_alias( $slider_id );
+                wp_localize_script( 'jquery', '__MSP_SLIDER_ALIAS'  , $slider_alias );
+            }
+			wp_localize_script( 'jquery', '__MSP_DATA'			, $msp_data          );
 			wp_localize_script( 'jquery', '__MSP_PRESET_STYLE'  , $msp_preset_style  );
 			wp_localize_script( 'jquery', '__MSP_PRESET_EFFECT' , $msp_preset_effect );
-			wp_localize_script( 'jquery', '__MSP_TYPE'			, $slider_type );
+			wp_localize_script( 'jquery', '__MSP_TYPE'			, $slider_type       );
 			wp_localize_script( 'jquery', '__MSP_PRESET_BUTTON'	, $msp_buttons_style );
 		}
 
@@ -167,8 +176,8 @@ class MSP_Admin_Assets {
 			foreach ( $defined_tags as $defined_tag ) {
 
 				$tag_type = ( '_general' == $defined_tag[ 'type' ] ) ? 'general' : $defined_tag[ 'type' ];
-				
-				$tags[ $tag_type ][] = array( 
+
+				$tags[ $tag_type ][] = array(
 					'name'	=> $defined_tag['name'],
 					'label' => $defined_tag['label']
 				);
@@ -179,7 +188,7 @@ class MSP_Admin_Assets {
 			$terms = $PS->get_tax_term_dictionary();
 
 			// -------------------------------------
-			// 
+			//
 			$js_data = array(
 				'types_taxs_terms' 	=> $terms,
 				'content_tags' 		=> $tags
@@ -191,15 +200,15 @@ class MSP_Admin_Assets {
 
 		// print essential variables (types, taxs, terms, template tags) for woocommerce sliders in admin panel
 		// since version 1.8
-		
+
 		if( isset( $slider_type ) && 'wc-product' == $slider_type ) {
 
-			
+
 			// if woocommerce is installed and actived
 			if ( msp_is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 
 				// -- template tags --------------------
-				
+
 				$defined_tags = msp_get_general_post_template_tags();
 				$woocomm_tags = msp_get_woocommerce_template_tags();
 
@@ -209,8 +218,8 @@ class MSP_Admin_Assets {
 				foreach ( $defined_tags as $defined_tag ) {
 
 					$tag_type = ( '_general' == $defined_tag[ 'type' ] ) ? 'general' : $defined_tag[ 'type' ];
-					
-					$tags[ $tag_type ][] = array( 
+
+					$tags[ $tag_type ][] = array(
 						'name'	=> $defined_tag['name'],
 						'label' => $defined_tag['label']
 					);
@@ -221,19 +230,19 @@ class MSP_Admin_Assets {
 				$terms = $WCS->get_tax_term_dictionary();
 
 				// -------------------------------------
-				
+
 				$js_data = array(
 					'types_taxs_terms' 	=> $terms,
 					'content_tags' 		=> $tags
 				);
-			
-			// if woocommerce is not activated 
+
+			// if woocommerce is not activated
 			} else {
 				$js_data = null;
 				$wc_installation_url = admin_url( 'plugin-install.php?tab=plugin-information&plugin=woocommerce&TB_iframe=true&width=600&height=550' );
 				wp_localize_script( 'jquery', '__WC_INSTALL_URL', $wc_installation_url );
 			}
-			
+
 			wp_localize_script( 'jquery', '__MSP_POST', apply_filters( 'masterslider_wc_product_slider_init_data', $js_data ) );
 		}
 
@@ -244,8 +253,8 @@ class MSP_Admin_Assets {
 
 		$slider_panel_default_setting = array(
 
-	        'width'         => 1000, 
-	        'height'        => 500, 
+	        'width'         => 1000,
+	        'height'        => 500,
 
 	        'autoCrop' 		=> false,
 	        'autoplay'      => false,
@@ -259,13 +268,13 @@ class MSP_Admin_Assets {
 	        'start'         => 1,
 	        'space'         => 0,
 
-	        'grabCursor'    => true, 
+	        'grabCursor'    => true,
 	        'swipe'         => true,
 
 	        'wheel'         => false,
 	        'mouse'         => true,
 
-	        'loop'          => false, 
+	        'loop'          => false,
 	        'shuffle'       => false,
 	        'preload'       => '-1',
 
@@ -302,6 +311,16 @@ class MSP_Admin_Assets {
 	public function add_panel_general_variables() {
 
 		$uploads = wp_upload_dir();
+        $siteurl = get_site_url();
+
+        $uploads['baseurl'] = set_url_scheme( $uploads['baseurl'] );
+
+        if( false === strpos( $uploads['baseurl'], $siteurl ) ){
+            trigger_error(
+                sprintf( 'A third party plugin or a custom script has intruptted the original path to upload directory "%s", please contact your administarator.', $uploads['baseurl'] )
+            );
+            $uploads['baseurl'] = trailingslashit( $siteurl ) . trim( $uploads['baseurl'] );
+        }
 
 		// define admin ajax address and master slider page
 		wp_localize_script( 'jquery', '__MS', array(
@@ -316,17 +335,17 @@ class MSP_Admin_Assets {
 
 
 	/**
-	 * Add script localizations 
+	 * Add script localizations
 	 */
 	public function add_panel_script_localizations() {
 
 		wp_localize_script( 'jquery', '__MSP_LAN', apply_filters( 'masterslider_admin_localize', array(
-				
+
 			// CallbacksController.js
 			'cb_001' => __( 'On slide change start', MSWP_TEXT_DOMAIN ),
 			'cb_002' => __( 'On slide change end', MSWP_TEXT_DOMAIN ),
 			'cb_003' => __( 'On slide timer change', MSWP_TEXT_DOMAIN ),
-			'cb_004' => __( 'On slider resize', MSWP_TEXT_DOMAIN ), 
+			'cb_004' => __( 'On slider resize', MSWP_TEXT_DOMAIN ),
 			'cb_005' => __( 'On Youtube/Vimeo video play', MSWP_TEXT_DOMAIN ),
 			'cb_006' => __( 'On Youtube/Vimeo video close', MSWP_TEXT_DOMAIN ),
 			'cb_007' => __( 'On swipe start', MSWP_TEXT_DOMAIN ),
@@ -347,7 +366,7 @@ class MSP_Admin_Assets {
 			// EffectsController
 			'ec_001' => __( 'Please enter name for new preset effect', MSWP_TEXT_DOMAIN ),
 			'ec_002' => __( 'Custom effect', MSWP_TEXT_DOMAIN ),
-			
+
 			// LayersController.js
 			'lc_001' => __( 'Text Layer', MSWP_TEXT_DOMAIN ),
 			'lc_002' => __( 'Image Layer', MSWP_TEXT_DOMAIN ),
@@ -431,7 +450,7 @@ class MSP_Admin_Assets {
 			'ui_029' => __( 'Scroll animation duration :', MSWP_TEXT_DOMAIN ),
 			'ui_030' => __( 'Scroll to an element in page :', MSWP_TEXT_DOMAIN ),
 			'ui_031' => __( 'Target element :', MSWP_TEXT_DOMAIN ),
-		 	
+
 		 	// ApplicationController.js
 		 	'ap_001' => __( 'Sending data...', MSWP_TEXT_DOMAIN ),
 		 	'ap_002' => __( 'An Error accorded, please try again.', MSWP_TEXT_DOMAIN ),
@@ -456,34 +475,34 @@ class MSP_Admin_Assets {
 			'slc_001'=> __( 'Select background image for new slide. (Multiple selection is available)', MSWP_TEXT_DOMAIN ),
 			'slc_002'=> __( 'Create Slide(s)', MSWP_TEXT_DOMAIN )
 		) ) );
-	
+
 	}
-	
+
 
 	/**
-	 * Add general script localizations 
+	 * Add general script localizations
 	 */
 	public function add_panel_general_script_localizations() {
 
 		wp_localize_script( 'jquery', '__MSP_GEN_LAN', apply_filters( 'masterslider_admin_general_localize', array(
-			
+
 			'genl_001' => __( 'The changes you made will be lost if you navigate away from this page. To exit preview mode click on close (X) button.', MSWP_TEXT_DOMAIN ),
 			'genl_002' => __( 'Master Slider Preview', MSWP_TEXT_DOMAIN ),
 			'genl_003' => __( 'Loading Slider ..', MSWP_TEXT_DOMAIN ),
-			'genl_004' => __( 'Creating The Slider ..', MSWP_TEXT_DOMAIN ), 
+			'genl_004' => __( 'Creating The Slider ..', MSWP_TEXT_DOMAIN ),
 			'genl_005' => __( 'Select a Starter', MSWP_TEXT_DOMAIN ),
 			'genl_006' => __( 'No slider is selected to export.', MSWP_TEXT_DOMAIN ),
 			'genl_007' => __( 'Import', MSWP_TEXT_DOMAIN )
 
 		) ) );
-	
+
 	}
 
 
 
 	/**
 	 * Panel spesific styles
-	 * 
+	 *
 	 * @return void
 	 */
 	public function load_panel_styles() {
@@ -501,7 +520,7 @@ class MSP_Admin_Assets {
 
 	/**
 	 * Master slider general/common styles
-	 * 
+	 *
 	 * @return void
 	 */
 	public function load_panel_general_styles() {
@@ -511,7 +530,7 @@ class MSP_Admin_Assets {
 
 
 	public function load_panel_general_scripts() {
-		// disable wp autosave on master slider panel 
+		// disable wp autosave on master slider panel
 		wp_dequeue_script( 'autosave' );
 		wp_enqueue_script( MSWP_SLUG .'-admin-scripts', MSWP_AVERTA_ADMIN_URL . '/assets/js/admin.js', array('jquery', 'jquery-ui-core', 'jquery-ui-dialog'), MSWP_AVERTA_VERSION, true );
 	}

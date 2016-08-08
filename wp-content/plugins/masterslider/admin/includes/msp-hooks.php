@@ -3,14 +3,14 @@
 // Init plugin auto-update class
 function msp_check_for_update() {
 
-    $current_version 	= MSWP_AVERTA_VERSION;
-    $update_path 		= 'http://support.averta.net/envato/api/?branch=envato&group=items';
-    $plugin_slug 		= MSWP_AVERTA_BASE_NAME;
-    $slug 				= 'masterslider';
-    $item_request_name  = 'masterslider-wp';
-    $plugin_file        = MSWP_AVERTA_DIR . '/masterslider.php';
-
-    $plugin_update_check = new Axiom_Plugin_Check_Update ( $current_version, $update_path, $plugin_slug, $slug, $item_request_name, $plugin_file );
+    $plugin_update_check = new Axiom_Plugin_Check_Update (
+        MSWP_AVERTA_VERSION,                    // current version
+        'http://api.averta.net/envato/items/',  // update path
+        MSWP_AVERTA_BASE_NAME,                  // plugin file slug
+        'masterslider',                         // plugin slug
+        'masterslider-wp',                      // item request name
+        MSWP_AVERTA_DIR . '/masterslider.php'   // plugin file
+    );
     $plugin_update_check->plugin_id = '7467925';
     $plugin_update_check->banners   = array(
         'low'   => 'http://ps.w.org/master-slider/assets/banner-772x250.png',
@@ -26,7 +26,7 @@ function msp_filter_masterslider_admin_menu_title( $menu_title ){
 
     if ( ! isset( $current->response[ MSWP_AVERTA_BASE_NAME ] ) )
 		return $menu_title;
-	
+
 	return $menu_title . '&nbsp;<span class="update-plugins"><span class="plugin-count">1</span></span>';
 }
 
@@ -39,7 +39,7 @@ function after_masterslider_row_meta( $plugin_meta, $plugin_file, $plugin_data, 
         $plugin_meta[] = '<a href="http://masterslider.com/doc/wp/#rate" target="_blank" title="' . esc_attr__( 'Rate this plugin', MSWP_TEXT_DOMAIN ) . '">' . __( 'Rate this plugin', MSWP_TEXT_DOMAIN ) . '</a>';
         $plugin_meta[] = '<a href="http://masterslider.com/doc/wp/#support" target="_blank" title="' . esc_attr__( 'Premium support', MSWP_TEXT_DOMAIN ) . '">' . __( 'Premium support', MSWP_TEXT_DOMAIN ) . '</a>';
     }
-    
+
     return $plugin_meta;
 }
 
@@ -60,16 +60,13 @@ function msp_check_vital_user_capabilities(){
 add_action( 'admin_init', 'msp_check_vital_user_capabilities' );
 
 
-// activate licenses on new API too @DEPRECATE in 3.2
+// remove invalid token
 function msp_new_api_compatibility(){
-    if( get_option( MSWP_SLUG . '_is_license_actived', 0 ) ){
-        
-        $token = msp_get_setting( 'token', 'msp_envato_license' );
-        if( empty( $token ) ){
-            $username       = msp_get_setting( 'username'      , 'msp_envato_license' );
-            $purchase_code  = msp_get_setting( 'purchase_code' , 'msp_envato_license' );
-            Axiom_Plugin_License::get_instance()->license_action( $username, $purchase_code ); 
-        }        
+
+    if( false === get_transient( 'msp_get_token_validation_status' ) ){
+        $status = Axiom_Plugin_License::get_instance()->remove_invalid_token();
+        set_transient( 'msp_get_token_validation_status', 5, DAY_IN_SECONDS );
     }
+
 }
 add_action( 'admin_init', 'msp_new_api_compatibility' );

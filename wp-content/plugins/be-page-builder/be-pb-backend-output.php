@@ -1,7 +1,7 @@
 <?php
 
 function be_pb_text_output($m){
-	return wpautop($m[5]);
+	return wpautop( $m[5] );
 }
 
 function be_pb_icon_output($m) {

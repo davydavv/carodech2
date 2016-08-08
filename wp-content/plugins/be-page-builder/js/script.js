@@ -400,7 +400,7 @@ jQuery(document).ready(function() {
 	});
 	jQuery(document).on('click','.paste-shortcode-module',function(e) {
 		e.preventDefault();
-		console.log('test');
+		
 		var	form = jQuery(this).closest('form');
 		var $ajax_data = "action=paste_shortcode_form&shortcode_name="+$current_paste_block+"&"+form.serialize();
 		jQuery.ajax({
@@ -742,7 +742,8 @@ jQuery(document).ready(function() {
 			});
 			output +='[/section]';
 		});
-		console.log(output);
+		// console.log(output);
+
 		output = encodeURIComponent(output);
 
 		var disable;
@@ -751,19 +752,31 @@ jQuery(document).ready(function() {
 		} else {
 			disable = 'no';
 		}	
+		
 		jQuery.ajax({
 			type: "POST",
 			url: ajax_url,
 			data: "action=save_be_pb_builder&nonce="+jQuery('#be_pb_save_nonce').val()+"&post_id="+jQuery('#post_ID').val()+"&content="+output+"&disable_pb="+disable,
 			success	: function(msg) {	
 				jQuery('#be-pb-loader').hide();
-				if(msg =='success') {
-					jQuery('<div class="notification green">Successfully Saved<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();
-					
+				switch(jQuery.trim(msg)) {
+				    case 'success':
+				        jQuery('<div class="notification green">Successfully Saved<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();		
+				        break;
+				    case 'no_changes':
+				        jQuery('<div class="notification red">No Changes have been made<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();
+				        break;
+				    default:
+				    	console.log(output);
+				    	console.log(msg);
+				        break;
 				}
-				else if(msg == 'no_changes') {
-					jQuery('<div class="notification red">No Changes have been made<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();
-				}
+				// if(msg == "success") 
+				// 	jQuery('<div class="notification green">Successfully Saved<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();		
+				// }
+				// else if(msg == 'no_changes') {
+				// 	jQuery('<div class="notification red">No Changes have been made<span class="close"></span></div>').hide().appendTo('#be-pb-save-wrap').fadeIn();
+				// }
 				setTimeout( "jQuery('#be-pb-save-wrap .notification').fadeOut(500, function() { jQuery(this).remove(); });",2000 );
 				
 			},

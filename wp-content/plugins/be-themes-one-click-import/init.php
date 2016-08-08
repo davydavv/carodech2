@@ -3,7 +3,7 @@
  	* Plugin Name: BE one click import
  	* Plugin URI: http://www.brandexponents.com/
  	* Description: One click import
- 	* Version: 1.4
+ 	* Version: 1.8
  	* Author: BrandExponents
  	* Author URI: http://www.brandexponents.com/
  	* License: GPL2
