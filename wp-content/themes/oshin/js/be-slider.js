@@ -1,3 +1,6 @@
+/************************************************
+BE SLIDER
+************************************************/
 ;(function($) {
 	function set_slider_height() {
     	jQuery('.component').each(function() {
@@ -140,6 +143,7 @@
     	set_slider_height();
     });
 }( jQuery ));
+
 ;(function($) {
 	function update_be_slider() {
 		if(jQuery(window).width() < 960){

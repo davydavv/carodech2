@@ -59,8 +59,12 @@ if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt
 	$header_style = '';
 }
 
+if ( isset($be_themes_data['mobile_bg_controller']) && !empty($be_themes_data['mobile_bg_controller']) ){
+	$header_class .= ' exclusive-mobile-bg';
+}
+
 ?>
- <!-- if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt-header-type'] ) ) { -->
+
 	<header id="header">
 		<?php 
 			if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt-header-type'] ) ) {
@@ -100,81 +104,96 @@ if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt
 					$default_header_height = $logo_height;
 				}
 			?>
-			<div id = "left-header-mobile" class="clearfix">
-				<div class="logo">
-					<?php be_themes_get_header_logo_image(); ?>
-				</div><?php
-				be_themes_get_header_woocommerce_cart_widget();?>
-				<div class="mobile-nav-controller-wrap">
-					<div class="menu-controls mobile-nav-controller" title="Mobile Menu Controller"><i class="font-icon icon-list2"></i></div>
-				</div>
-			</div>
-			<div id="header-wrap" class="<?php if($be_themes_data['opt-header-wrap']){?>be-wrap<?php } ?> clearfix" data-default-height="<?php echo $default_header_height; ?>" data-sticky-height="<?php echo $logo_sticky_height; ?>">
-				<?php
-				if (basename($be_themes_data['opt-header-style'],'.png') != 'style5' ) { ?>
-					<?php if (basename($be_themes_data['opt-header-style'],'.png') == 'style2' ) { ?>
-						<div id="header-controls-left">
-							<?php
-								if($be_themes_data['opt-header-pos']['left']) {
-									foreach ($be_themes_data['opt-header-pos']['left'] as $key => $value) {
-										be_themes_get_header_widgets($key);
-									}
-								}
-							?>
-						</div><?php
-					} ?>
+			<?php if ( isset($be_themes_data['opt-header-type']) && ('left' == $be_themes_data['opt-header-type'] ) ) {?>
+				<div id = "left-header-mobile" class="clearfix"><?php
+					if((!isset($be_themes_data['disable_logo']) || empty($be_themes_data['disable_logo'])) || (isset($be_themes_data['disable_logo']) && (0 == $be_themes_data['disable_logo'])) ){
+					?>
 					<div class="logo">
 						<?php be_themes_get_header_logo_image(); ?>
 					</div>
-					<div id="header-controls-right">
-						<?php
-							if($be_themes_data['opt-header-pos']['right']) {
-								foreach ($be_themes_data['opt-header-pos']['right'] as $key => $value) {
-									be_themes_get_header_widgets($key);
-								}
-							}		
-							// var_dump(array_key_exists("cart", $be_themes_data['opt-header-pos']['right']))		;
-							if(isset($be_themes_data['top-menu-style']) && ('top-overlay-menu' == ($be_themes_data['top-menu-style'])) && !( array_key_exists("smenu", $be_themes_data['opt-header-pos']['right'])) ) {
-								be_themes_get_header_widgets('smenu');
-							}
+					<div class="mobile-nav-controller-wrap">
+						<!-- <div class="menu-controls mobile-nav-controller" title="Mobile Menu Controller"><i class="font-icon icon-list2"></i></div> -->
+						<div class="menu-controls mobile-nav-controller" title="Mobile Menu Controller"><span class="be-mobile-menu-icon"></span></div>
+					</div>
+					<?php 
+					} 
+					be_themes_get_header_woocommerce_cart_widget();?>
+				</div>
+			<?php }
+			if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt-header-type'] ) ) {?>
+				<div id="header-wrap" class="<?php if($be_themes_data['opt-header-wrap']){?>be-wrap<?php } ?> clearfix" data-default-height="<?php echo $default_header_height; ?>" data-sticky-height="<?php echo $logo_sticky_height; ?>">
+					<?php
+						if (basename($be_themes_data['opt-header-style'],'.png') == 'style2' ) { ?>
+							<div id="header-controls-left">
+								<?php
+									if($be_themes_data['opt-header-pos']['left']) {
+										foreach ($be_themes_data['opt-header-pos']['left'] as $key => $value) {
+											be_themes_get_header_widgets($key);
+										}
+									}
+								?>
+							</div><?php
+						} 
+						if((!isset($be_themes_data['disable_logo']) || empty($be_themes_data['disable_logo'])) || (isset($be_themes_data['disable_logo']) && (0 == $be_themes_data['disable_logo'])) ){
 						?>
-						<?php if(isset($be_themes_data['top-menu-style']) && !empty($be_themes_data['top-menu-style']) && $be_themes_data['top-menu-style'] == 'menu-animate-fall') { ?>
-							<div class="menu-controls menu-falling-animate-controller"><div class="font-icon custom-font-icon"><span class="menu-icon menu-icon-first"></span><span class="menu-icon menu-icon-second"></span><span class="menu-icon menu-icon-third"></span></div></div>
+						<div class="logo">
+							<?php be_themes_get_header_logo_image(); ?>
+						</div>
 						<?php } ?>
-						<div class="mobile-nav-controller-wrap">
-							<div class="menu-controls mobile-nav-controller"><div class="font-icon custom-font-icon"><span class="menu-icon menu-icon-first"></span><span class="menu-icon menu-icon-second"></span><span class="menu-icon menu-icon-third"></span></div></div>
+						<div id="header-controls-right">
+							<div class="mobile-nav-controller-wrap">
+								<!-- <div class="menu-controls mobile-nav-controller"><div class="font-icon custom-font-icon"><span class="menu-icon menu-icon-first"></span><span class="menu-icon menu-icon-second"></span><span class="menu-icon menu-icon-third"></span></div></div> -->
+								<div class="menu-controls mobile-nav-controller" title="Mobile Menu Controller"><span class="be-mobile-menu-icon"></span></div>
+							</div>
+							<?php
+								if(isset($be_themes_data['top-menu-style']) && !empty($be_themes_data['top-menu-style']) && $be_themes_data['top-menu-style'] == 'menu-animate-fall') { ?>
+									<div class="menu-controls menu-falling-animate-controller"><span class="be-mobile-menu-icon"></span></div>
+								<?php } 
+								if($be_themes_data['opt-header-pos']['right']) {
+									foreach ($be_themes_data['opt-header-pos']['right'] as $key => $value) {
+										be_themes_get_header_widgets($key);
+									}
+								}		
+								// var_dump(array_key_exists("cart", $be_themes_data['opt-header-pos']['right']))		;
+								if(isset($be_themes_data['top-menu-style']) && ('top-overlay-menu' == ($be_themes_data['top-menu-style'])) && !( array_key_exists("smenu", $be_themes_data['opt-header-pos']['right'])) ) {
+									be_themes_get_header_widgets('smenu');
+								}
+							?>
+						</div><?php
+					if ((basename($be_themes_data['opt-header-style'], '.png') != 'style2' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style6' )){	
+						if (((basename($be_themes_data['opt-header-style'], '.png') != 'style2' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style6' )) || (isset($be_themes_data['top-menu-style']) && !empty($be_themes_data['top-menu-style']) && $be_themes_data['top-menu-style'] == 'menu-animate-fall')) {?>
+						<!-- if (((basename($be_themes_data['opt-header-style'], '.png') != 'style2' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style4' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style6' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style5' )) || (isset($be_themes_data['top-menu-style']) && !empty($be_themes_data['top-menu-style']) && $be_themes_data['top-menu-style'] == 'menu-animate-fall')) {?> -->
+							<nav id="navigation" class="clearfix">	<?php
+								be_themes_get_header_navigation();?>
+							</nav><!-- End Navigation --><?php 
+						} 
+					}
+					if(basename($be_themes_data['opt-header-style'], '.png') == 'style6' ) {
+						echo '<nav id="navigation-left-side" class="clearfix">';
+							be_themes_get_header_left_navigation();
+						echo '</nav>';
+						echo '<nav id="navigation-right-side" class="clearfix">';
+							be_themes_get_header_right_navigation();
+						echo '</nav>';
+					} ?>
+				</div>
+
+				<?php
+				if ( isset($be_themes_data['opt-header-type']) && ($be_themes_data['opt-header-border-color']['border-style'] != 'none') && ('top' == $be_themes_data['opt-header-type'] ) ) { ?>
+					<span class="header-border <?php echo (($be_themes_data['opt-header-border-wrap']) ? 'be-wrap ' : '' );?>"></span><?php
+				}?>
+				<?php 
+				if((basename($be_themes_data['opt-header-style'],'.png') == 'style2' ) ) { // || (basename($be_themes_data['opt-header-style'],'.png') == 'style4' )) { 
+					?>	
+					<div id="header-bottom-bar">
+						<div id="header-bottom-bar-wrap" class="<?php if($be_themes_data['opt-header-wrap']){?>be-wrap<?php } ?> clearfix">
+							<nav id="navigation" class="clearfix">	<?php
+							be_themes_get_header_navigation();?>
+							</nav><!-- End Navigation -->
 						</div>
 					</div><?php
-					}
-				if (((basename($be_themes_data['opt-header-style'], '.png') != 'style2' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style4' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style6' ) && (basename($be_themes_data['opt-header-style'], '.png') != 'style5' )) || (isset($be_themes_data['top-menu-style']) && !empty($be_themes_data['top-menu-style']) && $be_themes_data['top-menu-style'] == 'menu-animate-fall')) {?>
-					<nav id="navigation" class="clearfix">	<?php
-						be_themes_get_header_navigation();?>
-					</nav><!-- End Navigation --><?php 
-				} 
-				if(basename($be_themes_data['opt-header-style'], '.png') == 'style6' ) {
-					echo '<nav id="navigation-left-side" class="clearfix">';
-						be_themes_get_header_left_navigation();
-					echo '</nav>';
-					echo '<nav id="navigation-right-side" class="clearfix">';
-						be_themes_get_header_right_navigation();
-					echo '</nav>';
-				} ?>
-			</div>
-			<?php
-			if ( isset($be_themes_data['opt-header-type']) && ('top' == $be_themes_data['opt-header-type'] ) ) { ?>
-				<span class="header-border <?php echo (($be_themes_data['opt-header-border-wrap']) ? 'be-wrap ' : '' );?>"></span><?php
-			}?>
-			<?php 
-			if((basename($be_themes_data['opt-header-style'],'.png') == 'style2' ) || (basename($be_themes_data['opt-header-style'],'.png') == 'style4' )) { 
-				?>	
-				<div id="header-bottom-bar">
-					<div id="header-bottom-bar-wrap" class="<?php if($be_themes_data['opt-header-wrap']){?>be-wrap<?php } ?> clearfix">
-						<nav id="navigation" class="clearfix">	<?php
-						be_themes_get_header_navigation();?>
-						</nav><!-- End Navigation -->
-					</div>
-				</div><?php
-			}?>
+				}?>
+			<?php }?>
 			<div class="clearfix"><?php
 				be_themes_get_header_mobile_navigation();?>
 			</div>

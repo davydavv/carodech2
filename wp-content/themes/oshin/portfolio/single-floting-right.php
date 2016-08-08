@@ -24,6 +24,7 @@
 						foreach ( $attachments as $attachment_id ) {
 							$attach_img = wp_get_attachment_image_src($attachment_id, 'full');
 							$video_url = get_post_meta($attachment_id, 'be_themes_featured_video_url', true);
+							$attachment_info = be_wp_get_attachment( $attachment_id );
 							if($video_url) {
 								$data_source = 'video';
 							} else {
@@ -33,7 +34,7 @@
 							if($video_url) {
 								echo be_gal_video($video_url);
 							} else {
-								echo '<img src="'.$data_source.'" style="display: block;" alt="" />';
+								echo '<img src="'.$data_source.'" style="display: block;" alt="'.$attachment_info['alt'].'" />';
 							}
 							echo '</p>';
 						}

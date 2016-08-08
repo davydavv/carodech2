@@ -8,12 +8,7 @@
 <html class="no-js" <?php language_attributes(); ?>> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<!--[if IE]>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
-	<![endif]-->
-
-	<title><?php wp_title('&laquo;', true, 'right'); ?></title>
-
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 	<?php
@@ -35,33 +30,50 @@
 	if ( isset($be_themes_data['opt-header-type']) && ('left' == $be_themes_data['opt-header-type'] ) ) {
 		$sidebar_class = 'sb-left';
 	}
+	$show_sidebar = 0;
+	$header_right_widgets = isset($be_themes_data['opt-header-pos']['right']) ? $be_themes_data['opt-header-pos']['right'] :  array() ;
+	if (isset($be_themes_data['opt-header-type'])){
+		if ('left' == $be_themes_data['opt-header-type'] ) {
+			$show_sidebar = 1;
+		}else if ('top' == $be_themes_data['opt-header-type'] ) {
+			if( array_key_exists('smenu',$header_right_widgets) || ('top-overlay-menu' == ($be_themes_data['top-menu-style'])) ){
+				$show_sidebar = 1;
+			}
+		}
+	}
 	$strip_flag = (('strip' == $be_themes_data['left-header-style'] ) || ('overlay' == $be_themes_data['left-header-style'] )) ? 'on' : 'off' ;
+	$strip_menu_class = isset($be_themes_data['left-header-style']) && !empty($be_themes_data['left-header-style']) ? $be_themes_data['left-header-style'] : '' ;
+	$left_strip_animation = isset($be_themes_data['left-strip-animation']) && !empty($be_themes_data['left-strip-animation']) ? $be_themes_data['left-strip-animation'] : 'menu_push_main' ;
 ?>
-<body <?php body_class(); ?>>
-	<div class="sb-slidebar <?php echo $sidebar_class; ?>">
-		<i class="overlay-menu-close font-icon icon-icon_close"></i>
-		<div class="display-table">
-			<div id="sb-slidebar-content" class="sb-slidebar-content ajaxable">
-				<?php 
-					if( ! empty( $be_themes_data['logo_sidebar']['url'] )) {
-						$logo_sidebar = $be_themes_data['logo_sidebar']['url'];
-					}else{
-						if( array_key_exists('logo', $be_themes_data) ) {
-							$logo_sidebar = $be_themes_data['logo']['url'];
-						} 
-						else {
-							$logo_sidebar = get_template_directory_uri().'/img/logo.png';
+<body <?php body_class(); ?> data-be-site-layout='<?php echo $be_themes_data['layout']; ?>' data-be-page-template = '<?php echo basename(get_page_template(),".php"); ?>'>	
+	<?php if ( $show_sidebar == 1 ) {?>
+		<div class="sb-slidebar <?php echo $sidebar_class; ?>">
+			<i class="overlay-menu-close font-icon icon-icon_close"></i>
+			<div class="display-table">
+				<div id="sb-slidebar-content" class="sb-slidebar-content ajaxable">
+					<?php 
+					if((!isset($be_themes_data['disable_logo']) || empty($be_themes_data['disable_logo'])) || (isset($be_themes_data['disable_logo']) && (0 == $be_themes_data['disable_logo'])) ){		
+						if( ! empty( $be_themes_data['logo_sidebar']['url'] )) {
+							$logo_sidebar = $be_themes_data['logo_sidebar']['url'];
+						}else{
+							if( array_key_exists('logo', $be_themes_data) && ! empty( $be_themes_data['logo']['url'] ) ) {
+								$logo_sidebar = $be_themes_data['logo']['url'];
+							} 
+							else {
+								$logo_sidebar = get_template_directory_uri().'/img/logo.png';
+							}
 						}
 					}
-					echo '<div id="logo-sidebar"><a href="'.home_url().'"><img class="transparent-logo dark-scheme-logo" src="'.$logo_sidebar.'" alt="" /></a></div>';
-					be_themes_get_header_sidebar_navigation();
-					if (is_active_sidebar( 'sliderbar-area' ) ) {
-						dynamic_sidebar( 'sliderbar-area' );
-					}
-				?>
+						echo '<div id="logo-sidebar"><a href="'.home_url().'"><img class="transparent-logo dark-scheme-logo" src="'.$logo_sidebar.'" alt="'.esc_attr(get_bloginfo('name')).'" /></a></div>';
+						be_themes_get_header_sidebar_navigation();
+						if (is_active_sidebar( 'sliderbar-area' ) ) {
+							dynamic_sidebar( 'sliderbar-area' );
+						}
+					?>
+				</div>
 			</div>
 		</div>
-	</div>
+	<?php } ?>
 	<?php
 	$widget_style = (isset($be_themes_data['seach_widget_style']) && !empty($be_themes_data['seach_widget_style'])) ? $be_themes_data['seach_widget_style'] : 'style1-header-search-widget';
 	if($widget_style == 'style2-header-search-widget') {
@@ -69,7 +81,7 @@
 	}
 	if ( ('left' == $be_themes_data['opt-header-type'] ) && isset($be_themes_data['left-header-style']) && ('on' == $strip_flag)) {?>
 	<div class="left-strip-wrapper">
-		<div id="sb-left-strip" class="leftside-menu-controller ajaxable">
+		<div id="sb-left-strip" class="leftside-menu-controller ajaxable <?php echo $strip_menu_class.' '; echo $left_strip_animation; ?>">
 		<?php 
 			if ( ! empty( $be_themes_data['left-strip-logo']['url'])){
 				$logo_strip = $be_themes_data['left-strip-logo']['url'];
@@ -82,6 +94,7 @@
 		</div>
 	</div><?php
 	}?>
+
 	<div id="main-wrapper">
 		<?php 
 			if($be_themes_data['layout'] == 'layout-border-header-top') {

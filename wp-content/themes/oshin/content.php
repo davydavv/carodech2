@@ -12,10 +12,14 @@ if( has_post_thumbnail() ) :
 	$link = $attachment_full_url;
 endif;
 $class = '';
-if((isset($be_themes_data['open_to_lightbox']) && 1 == $be_themes_data['open_to_lightbox']) || is_single()) {
+if((isset($be_themes_data['open_to_lightbox']) && 1 == $be_themes_data['open_to_lightbox']) ) { //|| is_single()
 	$class = 'image-popup-vertical-fit mfp-image';
 } else {
-	$link = get_permalink();
+	if(!is_single()){
+		$link = get_permalink();	
+	}else{
+		$link = '#';
+	}
 }
 if( !empty( $url ) ) : ?>
 <div class="post-thumb">	

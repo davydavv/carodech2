@@ -32,7 +32,7 @@ if( class_exists('Woocommerce') ) {
 			wp_enqueue_style( 'be-themes-woocommerce-css' );
 			
 			wp_deregister_script( 'be-themes-woocommerce-js' );
-			wp_register_script( 'be-themes-woocommerce-js', get_template_directory_uri() . '/woocommerce/woocommerce.js', array( 'jquery','be-themes-plugins-js'), FALSE, TRUE );
+			wp_register_script( 'be-themes-woocommerce-js', get_template_directory_uri() . '/woocommerce/woocommerce.js', array( 'jquery','be-theme-plugins-js'), FALSE, TRUE );
 			wp_enqueue_script( 'be-themes-woocommerce-js' );
 		}
 		add_action( 'wp_enqueue_scripts', 'be_themes_add_custom_styles_scripts' );
@@ -76,7 +76,7 @@ if( class_exists('Woocommerce') ) {
 		function be_woo_before_main_content_shop_page_content() {
 			$shop_query = new WP_Query( array('page_id' => get_option('woocommerce_shop_page_id')));
 		    while ( $shop_query->have_posts() ) : $shop_query->the_post();
-		   		if( is_shop()) {
+		   		if( is_shop() && !(is_search())) {
 		        	the_content();
 		        }
 		    endwhile;
@@ -221,8 +221,8 @@ if( class_exists('Woocommerce') ) {
 		function be_themes_add_dropdown_styles() {
 			global $woocommerce;
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			wp_enqueue_script( 'wc-chosen', $woocommerce->plugin_url() . '/assets/js/frontend/chosen-frontend' . $suffix . '.js', array( 'chosen' ), FALSE, true );
-			wp_enqueue_style( 'woocommerce_chosen_styles', $woocommerce->plugin_url() . '/assets/css/chosen.css' );
+			//wp_enqueue_script( 'wc-chosen', $woocommerce->plugin_url() . '/assets/js/frontend/chosen-frontend' . $suffix . '.js', array( 'chosen' ), FALSE, true );
+			// wp_enqueue_style( 'woocommerce_chosen_styles', $woocommerce->plugin_url() . '/assets/css/chosen.css' );
 		}
 		add_action( 'wp_enqueue_scripts', 'be_themes_add_dropdown_styles', 99 );
 	}

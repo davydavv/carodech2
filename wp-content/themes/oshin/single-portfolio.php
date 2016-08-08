@@ -11,7 +11,11 @@ $portfolio_home_page = ($portfolio_home_page == '' ? $be_themes_data['portfolio_
 $portfolio_catg_traversal = (1 == get_post_meta( get_the_ID(), 'be_themes_traverse_catg', true) ? true : false);
 $single_portfolio_style = get_post_meta(get_the_ID(), 'be_themes_portfolio_single_page_style', true);
 
-if ((isset($portfolio_title_nav) && 1 == $portfolio_title_nav) && ('style1' != $single_portfolio_style) && ('style2' != $single_portfolio_style) && ('style3' != $single_portfolio_style) && ('style4' != $single_portfolio_style)) { ?>
+if($single_portfolio_style == 'style2' || $single_portfolio_style == 'style3' || $single_portfolio_style == 'be-ribbon-carousel' || $single_portfolio_style == 'be-center-carousel'){
+	$single_portfolio_style = 'flickity';
+}
+
+if ((isset($portfolio_title_nav) && 1 == $portfolio_title_nav) && ('style1' != $single_portfolio_style) && ('style4' != $single_portfolio_style)  && ('flickity' != $single_portfolio_style)) { ?>
 		<div id="portfolio-title-nav-wrap" class=" <?php echo esc_attr( $portoflio_title_nav_style ) ;?> clearfix">
 			<div <?php echo ($portoflio_title_nav_style != 'style2' ? "class=be-wrap" : "") ; ?> >
 				<h6 class="portfolio-title-nav"><?php echo get_the_title(); ?></h6>
@@ -26,7 +30,7 @@ if ((isset($portfolio_title_nav) && 1 == $portfolio_title_nav) && ('style1' != $
 					</li>
 					<!-- Home Page Grid -->
 					<?php if ($portfolio_home_page != '') { ?>
-						<li><a href="<?php echo esc_url( $portfolio_home_page ); ?>" class="font-icon icon-icon_grid-2x2	"></a></li><?php
+						<li class="home-grid-wrapper"><a href="<?php echo esc_url( $portfolio_home_page ); ?>"><div class="home-grid-icon"><span></span><span></span><span></span><span></span><span></span><span></span></div></a></li><?php
 					}?>
 					<!-- Next Post Link -->
 					<li>
@@ -45,6 +49,7 @@ if ((isset($portfolio_title_nav) && 1 == $portfolio_title_nav) && ('style1' != $
 if($single_portfolio_style == 'lightbox') {
 	$single_portfolio_style = 'normal';
 }
+
 	while (have_posts() ) : the_post();
 		get_template_part( 'portfolio/single', $single_portfolio_style );
 	endwhile;

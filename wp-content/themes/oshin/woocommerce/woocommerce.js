@@ -23,9 +23,9 @@ jQuery(document).ready(function() {
             tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
 		}
     });
-	jQuery("select.orderby,select#calc_shipping_country,select#calc_shipping_state").chosen({inherit_select_classes: true});
-	jQuery("select.orderby,select#calc_shipping_country,select#calc_shipping_state").trigger("chosen:updated");
-	jQuery(document).on("update_content", function() {
-		jQuery.ajax( $fragment_refresh );
-	});
+	// jQuery("select.orderby,select#calc_shipping_country,select#calc_shipping_state").chosen({inherit_select_classes: true});
+	// jQuery("select.orderby,select#calc_shipping_country,select#calc_shipping_state").trigger("chosen:updated");
+	// jQuery(document).on("update_content", function() {
+	// 	jQuery.ajax( $fragment_refresh );
+	// });
 });

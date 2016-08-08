@@ -9,10 +9,13 @@ $blog_attr['gutter_width'] = ((!isset($be_themes_data['blog_gutter_width'])) || 
 $blog_attr['pagination_style'] = ((!isset($be_themes_data['blog_pagination_style'])) || empty($be_themes_data['blog_pagination_style'])) ? 'normal' : $be_themes_data['blog_pagination_style'];
 $blog_attr['style'] = ((!isset($be_themes_data['blog_style'])) || empty($be_themes_data['blog_style'])) ? 'style1' : $be_themes_data['blog_style'];
 $blog_column = ((!isset($be_themes_data['blog_column'])) || empty($be_themes_data['blog_column'])) ? 'three-col' : $be_themes_data['blog_column'];
+$col = explode('-', $blog_column);
 $sidebar = ((!isset($be_themes_data['blog_sidebar'])) || empty($be_themes_data['blog_sidebar'])) ? 'right' : $be_themes_data['blog_sidebar'];
+$be_wrap = 'be-wrap';
 if( $blog_attr['style'] == 'style3' ) {
 	$sidebar = 'no';
 	$blog_style_class = $blog_attr['style'].'-blog portfolio-container clickable clearfix';
+	$be_wrap = (isset($be_themes_data['blog_grid_style']) && !empty($be_themes_data['blog_grid_style']) && 'full' == $be_themes_data['blog_grid_style'] ) ? '' : 'be-wrap' ;
 } else {
 	$blog_style_class = $blog_attr['style'].'-blog';
 }
@@ -33,10 +36,10 @@ if($blog_attr['style'] == 'style3' && $blog_attr['gutter_style'] == 'style2') {
 	</div> <!--  End Page Content -->
 </section>
 <section id="content" class="<?php echo esc_attr( $sidebar ); ?>-sidebar-page">
-	<div id="content-wrap" class="be-wrap clearfix"> 
+	<div id="content-wrap" class="<?php echo $be_wrap; ?> clearfix"> 
 		<section id="page-content" class="<?php echo ($blog_attr['style'] == 'style3' || $sidebar == 'no') ? 'content-no-sidebar' : 'content-single-sidebar'; ?>">
 			<div class="portfolio-all-wrap">
-				<div class="<?php echo ($blog_attr['style'] == 'style3') ? 'portfolio full-screen full-screen-gutter '.$blog_attr['gutter_style'].'-gutter '.$blog_column : ''; ?>" data-gutter-width="<?php echo esc_attr( $blog_attr['gutter_width'] ); ?>" data-showposts="<?php echo esc_attr( $items_per_page ); ?>" data-paged="2" data-action="get_blog" <?php echo $portfolio_wrap_style; ?> >
+				<div class="<?php echo ($blog_attr['style'] == 'style3') ? 'portfolio full-screen full-screen-gutter '.$blog_attr['gutter_style'].'-gutter '.$blog_column : ''; ?>" data-col="<?php echo $col[0]; ?>" data-gutter-width="<?php echo esc_attr( $blog_attr['gutter_width'] ); ?>" data-showposts="<?php echo esc_attr( $items_per_page ); ?>" data-paged="2" data-action="get_blog" <?php echo $portfolio_wrap_style; ?> >
 					<div class="clearfix <?php echo esc_attr( $blog_style_class ); ?>">
 						<?php 			
 						if( have_posts() ) : 

@@ -48,7 +48,7 @@ function my_theme_register_required_plugins() {
 			'slug'     				=> 'masterslider', // The plugin slug (typically the folder name)
 			'source'   				=> get_stylesheet_directory() . '/lib/plugins/masterslider.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '2.5.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '2.29.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
@@ -59,7 +59,7 @@ function my_theme_register_required_plugins() {
 			'slug'     				=> 'revslider', // The plugin slug (typically the folder name)
 			'source'   				=> get_stylesheet_directory() . '/lib/plugins/revslider.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '4.6.5', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '5.2.5', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
@@ -96,19 +96,62 @@ function my_theme_register_required_plugins() {
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
-		),				
+		),	
 
+		array(
+			'name'     				=> 'Meta Box Conditional Logic', // The plugin name
+			'slug'     				=> 'meta-box-conditional-logic', // The plugin slug (typically the folder name)
+			'source'   				=> get_stylesheet_directory() . '/lib/plugins/meta-box-conditional-logic.zip', // The plugin source
+			'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
+			'version' 				=> '1.0.8', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+		),	
+
+		array(
+			'name'     				=> 'Meta Box Show Hide', // The plugin name
+			'slug'     				=> 'meta-box-show-hide', // The plugin slug (typically the folder name)
+			'source'   				=> get_stylesheet_directory() . '/lib/plugins/meta-box-show-hide.zip', // The plugin source
+			'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
+			'version' 				=> '0.2.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+		),	
+
+		array(
+			'name'     				=> 'Meta Box Tabs', // The plugin name
+			'slug'     				=> 'meta-box-tabs', // The plugin slug (typically the folder name)
+			'source'   				=> get_stylesheet_directory() . '/lib/plugins/meta-box-tabs.zip', // The plugin source
+			'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
+			'version' 				=> '0.1.5', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+		),	
+
+		// array(
+		// 	'name'     				=> 'Meta Box Tooltip', // The plugin name
+		// 	'slug'     				=> 'meta-box-tooltip', // The plugin slug (typically the folder name)
+		// 	'source'   				=> get_stylesheet_directory() . '/lib/plugins/meta-box-tooltip.zip', // The plugin source
+		// 	'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
+		// 	'version' 				=> '0.1.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+		// 	'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+		// 	'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+		// 	'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+		// ),	
 		// This is an example of how to include a plugin from the WordPress Plugin Repository
 		array(
 			'name' 		=> 'Contact Form 7',
 			'slug' 		=> 'contact-form-7',
 			
 		),
-		array(
-			'name' 		=> 'Sidekick - Voice Guided Training',
-			'slug' 		=> 'sidekick',
+		// array(
+		// 	'name' 		=> 'Sidekick - Voice Guided Training',
+		// 	'slug' 		=> 'sidekick',
 			
-		),
+		// ),
 
 	);
 
@@ -125,8 +168,8 @@ function my_theme_register_required_plugins() {
 	$config = array(
 		'domain'       		=> $theme_text_domain,         	// Text domain - likely want to be the same as your theme.
 		'default_path' 		=> '',                         	// Default absolute path to pre-packaged plugins
-		'parent_menu_slug' 	=> 'themes.php', 				// Default parent menu slug
-		'parent_url_slug' 	=> 'themes.php', 				// Default parent URL slug
+		'parent_slug' 	=> 'themes.php', 				// Default parent menu slug
+		//'parent_url_slug' 	=> 'themes.php', 				// Default parent URL slug
 		'menu'         		=> 'install-required-plugins', 	// Menu slug
 		'has_notices'      	=> true,                       	// Show admin notices or not
 		'is_automatic'    	=> false,					   	// Automatically activate plugins after installation or not

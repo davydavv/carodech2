@@ -13,7 +13,7 @@ class BraPhotostreamWidget extends WP_Widget {
             'classname'		=>		'bra-photostream-widget',
             'description' 	=>		'Showing photostream from Dribbble, Flickr, Pinterest or Instagram in your sidebar'
 		);
-		parent::WP_Widget('bra_photostream_widget', 'Brankic Photostream Widget', $widget_options);
+		parent::__construct('bra_photostream_widget', 'Brankic Photostream Widget', $widget_options);
 	}
 	function widget( $args, $instance ) {
 		extract ( $args, EXTR_SKIP );
@@ -44,20 +44,24 @@ class BraPhotostreamWidget extends WP_Widget {
         $html = '<div class="photostream clearfix" id="' . $unique_id  .'" data-user="'.$user.'" data-limit="'.$limit.'" data-social-media="'.$social_network.'">';
         $html .= '<ul class="clearfix">';
         $count = 1;
-        if( !empty($images) && is_array($images) ) {
-	        foreach ($images as $key => $image) {
-	            if(($count % 3) == 0) {
-	                $class = 'last';
-	            } else {
-	                $class = '';
-	            }
-	            $html .= '<li class="'.$class.'">';
-	            $html .= '<a href="'.$image['full_image_url'].'" data-href="'.$image['full_image_url'].'" class="thumb-wrap image-popup-vertical-fit '.$image['mfp_class'].'" title="'.$image['caption'].'">';
-	            $html .= '<img src="'.$image['thumbnail'].'" alt />';
-	            $html .= '</a>';
-	            $html .= '</li>';
-	            $count++;
-	        }
+        if( !empty($images['error']) && $images['error'] != '' ){
+            $html .= $images['error']; 
+        }else{
+            if( !empty($images) && is_array($images) ) {
+                foreach ($images as $key => $image) {
+                    if(($count % 3) == 0) {
+                        $class = 'last';
+                    } else {
+                        $class = '';
+                    }
+                    $html .= '<li class="'.$class.'">';
+                    $html .= '<a href="'.$image['full_image_url'].'" data-href="'.$image['full_image_url'].'" class="thumb-wrap image-popup-vertical-fit '.$image['mfp_class'].'" title="'.$image['caption'].'">';
+                    $html .= '<img src="'.$image['thumbnail'].'" alt />';
+                    $html .= '</a>';
+                    $html .= '</li>';
+                    $count++;
+                }
+            }
         }
         $html .= '</ul>';
         $html .= '</div>';

@@ -74,8 +74,10 @@
 		</footer> <?php
 	}
 	?>
+	<?php do_action('be_themes_after_footer'); ?>
 	</div>
 	<?php get_template_part( 'page', 'loader' ); ?>
+
 	<?php
 		if(!(isset($be_themes_data['disable_back_top_btn']) && !empty($be_themes_data['disable_back_top_btn']) && $be_themes_data['disable_back_top_btn'] == 1)) {
 			echo '<a href="#" id="back-to-top" class="'.$be_themes_data['layout'].'"><i class="font-icon icon-arrow_carrot-up"></i></a>';
@@ -83,25 +85,28 @@
 	?>
 	<?php if('layout-border' == $be_themes_data['layout'] || 'layout-border-header-top' == $be_themes_data['layout']) { ?>
 	<div class="layout-box-container">
-		<?php if('layout-border' == $be_themes_data['layout']) { ?>
+		<?php if('layout-border' == $be_themes_data['layout'] || 'left' == $be_themes_data['opt-header-type']) { ?>
 			<div class="layout-box-top"></div>
 		<?php } ?>
 		<div class="layout-box-right"></div>
 		<div class="layout-box-bottom"></div>
 		<div class="layout-box-left"></div>
-	</div><?php
+	</div>
+	<?php
 	}?>
 </div>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '<?php echo esc_js( $be_themes_data['google_analytics_code'] ); ?>', 'auto');
-  ga('send', 'pageview');
+<?php if( !empty($be_themes_data['google_analytics_code']) ) : ?>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-</script>
+	  ga('create', '<?php echo esc_js( $be_themes_data['google_analytics_code'] ); ?>', 'auto');
+	  ga('send', 'pageview');
+	</script>
+<?php endif; ?>
 
 <input type="hidden" id="ajax_url" value="<?php echo admin_url( 'admin-ajax.php' ); ?>" />
 <?php if( array_key_exists('all_ajax_exclude_links', $be_themes_data) ) : ?>

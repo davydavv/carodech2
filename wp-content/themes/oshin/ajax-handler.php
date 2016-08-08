@@ -6,251 +6,275 @@
 /* ---------------------------------------------  */
 // Function for processing contact form submission
 /* ---------------------------------------------  */
-add_action( 'wp_ajax_nopriv_contact_authentication', 'be_themes_contact_authentication' );
-add_action( 'wp_ajax_contact_authentication', 'be_themes_contact_authentication' );
-function be_themes_contact_authentication() {
-	global $be_themes_data;
-	$contact_name = $_POST['contact_name'];
-	$contact_email = $_POST['contact_email'];
-	$contact_comment = "Name: ".$contact_name."\n\nMessage:\n".$_POST['contact_comment'];
-	$contact_subject = $_POST['contact_subject'];
-	if(empty($contact_name) || empty($contact_email) || empty($contact_comment) || empty($contact_subject) ) {
-		$result['status']="error";
-		$result['data']= __('All fields are required','be-themes');
-	}
-	else if(!preg_match ('/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,6}$/', $contact_email)) {
-		$result['status']="error";
-		$result['data']=__('Please enter a valid email address','be-themes');
-	}
-	else if(!empty($contact_name) && !empty($contact_email) && !empty($contact_comment) && !empty($contact_subject) ) {
-		if ( !empty( $be_themes_data['mail_id'] ) ) {
-			$to = $be_themes_data['mail_id'];
-		} else {
-			$to = get_option('admin_email');
-		}		
-		$subject= $contact_subject;
-		$from = $contact_name."<".$contact_email.">";
-		$headers = "From:" . $from;
-		mail($to,$subject,$contact_comment,$headers);
-		$result['status']="success";
-		$result['data']=__('Your message was sent sucessfully','be-themes');
-	}
-	header('Content-type: application/json');
-	echo json_encode($result);
-	die();
-}
-add_action( 'wp_ajax_nopriv_get_ajax_full_screen_gutter_portfolio', 'be_themes_get_ajax_full_screen_gutter_portfolio' );
-add_action( 'wp_ajax_get_ajax_full_screen_gutter_portfolio', 'be_themes_get_ajax_full_screen_gutter_portfolio' );
-function be_themes_get_ajax_full_screen_gutter_portfolio() {
-	extract($_POST);
-	$output='';
-	$global_thumb_overlay_color = $thumb_overlay_color;
-	$global_gradient_style_color = $gradient_style_color;
-	if(isset($title_color) && !empty($title_color)) {
-		$global_title_color = $title_color = $title_color;
-	} else {
-		$global_title_color = $title_color = '';
-	}
-	if(isset($cat_color) && !empty($cat_color)) {
-		$global_cat_color = $cat_color = $cat_color;
-	} else {
-		$global_cat_color = $cat_color = '';
-	}
-	$filter_to_use = 'portfolio_'.$filter;
-	$offset = ( ( $showposts * $paged ) - $showposts );
-	if( $paged == 0 ) {
-		$offset = 0; 
-	} else {
-		$offset = ( ( $showposts * $paged ) - $showposts ); 
-	}
-	$selected_categorey = explode(',', $category);
-	if($category) {
-		$args = array (
-			'post_type' => 'portfolio',
-			'posts_per_page' => intval($showposts),
-			'offset' => intval($offset),
-			'tax_query' => array (
-				array (
-					'taxonomy' => 'portfolio_categories',
-					'field' => 'slug',
-					'terms' => $selected_categorey,
-					'operator' => 'IN'
-				)
-			),
-			'orderby'=> 'date',
-			'order'=> 'DESC',
-			'status'=> 'publish'
-		);
-	}
-	else {
-		$args = array (
-			'post_type' => 'portfolio',
-			'posts_per_page' => intval($showposts),
-			'offset' => intval($offset),
-			'orderby'=> 'date',
-			'order'=> 'DESC',
-			'status'=> 'publish'
-		);
-	}
-	$the_query = new WP_Query( $args );
-	if ( $the_query->have_posts() ) :
-		while ( $the_query->have_posts() ) : $the_query->the_post();
-			$filter_classes = $permalink = '';
-			$mfp_class = 'mfp-image';
-			$post_terms = get_the_terms( get_the_ID(), $filter_to_use );
-			if( $show_filters == 'yes' && is_array( $post_terms ) ) {
-				foreach ( $post_terms as  $term ) {
-					$filter_classes .=$term->slug." ";
-				}
-			} else{
-				$filter_classes='';
-			}
-			$attachment_id = get_post_thumbnail_id(get_the_ID());
-			$image_atts = get_portfolio_image(get_the_ID(), $col, $masonry);
-			$attachment_thumb = wp_get_attachment_image_src( $attachment_id, $image_atts['size']);
-			$attachment_full = wp_get_attachment_image_src( $attachment_id, 'full');
-			$attachment_thumb_url = $attachment_thumb[0];
-			$attachment_full_url = $attachment_full[0];
-			$video_url = get_post_meta( $attachment_id, 'be_themes_featured_video_url', true );
-			$visit_site_url = get_post_meta( get_the_ID(), 'be_themes_portfolio_external_url', true );
-			$link_to = get_post_meta( get_the_ID(), 'be_themes_portfolio_link_to', true );
-			$open_with = get_post_meta( get_the_ID(), 'be_themes_portfolio_single_page_style', true );
-			$single_overlay_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_color', true );
-			$single_overlay_opacity = get_post_meta( get_the_ID(), 'be_themes_single_overlay_color_opacity', true );
-			$single_title_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_title_color', true );
-			$single_cat_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_cat_color', true );
-			$attachment_info = be_wp_get_attachment($attachment_id);
-			if(!isset($visit_site_url) || empty($visit_site_url)) {
-				$visit_site_url = '#';
-			}
-			$permalink = ( $link_to == 'external_url' ) ? $visit_site_url : get_permalink();
-			if(isset($single_overlay_opacity) && !empty($single_overlay_opacity)) {
-				$overlay_opacity = $single_overlay_opacity;
-			} else {
-				$overlay_opacity = 85;
-			}
-			if(isset($single_overlay_color) && !empty($single_overlay_color)) {
-				$single_overlay_color = be_themes_hexa_to_rgb( $single_overlay_color );
-				$thumb_overlay_color = 'rgba('.$single_overlay_color[0].','.$single_overlay_color[1].','.$single_overlay_color[2].','.(intval($overlay_opacity) / 100 ).')';
-				$gradient_style_color = '';
-			} else {
-				$thumb_overlay_color = $global_thumb_overlay_color;
-				$gradient_style_color = $global_gradient_style_color;
-			}
-			if(isset($single_title_color) && !empty($single_title_color)) {
-				$title_color = $single_title_color;
-			} else {
-				$title_color = $global_title_color;
-			}
-			if(isset($single_cat_color) && !empty($single_cat_color)) {
-				$cat_color = $single_cat_color;
-			} else {
-				$cat_color = $global_cat_color;
-			}
 
-			if(!empty( $video_url ) ) {
-				$attachment_full_url = $video_url;
-				$mfp_class = 'mfp-iframe';
-			}
-			if(isset($open_with) && $open_with == 'lightbox-gallery') {
-				$thumb_class = 'be-lightbox-gallery';
-			} else if(isset($open_with) && $open_with == 'lightbox') {
-				$thumb_class = 'image-popup-vertical-fit';
-			} else if(isset($open_with) && $open_with == 'none') {
-				$thumb_class = 'no-link';
-				$attachment_full_url = '#';
+if ( ! function_exists( 'be_themes_contact_authentication' ) ) :
+	function be_themes_contact_authentication() {
+		global $be_themes_data;
+		$contact_name = $_POST['contact_name'];
+		$contact_email = $_POST['contact_email'];
+		$contact_comment = "Name: ".$contact_name."\n\nMessage:\n".$_POST['contact_comment'];
+		$contact_subject = $_POST['contact_subject'];
+		if(empty($contact_name) || empty($contact_email) || empty($contact_comment) || empty($contact_subject) ) {
+			$result['status']="error";
+			$result['data']= __('All fields are required','be-themes');
+		}
+		else if(!preg_match ('/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,6}$/', $contact_email)) {
+			$result['status']="error";
+			$result['data']=__('Please enter a valid email address','be-themes');
+		}
+		else if(!empty($contact_name) && !empty($contact_email) && !empty($contact_comment) && !empty($contact_subject) ) {
+			if ( !empty( $be_themes_data['mail_id'] ) ) {
+				$to = $be_themes_data['mail_id'];
 			} else {
-				$thumb_class = '';
-				$attachment_full_url = $permalink;
-			}
-			if($hover_style == 'style9-hover') {
-				$trigger_animation  = '';
-			} else {
-				$trigger_animation  = 'animation-trigger';
-			}
-			$link_to_thumbnail = $attachment_full_url;
-			$terms = be_themes_get_taxonomies_by_id(get_the_ID(), 'portfolio_categories');
-			$element_classes = '';
-			foreach ($terms as $term) {
-				$element_classes .= $term->slug.' ';
-			}
-			$output .= '<div class="element be-hoverlay '.$filter_classes.' '.$element_classes.$image_atts['class'].' '.$image_atts['alt_class'].' '.$hover_style.' '.$img_grayscale.' '.$title_style.'-title" id="'.be_get_the_slug(get_the_ID()).'" style="margin-bottom: '.$gutter_width.'px !important;">';
-			$output .= '<div class="element-inner" style="margin-left: '.$gutter_width.'px;">';
-			$output .= '<a href="'.$link_to_thumbnail.'" data-href="'.$attachment_full_url.'" class="thumb-wrap '.$thumb_class.' '.$mfp_class.'" title="'.$attachment_info['title'].'">';
-			$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt /></div></div>';
-			$output .= '<div class="thumb-overlay"><div class="thumb-bg" style="background-color:'.$thumb_overlay_color.'; '.$gradient_style_color.'">';
-			$output .= '<div class="thumb-title-wrap ">';
-			$output .= '<div class="thumb-title be-animate animated '.$trigger_animation.'" data-animation-type="'.$title_animation_type.'" style="color: '.$title_color.';">'.get_the_title().'</div>';
-			
-			if(!empty($terms) && (isset($cat_hide) && !($cat_hide) ) ) {
-				$output .= '<div class="portfolio-item-cats be-animate animated '.$trigger_animation.'" data-animation-type="'.$cat_animation_type.'" style="color: '.$cat_color.';">';
-				$length = 1;
-				foreach ($terms as $term) {
-					$output .= '<span>'.$term->name.'</span>';
-					if(count($terms) != $length) {
-						$output .= '<span>, </span>';
+				$to = get_option('admin_email');
+			}		
+			$subject= $contact_subject;
+			$from = $contact_name."<".$contact_email.">";
+			$headers = "From:" . $from;
+			mail($to,$subject,$contact_comment,$headers);
+			$result['status']="success";
+			$result['data']=__('Your message was sent successfully','be-themes');
+		}
+		header('Content-type: application/json');
+		echo json_encode($result);
+		die();
+	}
+	add_action( 'wp_ajax_nopriv_contact_authentication', 'be_themes_contact_authentication' );
+	add_action( 'wp_ajax_contact_authentication', 'be_themes_contact_authentication' );
+endif; 
+
+
+/* ---------------------------------------------------*/
+// Function for Portfolio Load More / Infinite scroll
+/* ---------------------------------------------------*/
+
+if ( ! function_exists( 'be_themes_get_ajax_full_screen_gutter_portfolio' ) ) :
+	function be_themes_get_ajax_full_screen_gutter_portfolio() {
+		extract($_POST);
+		$output='';
+		$global_thumb_overlay_color = $thumb_overlay_color;
+		$global_gradient_style_color = $gradient_style_color;
+		$global_like_button  = $like_button;
+		if(isset($title_color) && !empty($title_color)) {
+			$global_title_color = $title_color = $title_color;
+		} else {
+			$global_title_color = $title_color = '';
+		}
+		if(isset($cat_color) && !empty($cat_color)) {
+			$global_cat_color = $cat_color = $cat_color;
+		} else {
+			$global_cat_color = $cat_color = '';
+		}
+		// $filter_to_use = 'portfolio_'.$filter;
+		if($filter == 'categories'){
+			$filter_to_use = 'portfolio_'.$filter;
+		} else{
+			$filter_to_use = $filter;
+		}
+		$offset = ( ( $showposts * $paged ) - $showposts );
+		if( $paged == 0 ) {
+			$offset = 0; 
+		} else {
+			$offset = ( ( $showposts * $paged ) - $showposts ); 
+		}
+		$selected_categorey = explode(',', $category);
+		if($category) {
+			$args = array (
+				'post_type' => 'portfolio',
+				'posts_per_page' => intval($showposts),
+				'offset' => intval($offset),
+				'tax_query' => array (
+					array (
+						'taxonomy' => 'portfolio_categories',
+						'field' => 'slug',
+						'terms' => $selected_categorey,
+						'operator' => 'IN'
+					)
+				),
+				'orderby'=> apply_filters('be_portfolio_order_by','date'),
+				'order'=> apply_filters('be_portfolio_order','DESC'),
+				'post_status'=> 'publish'
+			);
+		}
+		else {
+			$args = array (
+				'post_type' => 'portfolio',
+				'posts_per_page' => intval($showposts),
+				'offset' => intval($offset),
+				'orderby'=> apply_filters('be_portfolio_order_by','date'),
+				'order'=> apply_filters('be_portfolio_order','DESC'),
+				'post_status'=> 'publish'
+			);
+		}
+		$the_query = new WP_Query( $args );
+		if ( $the_query->have_posts() ) :
+			while ( $the_query->have_posts() ) : $the_query->the_post();
+				$filter_classes = $permalink = '';
+				$mfp_class = 'mfp-image';
+				$post_terms = get_the_terms( get_the_ID(), $filter_to_use );
+				if( $show_filters == 'yes' && is_array( $post_terms ) ) {
+					foreach ( $post_terms as  $term ) {
+						$filter_classes .=$term->slug." ";
 					}
-					$length++;
+				} else{
+					$filter_classes='';
+				}
+				$attachment_id = get_post_thumbnail_id(get_the_ID());
+				$image_atts = get_portfolio_image(get_the_ID(), $col, $masonry);
+				$attachment_thumb = wp_get_attachment_image_src( $attachment_id, $image_atts['size']);
+				$attachment_full = wp_get_attachment_image_src( $attachment_id, 'full');
+				$attachment_thumb_url = $attachment_thumb[0];
+				$attachment_full_url = $attachment_full[0];
+				$video_url = get_post_meta( $attachment_id, 'be_themes_featured_video_url', true );
+				$visit_site_url = get_post_meta( get_the_ID(), 'be_themes_portfolio_external_url', true );
+				$link_to = get_post_meta( get_the_ID(), 'be_themes_portfolio_link_to', true );
+				$open_with = get_post_meta( get_the_ID(), 'be_themes_portfolio_single_page_style', true );
+				$single_overlay_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_color', true );
+				$single_overlay_opacity = get_post_meta( get_the_ID(), 'be_themes_single_overlay_color_opacity', true );
+				$single_title_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_title_color', true );
+				$single_cat_color = get_post_meta( get_the_ID(), 'be_themes_single_overlay_cat_color', true );
+				$attachment_info = be_wp_get_attachment($attachment_id);
+				if(!isset($visit_site_url) || empty($visit_site_url)) {
+					$visit_site_url = '#';
+				}
+				$permalink = ( $link_to == 'external_url' ) ? $visit_site_url : get_permalink();
+				$target = ("1" == get_post_meta( get_the_ID(), 'be_themes_portfolio_open_new_tab', true )) ? 'target="_blank"' : '';
+				if(isset($single_overlay_opacity) && !empty($single_overlay_opacity)) {
+					$overlay_opacity = $single_overlay_opacity;
+				} else {
+					$overlay_opacity = 85;
+				}
+				if(isset($single_overlay_color) && !empty($single_overlay_color)) {
+					$single_overlay_color = be_themes_hexa_to_rgb( $single_overlay_color );
+					$thumb_overlay_color = 'rgba('.$single_overlay_color[0].','.$single_overlay_color[1].','.$single_overlay_color[2].','.(intval($overlay_opacity) / 100 ).')';
+					$gradient_style_color = '';
+				} else {
+					$thumb_overlay_color = $global_thumb_overlay_color;
+					$gradient_style_color = $global_gradient_style_color;
+				}
+				if(isset($single_title_color) && !empty($single_title_color)) {
+					$title_color = $single_title_color;
+				} else {
+					$title_color = $global_title_color;
+				}
+				if(isset($single_cat_color) && !empty($single_cat_color)) {
+					$cat_color = $single_cat_color;
+				} else {
+					$cat_color = $global_cat_color;
+				}
+
+				if(!empty( $video_url ) ) {
+					$attachment_full_url = $video_url;
+					$mfp_class = 'mfp-iframe';
+				}
+				if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'lightbox-gallery') {
+					$thumb_class = 'be-lightbox-gallery';
+				} else if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'lightbox') {
+					$thumb_class = 'image-popup-vertical-fit';
+				} else if( ( $link_to != 'external_url' ) && isset($open_with) && $open_with == 'none') {
+					$thumb_class = 'no-link';
+					$attachment_full_url = '#';
+				} else {
+					$thumb_class = ( $link_to == 'external_url' || !empty( $target )  ) ? '' : 'dJAX_internal';
+					$mfp_class = '';
+					$attachment_full_url = $permalink;
+				}
+				if($hover_style == 'style9-hover') {
+					$trigger_animation  = '';
+				} else {
+					$trigger_animation  = 'animation-trigger';
+				}
+				$link_to_thumbnail = $attachment_full_url;
+				$terms = be_themes_get_taxonomies_by_id(get_the_ID(), 'portfolio_categories');
+				$element_classes = '';
+				foreach ($terms as $term) {
+					$element_classes .= $term->slug.' ';
+				}
+				$output .= '<div class="element be-hoverlay '.$filter_classes.' '.$element_classes.$image_atts['class'].' '.$image_atts['alt_class'].' '.$hover_style.' '.$img_grayscale.' '.$title_style.'-title" id="'.be_get_the_slug(get_the_ID()).'" style="margin-bottom: '.$gutter_width.'px !important;">';
+				$output .= '<div class="element-inner" style="margin-left: '.$gutter_width.'px;">';
+				$output .= '<a href="'.$link_to_thumbnail.'" data-href="'.$attachment_full_url.'" class="thumb-wrap '.$thumb_class.' '.$mfp_class.'" title="'.$attachment_info['title'].'" '.$target.'>';
+				$output .= '<div class="flip-wrap"><div class="flip-img-wrap '.$image_effect.'-effect"><img src="'.$attachment_thumb_url.'" alt /></div></div>';
+				$output .= '<div class="thumb-overlay"><div class="thumb-bg" style="background-color:'.$thumb_overlay_color.'; '.$gradient_style_color.'">';
+				$output .= '<div class="thumb-title-wrap ">';
+				$output .= '<div class="thumb-title be-animate animated '.$trigger_animation.'" data-animation-type="'.$title_animation_type.'" style="color: '.$title_color.';">'.get_the_title().'</div>';
+				
+				if(!empty($terms) && (isset($cat_hide) && !($cat_hide) ) ) {
+					$output .= '<div class="portfolio-item-cats be-animate animated '.$trigger_animation.'" data-animation-type="'.$cat_animation_type.'" style="color: '.$cat_color.';">';
+					$length = 1;
+					foreach ($terms as $term) {
+						$output .= '<span>'.$term->name.'</span>';
+						if(count($terms) != $length) {
+							$output .= '<span>, </span>';
+						}
+						$length++;
+					}
+					$output .= '</div>';
 				}
 				$output .= '</div>';
-			}
-			$output .= '</div>';
-			$output .= '</div></div>'; //End Thumb Bg & Thumb Overlay
-			$output .= '</a>'; //End Thumb Wrap
-			if(isset($open_with) && $open_with == 'lightbox-gallery') :
-				$output .='<div class="popup-gallery">';
-				$attachments = get_post_meta(get_the_ID(),'be_themes_single_portfolio_slider_images');
-				if(!empty($attachments)) {
-					foreach ( $attachments as $attachment_id ) {
-						$attach_img = wp_get_attachment_image_src($attachment_id, 'full');
-						$video_url = get_post_meta($attachment_id, 'be_themes_featured_video_url', true);
-						$attachment_info = be_wp_get_attachment($attachment_id);
-						if($video_url) {
-							$url = $video_url;
-							$mfp_class = 'mfp-iframe';
-						} else {
-							$url = $attach_img[0];
-							$mfp_class ='mfp-image';
+				$output .= '</div></div>'; //End Thumb Bg & Thumb Overlay
+				$output .= '</a>'; //End Thumb Wrap
+				if(isset($open_with) && $open_with == 'lightbox-gallery') :
+					$output .='<div class="popup-gallery">';
+					$attachments = get_post_meta(get_the_ID(),'be_themes_single_portfolio_slider_images');
+					if(!empty($attachments)) {
+						foreach ( $attachments as $attachment_id ) {
+							$attach_img = wp_get_attachment_image_src($attachment_id, 'full');
+							$video_url = get_post_meta($attachment_id, 'be_themes_featured_video_url', true);
+							$attachment_info = be_wp_get_attachment($attachment_id);
+							if($video_url) {
+								$url = $video_url;
+								$mfp_class = 'mfp-iframe';
+							} else {
+								$url = $attach_img[0];
+								$mfp_class ='mfp-image';
+							}
+							$output .='<a href="'.$url.'" class="'.$mfp_class.'" title="'.$attachment_info['title'].'"></a>';
 						}
-						$output .='<a href="'.$url.'" class="'.$mfp_class.'" title="'.$attachment_info['title'].'"></a>';
 					}
-				}
-				$output .= '</div>'; //End Gallery
-			endif;
-			$output .= be_get_like_button(get_the_ID());
-			$output .= '</div>'; //End Element Inner
-			$output .= '</div>'; //End Element
-		endwhile;
-		wp_reset_postdata();
-		echo $output;
-	else :
-		return 0;
-	endif;
-	die();
-}
+					$output .= '</div>'; //End Gallery
+				endif;
+				$output .= ($global_like_button != 1) ? be_get_like_button(get_the_ID()) : '';
+				$output .= '</div>'; //End Element Inner
+				$output .= '</div>'; //End Element
+			endwhile;
+			wp_reset_postdata();
+			echo $output;
+		else :
+			return 0;
+		endif;
+		die();
+	}
+	add_action( 'wp_ajax_nopriv_get_ajax_full_screen_gutter_portfolio', 'be_themes_get_ajax_full_screen_gutter_portfolio' );
+	add_action( 'wp_ajax_get_ajax_full_screen_gutter_portfolio', 'be_themes_get_ajax_full_screen_gutter_portfolio' );
+endif;
+
 /* ---------------------------------------------  */
 // Function for processing Like Button
 /* ---------------------------------------------  */
-add_action( 'wp_ajax_nopriv_post_like', 'be_themes_post_like' );
-add_action( 'wp_ajax_post_like', 'be_themes_post_like' );
-function be_themes_post_like() {
-	extract($_POST);
-	$post_like_count = get_post_meta( $post_id, "_post_like_count", true );
-	if (be_AlreadyLiked_post($post_id)) {
-		$result['status'] = "error";
-		$result['data'] = "You Already Liked This Item";
-		$result['count'] = $post_like_count;
-	} else {
-		setcookie( $post_id."_liked", $post_id, time() + 31536000, "/");
-		update_post_meta( $post_id, "_post_like_count", ++$post_like_count );
-		$result['status'] = "success";
-		$result['data'] = "You Liked Successfully";
-		$result['count'] = $post_like_count;
+if ( ! function_exists( 'be_themes_post_like' ) ) :
+	function be_themes_post_like() {
+		extract($_POST);
+		$post_like_count = get_post_meta( $post_id, "_post_like_count", true );
+		if (be_AlreadyLiked_post($post_id)) {
+			$result['status'] = "error";
+			$result['data'] = "You Already Liked This Item";
+			$result['count'] = $post_like_count;
+		} else {
+			setcookie( $post_id."_liked", $post_id, time() + 31536000, "/");
+			update_post_meta( $post_id, "_post_like_count", ++$post_like_count );
+			$result['status'] = "success";
+			$result['data'] = "You Liked Successfully";
+			$result['count'] = $post_like_count;
+		}
+		header('Content-type: application/json');
+		echo json_encode($result);
+		die();
 	}
-	header('Content-type: application/json');
-	echo json_encode($result);
-	die();
-}
+	add_action( 'wp_ajax_nopriv_post_like', 'be_themes_post_like' );
+	add_action( 'wp_ajax_post_like', 'be_themes_post_like' );
+endif;
+
+
 /* ---------------------------------------------  */
 // Function for processing Blog Pagination
 /* ---------------------------------------------  */
@@ -262,51 +286,70 @@ function be_themes_get_blog() {
 	$blog_attr['gutter_width'] = ((!isset($_POST['gutter_width'])) || empty($_POST['gutter_width'])) ? intval(40) : intval( $_POST['gutter_width'] );
 	$blog_attr['style'] = 'style3';
 	global $wp_query;
-	if(!(is_category() || is_archive() || is_tag() || is_search())) {
-		var_dump($wp_query);
-		$args = array (
-			'paged' => $paged,
-			'post_status'=> 'publish',
-			'ignore_sticky_posts'=> true
-		);
-		query_posts($args);
+	// alert($showposts * ( $paged - 1 ));
+	// if( ( $showposts * ( $paged - 1 ) ) > $total_items ) {
+	// 	return 0;
+	// 	die();
+	// } else {
+		if(!(is_category() || is_archive() || is_tag() || is_search())) {
+			// var_dump($wp_query);
+			$args = array (
+				'paged' => $paged,
+				'post_status'=> 'publish',
+				'ignore_sticky_posts'=> true
+			);
+			query_posts($args);
+		}
+		if( have_posts() ) :
+			while ( have_posts() ) : the_post();
+				$blog_style = be_get_blog_loop_style( $blog_attr['style'] );
+				get_template_part( 'blog/loop', $blog_style );
+			endwhile;
+		else :
+			return 0;
+		endif;
+		wp_reset_postdata();
+		wp_reset_query();
+		die();
+	// }
+}
+
+/* ---------------------------------------------  */
+// Function for Mail Chimp Newsletter Subscription
+/* ---------------------------------------------  */
+
+if ( ! function_exists( 'be_themes_mailchimp_subscription' ) ) :
+	function be_themes_mailchimp_subscription() {
+		global $be_themes_data;
+		$MailChimp = new MailChimp($_POST['api_key']);
+		$result = $MailChimp->call('lists/subscribe', array (
+	        'id'                => $_POST['list_id'],
+	        'email'             => array('email'=> $_POST['email']),
+	        'merge_vars'        => array('FNAME'=>'', 'LNAME'=>''),
+	        'double_optin'      => false,
+	        'update_existing'   => true,
+	        'replace_interests' => false,
+	        'send_welcome'      => false,
+	    ));
+	    if(!isset($result['status'])) {
+	    	$result['status'] = 'success';
+	    	$result['data'] = __('Thank you, you have been added to our mailing list.','be-themes');
+	    } else {
+	    	$result['data'] = $result['error'];
+	    }
+		header('Content-type: application/json');
+		echo json_encode($result);
+		die();
 	}
-	if( have_posts() ) :
-		while ( have_posts() ) : the_post();
-			$blog_style = be_get_blog_loop_style( $blog_attr['style'] );
-			get_template_part( 'blog/loop', $blog_style );
-		endwhile;
-	endif;
-	wp_reset_postdata();
-	wp_reset_query();
-	die();
-}
-add_action( 'wp_ajax_nopriv_mailchimp_subscription', 'be_themes_mailchimp_subscription' );
-add_action( 'wp_ajax_mailchimp_subscription', 'be_themes_mailchimp_subscription' );
-function be_themes_mailchimp_subscription() {
-	global $be_themes_data;
-	$MailChimp = new MailChimp($_POST['api_key']);
-	$result = $MailChimp->call('lists/subscribe', array (
-        'id'                => $_POST['list_id'],
-        'email'             => array('email'=> $_POST['email']),
-        'merge_vars'        => array('FNAME'=>'', 'LNAME'=>''),
-        'double_optin'      => false,
-        'update_existing'   => true,
-        'replace_interests' => false,
-        'send_welcome'      => false,
-    ));
-    if(!isset($result['status'])) {
-    	$result['status'] = 'success';
-    	$result['data'] = 'Thank you, you have been added to our mailing list.';
-    } else {
-    	$result['data'] = $result['error'];
-    }
-	header('Content-type: application/json');
-	echo json_encode($result);
-	die();
-}
-?>
-<?php
+	add_action( 'wp_ajax_nopriv_mailchimp_subscription', 'be_themes_mailchimp_subscription' );
+	add_action( 'wp_ajax_mailchimp_subscription', 'be_themes_mailchimp_subscription' );
+endif;
+
+/* ---------------------------------------------  */
+// Mail Chimp API Class
+/* ---------------------------------------------  */
+
+if( ! class_exists( 'MailChimp' ) ) :
 	class MailChimp {
     	private $api_key;
     	private $api_endpoint = 'https://<dc>.api.mailchimp.com/2.0';
@@ -370,4 +413,6 @@ function be_themes_mailchimp_subscription() {
         	return $result ? json_decode($result, true) : false;
     	}
 	}
+endif;
+
 ?>

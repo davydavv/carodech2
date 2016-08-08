@@ -47,9 +47,15 @@
 	<p class="nocomments"><?php _e('Comments are closed.','be-themes'); ?></p>
 	<?php endif; ?>
 	<?php 
+	$fields =  array(
+		'author' =>  '<p class="comment-form-author"><input placeholder="'.__('Name','be-themes').'" id="author" name="author" type="text" aria-required="true"/></p>',
+		'email' =>  '<p class="comment-form-email"><input placeholder="'.__('Email','be-themes').'" id="email" name="email" type="text" aria-required="true"/></p>',
+		'url' =>  '<p class="comment-form-url"><input placeholder="'.__('Website','be-themes').'" id="url" name="url" type="text" aria-required="true"/></p>'
+	);
 	$defaults = array(
+		'fields' => $fields,
 		'label_submit' => __('Submit','be-themes'),
-		'comment_field' =>  '<p class="comment-form-comment"><textarea placeholder="'.__('Comment','be-themes').'" id="comment" name="comment" cols="45" rows="15" aria-required="true"></textarea></p>'
+		'comment_field' =>  '<p class="comment-form-comment"><textarea placeholder="'.__('Comment','be-themes').'" id="comment" name="comment" cols="45" rows="15" aria-required="true"></textarea></p>',
 	);
 	comment_form($defaults); 
 	?>

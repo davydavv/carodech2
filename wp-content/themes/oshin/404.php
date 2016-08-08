@@ -9,7 +9,7 @@ get_header(); ?>
 		<div id="content-wrap" class="">
 			<section id="page-content">
 				<div class="clearfix">	
-					<div class="be-themes-comments be-row be-wrap not-found">
+					<div class="be-row be-wrap not-found">
 						<header class="entry-header">
 							<h1 class="entry-title"><?php _e( '404 PAGE NOT FOUND', 'be-themes' ); ?></h1>
 						</header>

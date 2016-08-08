@@ -27,7 +27,12 @@
 			}
 			if($hero_section == 'custom') {
 				echo '<div class="header-hero-custom-section">';
-				$hero_section_with_header = $be_themes_data[$hero_section_pfx.'_hero_section_with_header'];
+				$hero_section_position = $be_themes_data[$hero_section_pfx.'_hero_section_position'];
+				if($hero_section_position == 'before'){
+					$hero_section_with_header = 'full-'.$be_themes_data[$hero_section_pfx.'_hero_section_with_header'];	
+				}else{
+					$hero_section_with_header = '';
+				}
 				$hero_section_custom_height = $be_themes_data[$hero_section_pfx.'_hero_section_custom_height'];
 				if( !empty( $hero_section_custom_height ) ) {
 					$full = '';
@@ -102,7 +107,7 @@
 					$bg_video_class = 'be-video-section';
 				}
 				$output = '';
-				$output .= '<div class="hero-section-wrap be-section '.$full.' full-'.$hero_section_with_header.' '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' clearfix" style="'.$background.'; height: '.$hero_section_custom_height.'px !important;">';
+				$output .= '<div class="hero-section-wrap be-section '.$full.' '.$hero_section_with_header.' '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' clearfix" style="'.$background.'; height: '.$hero_section_custom_height.'px !important;">';
 				if( isset( $bg_video ) && 1 == $bg_video ) {
 					$output .= '<video class="be-bg-video" autoplay="autoplay" loop="loop" muted="'.$bg_video_mute.'" preload="auto">';
 					if('mp4' == $bg_video_format) {
@@ -137,9 +142,10 @@
 				echo '</div>';
 			}
 			echo '</div>';
-		} else {
-			echo '<div class="header-hero-section"></div>';
-		}
+		} 
+		// else {
+		// 	echo '<div class="header-hero-section"></div>';
+		// }
 	} 
 	else {
 		$hero_section = get_post_meta($post_id, 'be_themes_hero_section', true);
@@ -153,13 +159,19 @@
 			}
 			if($hero_section == 'custom') {
 				echo '<div class="header-hero-custom-section">';
-				$hero_section_with_header = get_post_meta($post_id, 'be_themes_hero_section_with_header', true);
+				$hero_section_position = get_post_meta($post_id, 'be_themes_hero_section_position', true);
+				if($hero_section_position == 'before'){
+					$hero_section_with_header = 'full-'.get_post_meta($post_id, 'be_themes_hero_section_with_header', true);
+				}else{
+					$hero_section_with_header = '';
+				}
 				$hero_section_custom_height = get_post_meta($post_id, 'be_themes_hero_section_custom_height', true);
 				if( !empty( $hero_section_custom_height ) ) {
 					$full = '';
 				} else {
 					$full = 'full-screen-height';
 				}
+
 				$bg_color = get_post_meta($post_id, 'be_themes_hero_section_bg_color', true);
 				$bg_image = get_post_meta($post_id, 'be_themes_hero_section_bg_image', true);
 				$bg_repeat = get_post_meta($post_id, 'be_themes_hero_section_bg_repeat', true);
@@ -189,6 +201,13 @@
 					$be_wrap = '';
 				}
 				
+				if(is_page_template('page-splitscreen-left.php') || is_page_template('page-splitscreen-right.php')){
+					$bg_animation = '';
+					$bg_attachment = '';
+					$hero_section_custom_height = '';
+					$full = 'full-screen-height';
+				}
+
 				$background = '';
 				if( !isset($bg_animation) || empty($bg_animation) || $bg_animation == 'none' ) {
 	    			$bg_animation = '';
@@ -224,7 +243,7 @@
 				}
 
 				$output = '';
-				$output .= '<div class="hero-section-wrap be-section '.$full.' full-'.$hero_section_with_header.' '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' clearfix" style="'.$background.'; height: '.$hero_section_custom_height.'px !important;">';
+				$output .= '<div class="hero-section-wrap be-section '.$full.' '.$hero_section_with_header.' '.$bg_stretch.' '.$bg_animation.' '.$bg_overlay_class.' '.$bg_video_class.' clearfix" style="'.$background.'; height: '.$hero_section_custom_height.'px;">';
 				if( isset( $bg_video ) && 1 == $bg_video ) {
 					$output .= '<video class="be-bg-video" autoplay="autoplay" loop="loop" muted="muted" preload="auto">';
 					if($bg_video_mp4_src) {
@@ -249,7 +268,7 @@
 					}
 					$output .= '<div class="section-overlay" style="background: '.$overlay_color.'; '.$opacity.'"></div>';
 				}
-				if( isset( $bg_canvas_type ) && 'none' != $bg_canvas_type ) {
+				if( isset( $bg_canvas_type ) && !empty($bg_canvas_type) && 'none' != $bg_canvas_type ) {
 					$output .= '<canvas id="'.$bg_canvas_type.'" data-color1="'.$bg_canvas_color1.'" data-color2="'.$bg_canvas_color2.'" data-color3="'.$bg_canvas_color3.'" data-color4="'.$bg_canvas_color4.'" data-color5="'.$bg_canvas_color5.'"></canvas>';
 				}  
 				$output .= '<div class="be-row '.$be_wrap.'">';
@@ -265,11 +284,16 @@
 			$section_nav_icon_color = get_post_meta($post_id, 'be_themes_section_nav_icon_color', true);
 			$section_nav_icon = get_post_meta($post_id, 'be_themes_section_nav_icon', true);
 			if(isset( $section_nav ) && !empty($section_nav)) {
-				echo '<a href="#'.$section_nav.'" class="section-navigation"><i class="font-icon '.$section_nav_icon.'" style="color: '.$section_nav_icon_color.'"></i></a>';
+				if( 'icon-mouse-wheel' == $section_nav_icon ) {
+					echo '<a href="#'.$section_nav.'" class="section-navigation"><span class="mouse-icon" style="border-color: '.$section_nav_icon_color.'"><span class="wheel" style="background-color: '.$section_nav_icon_color.'"></span></span></a>';
+				} else {
+					echo '<a href="#'.$section_nav.'" class="section-navigation"><i class="font-icon '.$section_nav_icon.'" style="color: '.$section_nav_icon_color.'"></i></a>';
+				}
 			}
 			echo '</div>';
-		} else {
-			echo '<div class="header-hero-section"></div>';
-		}
+		} 
+		// else {
+		// 	echo '<div class="header-hero-section"></div>';
+		// }
 	}
 ?>

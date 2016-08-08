@@ -53,9 +53,23 @@ $post_format = get_post_format();
 									$be_pb_disabled = get_post_meta( get_the_ID(), '_be_pb_disable', true );	
 									
 									if ( isset($be_themes_data['enable_pb_blog_posts']) && 1 == $be_themes_data['enable_pb_blog_posts'] && 'yes' != $be_pb_disabled  && !is_single() ) {
-										the_excerpt();
+										// the_excerpt();
+										if ( post_password_required() ) {
+					       	 				$content  = get_the_password_form();
+
+					       	 			    echo '<div class="be-wrap clearfix be-section-pad">'.$content.'</div>';
+					       	 			} else {
+											the_excerpt();
+										}
 									} else {
-										the_content( __('Read More','be-themes') );
+										// the_content( __('Read More','be-themes') );
+										if ( post_password_required() ) {
+					       	 				$content  = get_the_password_form();
+
+					       	 			    echo '<div class="be-wrap clearfix be-section-pad">'.$content.'</div>';
+					       	 			} else {
+											the_content( __('Read More','be-themes') );
+										}
 									}
 								}
 								if( is_single() ): 
